@@ -390,23 +390,7 @@
     /* ============================================================
        9. ABOUT
        ============================================================ */
-    .about-quote {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: clamp(1.5rem, 3.2vw, 2.1rem);
-      line-height: 1.35;
-      color: var(--teal);
-      margin-bottom: 3rem;
-      max-width: 44rem;
-    }
     .about p { color: var(--mut); margin-bottom: 1.6rem; max-width: 40rem; }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 260px;
-      gap: 3rem;
-      align-items: start;
-    }
 
     /* ============================================================
        10. IMAGES — parallax + clip-wipe reveal.
@@ -433,54 +417,10 @@
       object-fit: cover;
       will-change: transform;
     }
-    .about-grid .plx-wrap { aspect-ratio: 3 / 4; }
 
     /* ============================================================
-       11. PROJECTS — thin-border newspaper grid, no shadows
+       11. CHIPS + IMAGE FALLBACKS
        ============================================================ */
-    .pgrid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      border: 1px solid var(--line);
-    }
-    .pcard {
-      position: relative;
-      padding: 2.2rem 1.8rem;
-      border-right: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-      background: var(--bg);
-      transition: background 0.35s;
-    }
-    .pcard:last-child { border-right: none; }
-    /* left-border-slide on hover */
-    .pcard::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: var(--teal);
-      transform: scaleY(0);
-      transform-origin: top;
-      transition: transform 0.45s var(--ease);
-    }
-    .pcard:hover::before { transform: scaleY(1); }
-
-    .ptag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--terra);
-    }
-    .pcard h3 { font-size: 1.5rem; color: var(--teal); }
-    .pcard p  { font-size: 0.92rem; color: var(--mut); flex: 1; }
-    .pimgs { display: flex; gap: 0.6rem; }
-    .pimgs .plx-wrap { aspect-ratio: 4 / 3; flex: 1; }
-    .plink { font-size: 0.9rem; font-weight: 600; color: var(--teal); }
-    .plink:hover { color: var(--terra); }
-
     .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
     .chip {
       font-size: 0.72rem;
@@ -493,22 +433,24 @@
     }
     .teal .chip { border-color: var(--line-d); color: var(--mut-d); }
 
-    /* ============================================================
-       12. NOCE — Three.js interactive map section
-       ============================================================ */
-    .noce-head { text-align: center; }
-    .noce-sub  { color: var(--mut); margin: 0 auto 1rem; max-width: 36rem; }
-    .noce-desc { color: var(--mut); font-size: 0.95rem; margin: 0 auto 2rem; max-width: 40rem; }
-
-    .noce-stage {
-      position: relative;
-      width: 100%;
-      height: min(72vh, 600px);
-      margin: 1rem 0 2rem;
+    /* A missing image file degrades to a clean neutral fill in the
+       site palette (JS adds .ph to the image's container when a file
+       fails to load) instead of the browser's broken-image icon. */
+    .ph { background: linear-gradient(135deg, #EFEEE8 0%, #E4E2DB 100%) !important; }
+    .ph img { visibility: hidden; }
+    .hero-photo-ph {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      background: linear-gradient(135deg, #EFEEE8, #E4E2DB);
+      display: grid; place-items: center;
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      color: var(--teal);
+      margin-bottom: 2rem;
     }
-    .noce-stage canvas { display: block; width: 100%; height: 100%; }
 
-    /* Floating card shown beside a hovered/tapped point */
+    /* Floating card shown beside a hovered/tapped Noce map point */
     .noce-card {
       position: absolute;
       background: #fff;
@@ -536,138 +478,194 @@
     }
 
     /* ============================================================
-       14. ACADEMIC JOURNEY — pinned scroll storytelling.
-           Outer .journey is very tall; the inner .journey-sticky pins
-           for the whole distance while JS maps scroll progress onto
-           the SVG stroke-dashoffset and city reveals.
+       14. VERTICAL UNIVERSITY JOURNEY (inside About)
+       A line draws itself downward (SVG stroke, scroll-linked) past
+       three nodes; each reveals as the line reaches it. RSM is the
+       final, emphasised node with a terracotta glow.
        ============================================================ */
-    .journey {
-      height: 420vh;      /* the "scroll runway" for the pinned scene */
-      background: var(--teal);
-      color: var(--bg);
-      padding: 0;
+    .vjourney { margin-top: 4.5rem; }
+    .vjourney .eyebrow { margin-bottom: 0.5rem; }
+    .vj-rail { position: relative; }
+    .vj-svg {
+      position: absolute;
+      left: 31px; top: 12px;
+      width: 2px; height: calc(100% - 24px);
+      overflow: visible;
     }
-    .journey-sticky {
+    .vj-svg path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .vj-ghost { stroke: var(--line); }
+    /* pathLength="1" in the markup → dashoffset is simply 1 - progress */
+    .vj-draw  { stroke: var(--teal); stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .vj-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 1.6rem;
+      align-items: center;
+      padding: 2rem 0;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+    .vj-item.on { opacity: 1; transform: none; }
+    .vj-badge {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--line);
+      display: grid; place-items: center;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--teal);
+      transition: border-color 0.5s, color 0.5s, box-shadow 0.5s;
+    }
+    .vj-name { font-family: var(--serif); font-size: 1.35rem; }
+    .vj-name a { border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color 0.25s, border-color 0.25s; }
+    .vj-name a:hover { color: var(--teal); border-color: var(--teal); }
+    .vj-course { font-size: 0.88rem; color: var(--mut); margin-top: 0.25rem; }
+    .vj-final.on .vj-badge {
+      border-color: var(--terra);
+      color: var(--terra);
+      box-shadow: 0 0 18px rgba(199, 98, 63, 0.45);
+    }
+    .vj-final .vj-name a:hover { color: var(--terra); border-color: var(--terra); }
+
+    /* ============================================================
+       15. PROJECTS — ROTATING PANEL SHOWCASE
+       #projects is a tall scroll runway; .show-sticky pins for its
+       whole length. Three identical 4:5 panels sit on a wheel that
+       turns around a shared horizontal axis behind the front slot;
+       JS maps scroll progress onto the wheel angle (expo-out easing
+       into each dwell) and writes every transform. Panels away from
+       the front fade and blur slightly for depth. With .stacked
+       (mobile / reduced motion) it degrades to plain vertical cards.
+       ============================================================ */
+    .showcase { height: 380vh; padding: 0; }
+    .show-sticky {
       position: sticky;
       top: 0;
       height: 100vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    .journey-eyebrow {
-      position: absolute;
-      top: 5.5rem; left: 2.5rem;
-      z-index: 3;
-    }
-
-    .jmap {
-      position: absolute;
-      inset: 0;
+    .show-head { position: absolute; top: 4.5rem; text-align: center; }
+    .show-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4.5rem;
       width: 100%;
-      height: 100%;
-    }
-    .jmap-m { display: none; } /* mobile variant, swapped in media query */
-
-    /* faint "ghost" of the full route */
-    .jpath-bg { fill: none; stroke: rgba(250,250,247,0.10); stroke-width: 2; }
-    /* the drawn route — dashoffset driven by scroll progress in JS */
-    .jpath    { fill: none; stroke: var(--bg); stroke-width: 2.5; stroke-linecap: round; }
-
-    .jnode { fill: var(--teal); stroke: rgba(250,250,247,0.4); stroke-width: 2; r: 7px; transition: fill 0.5s, stroke 0.5s; }
-    .jnode.on { fill: var(--bg); stroke: var(--bg); }
-    /* Rotterdam — the final, emphasised node: terracotta + glow */
-    .jnode.final.on {
-      fill: var(--terra);
-      stroke: var(--terra);
-      filter: drop-shadow(0 0 8px rgba(199, 98, 63, 0.9));
-    }
-
-    /* City blocks — absolutely positioned over the map */
-    .jcity {
-      position: absolute;
-      max-width: 300px;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-      z-index: 2;
-    }
-    .jcity.on { opacity: 1; transform: none; }
-    .jcity h3 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); margin-bottom: 0.5rem; }
-    .jcity p  { font-size: 0.88rem; color: var(--mut-d); line-height: 1.55; margin-bottom: 0.9rem; max-width: 26ch; }
-    .jcity .plx-wrap { width: 150px; aspect-ratio: 3 / 2; }
-    .jcity-rdam h3 { color: var(--terra); }
-    /* Rotterdam's short emphasis line under its caption */
-    .jcity .cap2 {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 1rem;
-      color: var(--terra);
-      margin-bottom: 0.9rem;
-    }
-
-    /* Desktop positions — tuned to the SVG path coordinates */
-    .jcity-utrecht { left: 8%;  top: 19%; }
-    .jcity-rio     { left: 38%; top: 62%; }
-    .jcity-rdam    { right: 3%; top: 16%; }
-
-    .jclose {
-      position: absolute;
-      bottom: 8vh;
-      left: 0; right: 0;
-      text-align: center;
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: clamp(1.15rem, 2.4vw, 1.6rem);
-      color: var(--mut-d);
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
       padding: 0 2rem;
-      z-index: 2;
     }
-    .jclose.on { opacity: 1; transform: none; color: var(--bg); }
-
-    /* ============================================================
-       15. THESIS — data reveal: background line chart draws itself
-           while the three stats count up in sync.
-       ============================================================ */
-    .thesis-title { font-size: clamp(1.9rem, 4vw, 2.9rem); color: var(--teal); margin-bottom: 0.8rem; }
-    .thesis-sub   { color: var(--mut); font-size: 0.95rem; margin-bottom: 2rem; }
-    .thesis p.body { color: var(--mut); max-width: 44rem; margin-bottom: 3.5rem; }
-
-    .thesis-viz { position: relative; padding: 2.5rem 0 1rem; }
-    .tchart {
+    .carousel {
+      position: relative;
+      /* 4:5 panel, capped by width AND by viewport height so it never
+         collides with the section eyebrow on short screens */
+      width: min(420px, 84vw, calc((100vh - 190px) * 0.8));
+      aspect-ratio: 4 / 5;
+      perspective: 1300px;
+      flex-shrink: 0;
+    }
+    .panel {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.35;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      backface-visibility: hidden;
+      pointer-events: none;          /* JS grants it to the front panel */
+      will-change: transform, opacity, filter;
+    }
+    .panel.front { pointer-events: auto; }
+    .panel canvas { display: block; width: 100%; height: 100%; }
+    .panel-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    /* Volunteers: confident scale-up as the panel settles front —
+       overshoots slightly beyond the frame, then eases back to fit. */
+    .panel-vol { overflow: visible; }
+    .panel-vol .panel-img { border-radius: 14px; }
+    @keyframes volPop {
+      0%   { transform: scale(1); }
+      55%  { transform: scale(1.10); }
+      100% { transform: scale(1); }
+    }
+    .panel-vol .panel-img.pop { animation: volPop 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    /* Newsletter: generated editorial cover — pure HTML/CSS, palette only */
+    .nl-cover { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; padding: 2rem; }
+    .nl-mast { font-family: var(--serif); font-size: 2.1rem; color: var(--teal); line-height: 1; }
+    .nl-sub  { font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mut); margin-top: 0.55rem; }
+    .nl-rule { height: 3px; background: var(--terra); margin: 1.2rem 0 1.3rem; }
+    .nl-head { font-family: var(--serif); font-size: 1.45rem; line-height: 1.15; color: var(--ink); margin-bottom: 1.2rem; }
+    .nl-cols { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .nl-col  { border-radius: 2px; opacity: 0.85;
+      background: repeating-linear-gradient(to bottom, var(--line) 0 2px, transparent 2px 11px); }
+    .nl-foot { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); margin-top: 1.2rem; }
+
+    /* Side meta — one block per project, cross-faded by JS */
+    .show-meta { position: relative; width: min(300px, 84vw); min-height: 230px; }
+    .meta-item {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
       pointer-events: none;
     }
-    .tline {
-      fill: none;
-      stroke: var(--teal);
-      stroke-width: 2;
-      /* dasharray/offset set by JS to the measured path length */
+    .meta-item.on { opacity: 1; transform: none; pointer-events: auto; }
+    .meta-index { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; color: var(--terra); margin-bottom: 0.8rem; }
+    .meta-item h3 { font-size: 1.9rem; color: var(--teal); margin-bottom: 0.7rem; }
+    .meta-item p { font-size: 0.92rem; color: var(--mut); margin-bottom: 1rem; }
+
+    /* Carousel mode on narrower viewports: meta drops below the wheel */
+    @media (max-width: 1080px) {
+      .show-stage { flex-direction: column; gap: 2.2rem; }
+      .show-meta { min-height: 190px; text-align: center; }
+      .show-meta .chips { justify-content: center; }
+      .carousel { width: min(380px, 80vw); }
     }
-    .tstats {
+
+    /* Stacked fallback (mobile / reduced motion): no pin, no 3D —
+       three plain cards, each with its meta re-parented beneath it. */
+    .showcase.stacked { height: auto; padding: 6rem 0; }
+    .showcase.stacked .show-sticky { position: static; height: auto; overflow: visible; display: block; }
+    .showcase.stacked .show-head { position: static; margin-bottom: 3rem; }
+    .showcase.stacked .show-stage { flex-direction: column; padding: 0 1.5rem; }
+    .showcase.stacked .carousel {
+      perspective: none;
+      width: 100%;
+      aspect-ratio: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.6rem;
+    }
+    .showcase.stacked .panel {
       position: relative;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      text-align: center;
+      inset: auto;
+      width: min(420px, 100%);
+      aspect-ratio: 4 / 5;
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+      visibility: visible !important;
+      pointer-events: auto;
+      flex-shrink: 0;
     }
-    .tnum {
-      display: block;
-      font-family: var(--serif);
-      font-size: clamp(2.6rem, 6vw, 4.2rem);
-      line-height: 1;
-      color: var(--teal);
-      margin-bottom: 0.5rem;
-      font-variant-numeric: tabular-nums;
+    .showcase.stacked .show-meta { display: none; }
+    .showcase.stacked .meta-item {
+      position: static;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      width: min(420px, 100%);
+      margin-bottom: 2.6rem;
     }
-    .tlabel { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.04em; }
 
     /* ============================================================
        16. EXPERIENCE — quiet editorial list on off-white.
@@ -754,29 +752,11 @@
       .hero { padding: 7rem 0 5rem; }
       .scroll-hint { left: 1.5rem; }
 
-      .about-grid { grid-template-columns: 1fr; }
-      .about-grid .plx-wrap { max-width: 320px; }
-
-      .pgrid { grid-template-columns: 1fr; }
-      .pcard { border-right: none; border-bottom: 1px solid var(--line); }
-      .pcard:last-child { border-bottom: none; }
-
-      .noce-stage { height: 62vh; }
-
-      /* Journey: vertical map, same pinning */
-      .jmap-d { display: none; }
-      .jmap-m { display: block; }
-      .journey { height: 380vh; }
-      .journey-eyebrow { left: 1.5rem; top: 4.5rem; }
-      .jcity { left: 96px !important; right: 1.25rem; max-width: none; }
-      .jcity-utrecht { top: 13%; }
-      .jcity-rio     { top: 41%; }
-      .jcity-rdam    { top: 69%; }
-      .jcity h3 { font-size: 1.6rem; }
-      .jcity .plx-wrap { width: 120px; }
-      .jclose { bottom: 4vh; }
-
-      .tstats { gap: 1rem; }
+      /* vertical journey tightens */
+      .vj-item { grid-template-columns: 52px 1fr; gap: 1.1rem; padding: 1.6rem 0; }
+      .vj-badge { width: 52px; height: 52px; font-size: 0.85rem; }
+      .vj-svg { left: 25px; }
+      .vj-name { font-size: 1.15rem; }
 
       .xp { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.8rem 0; }
       .xp-photo { width: 180px; }
@@ -799,13 +779,13 @@
       html.js .unfold { opacity: 1; transform: none; clip-path: none; }
       html.js .unfold .stg { opacity: 1; transform: none; }
       html.js .plx-wrap { clip-path: none; }
-      .jcity, .jclose { opacity: 1 !important; transform: none !important; }
-      .jnode { fill: var(--bg); stroke: var(--bg); }
-      .jnode.final { fill: var(--terra); stroke: var(--terra); }
       .scroll-hint i { display: none; }
-      /* No pinning: the journey collapses to a single static screen
-         with the full route and all three cities visible. */
-      .journey { height: 100vh; }
+      /* vertical journey: fully drawn, all nodes visible */
+      .vj-item { opacity: 1 !important; transform: none !important; }
+      .vj-draw { stroke-dashoffset: 0 !important; }
+      /* showcase: JS applies .stacked, so panels are static cards;
+         metas are forced visible here as well */
+      .meta-item { opacity: 1; transform: none; pointer-events: auto; }
     }
   </style>
 </head>
@@ -821,10 +801,8 @@
     <a href="#top" class="nav-brand" id="navBrand">Antonio Di Domenico</a>
     <div class="nav-links">
       <a href="#about"      data-i18n="nav.about">About</a>
-      <a href="#projects"   data-i18n="nav.projects">Projects</a>
-      <a href="#journey"    data-i18n="nav.journey">Journey</a>
-      <a href="#thesis"     data-i18n="nav.thesis">Thesis</a>
       <a href="#experience" data-i18n="nav.experience">Experience</a>
+      <a href="#projects"   data-i18n="nav.projects">Projects</a>
       <a href="#contact"    data-i18n="nav.contact">Contact</a>
     </div>
     <div class="lang" role="group" aria-label="Language">
@@ -836,10 +814,8 @@
   <!-- Mobile dropdown (mirrors the nav links) -->
   <div id="mobileMenu">
     <a href="#about"      data-i18n="nav.about">About</a>
-    <a href="#projects"   data-i18n="nav.projects">Projects</a>
-    <a href="#journey"    data-i18n="nav.journey">Journey</a>
-    <a href="#thesis"     data-i18n="nav.thesis">Thesis</a>
     <a href="#experience" data-i18n="nav.experience">Experience</a>
+    <a href="#projects"   data-i18n="nav.projects">Projects</a>
     <a href="#contact"    data-i18n="nav.contact">Contact</a>
   </div>
 
@@ -867,152 +843,52 @@
   </header>
 
   <!-- ============================================================
-       2. ABOUT — body copy and pull quote are intentional placeholders;
-       Antonio writes these himself.
+       2. ABOUT — story, then the vertical university journey:
+       a line draws itself downward as the user scrolls, revealing
+       Utrecht → PUC-Rio → RSM one by one.
        ============================================================ -->
   <section id="about" class="about">
     <div class="wrap unfold">
       <span class="eyebrow stg" data-i18n="about.eyebrow">About</span>
-      <p class="about-quote stg" data-i18n="about.quote">[PULL QUOTE — I will write this]</p>
-      <div class="about-grid stg">
-        <p data-i18n="about.body">[ABOUT TEXT — I will write this]</p>
-        <div class="plx-wrap"><img class="plx" src="images/exchange.jpg" alt="Antonio during his exchange semester in Rio de Janeiro"></div>
-      </div>
-    </div>
-  </section>
+      <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
+      <p class="stg" data-i18n="about.p2">Since then I've followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I've built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.</p>
+      <p class="stg" data-i18n="about.p3">This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I'm in the middle of something I don't yet know how to finish.</p>
 
-  <!-- ============================================================
-       4. PROJECTS — thin-border newspaper grid
-       ============================================================ -->
-  <section id="projects">
-    <div class="wrap unfold">
-      <span class="eyebrow stg" data-i18n="projects.eyebrow">Selected Projects</span>
-      <h2 class="section-title stg" data-i18n="projects.title">Built on the side.</h2>
-      <div class="pgrid stg">
-
-        <article class="pcard">
-          <span class="ptag" data-i18n="p1.tag">Editorial</span>
-          <h3 data-i18n="p1.title">Honours Newsletter</h3>
-          <p data-i18n="p1.desc">Led the editorial team and LinkedIn of the Utrecht University Honours Programme for two years — editorial calendar, copy review, contributor coordination, designed in Canva.</p>
-          <div class="pimgs">
-            <div class="plx-wrap"><img class="plx" src="images/newsletter-1.png" alt="Honours newsletter, first spread"></div>
-            <div class="plx-wrap"><img class="plx" src="images/newsletter-2.png" alt="Honours newsletter, second spread"></div>
+      <div class="vjourney stg" id="vjourney">
+        <span class="eyebrow" data-i18n="edu.eyebrow">Education</span>
+        <div class="vj-rail" id="vjRail">
+          <svg class="vj-svg" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
+            <path class="vj-ghost" d="M1,0 L1,100" pathLength="1"/>
+            <path class="vj-draw" id="vjDraw" d="M1,0 L1,100" pathLength="1"/>
+          </svg>
+          <div class="vj-item">
+            <div class="vj-badge" aria-hidden="true">UU</div>
+            <div>
+              <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a></div>
+              <div class="vj-course" data-i18n="edu.uu">BSc Economics &amp; Business Economics · Honours Programme</div>
+            </div>
           </div>
-          <div class="chips"><span class="chip">Canva</span><span class="chip">LinkedIn</span></div>
-        </article>
-
-        <article class="pcard">
-          <span class="ptag" data-i18n="p2.tag">Community</span>
-          <h3 data-i18n="p2.title">Volunteers</h3>
-          <p data-i18n="p2.desc">Launched the first Utrecht food drive: approached the manager of five local Jumbo stores, produced bilingual EN/NL materials, and recruited and coordinated student volunteers.</p>
-          <div class="pimgs">
-            <div class="plx-wrap"><img class="plx" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive"></div>
+          <div class="vj-item">
+            <div class="vj-badge" aria-hidden="true">PUC</div>
+            <div>
+              <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a></div>
+              <div class="vj-course" data-i18n="edu.puc">Exchange semester · first time leaving Europe</div>
+            </div>
           </div>
-          <div class="chips"><span class="chip">EN / NL</span><span class="chip">Canva</span></div>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       5. NOCE — Three.js 3D map (full-width signature moment)
-       ============================================================ -->
-  <section id="noce">
-    <div class="unfold">
-      <div class="wrap noce-head">
-        <span class="eyebrow stg" data-i18n="noce.eyebrow">Noce</span>
-        <h2 class="section-title stg" data-i18n="noce.title">Noce — a map of what maps miss.</h2>
-        <p class="noce-sub stg" data-i18n="noce.sub">Local knowledge residents hold but Google Maps never captures. Hover a point.</p>
-      </div>
-      <!-- The Three.js canvas mounts here; the floating card follows points -->
-      <div class="noce-stage stg" id="noceStage" aria-label="Interactive 3D map of Europe with hidden local places">
-        <div class="noce-card" id="noceCard"></div>
-      </div>
-      <div class="wrap noce-head">
-        <p class="noce-desc stg" data-i18n="noce.desc">Built during AI Scouts — a selective programme I was admitted to — and named after my grandmother's surname.</p>
-        <div class="chips stg" style="justify-content:center">
-          <span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span><span class="chip">Google Stitch</span>
+          <div class="vj-item vj-final">
+            <div class="vj-badge" aria-hidden="true">RSM</div>
+            <div>
+              <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM Rotterdam</a></div>
+              <div class="vj-course" data-i18n="edu.rsm">MSc Finance &amp; Investments · September 2026</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================
-       5. EDUCATION — ACADEMIC JOURNEY — pinned scroll storytelling.
-       Two SVGs: horizontal route (desktop) and vertical route (mobile).
-       JS drives stroke-dashoffset + node/city reveals from progress.
-       ============================================================ -->
-  <section id="journey" class="journey" aria-label="Academic journey: Utrecht, Rio de Janeiro, Rotterdam">
-    <div class="journey-sticky" id="journeySticky">
-      <span class="eyebrow journey-eyebrow" data-i18n="journey.eyebrow">Education</span>
-
-      <!-- Desktop map: Utrecht (top-left) → Rio (bottom-centre) → Rotterdam (top-right) -->
-      <svg class="jmap jmap-d" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <path class="jpath-bg" d="M240,170 C360,300 430,450 580,440 C760,428 790,200 960,205"/>
-        <path class="jpath" id="jpathD" d="M240,170 C360,300 430,450 580,440 C760,428 790,200 960,205"/>
-        <circle class="jnode"       cx="240" cy="170" r="7"/>
-        <circle class="jnode"       cx="580" cy="440" r="7"/>
-        <circle class="jnode final" cx="960" cy="205" r="9"/>
-      </svg>
-
-      <!-- Mobile map: a vertical route, top to bottom -->
-      <svg class="jmap jmap-m" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <path class="jpath-bg" d="M60,120 C110,240 20,330 60,430 C100,530 30,610 60,720"/>
-        <path class="jpath" id="jpathM" d="M60,120 C110,240 20,330 60,430 C100,530 30,610 60,720"/>
-        <circle class="jnode"       cx="60" cy="120" r="7"/>
-        <circle class="jnode"       cx="60" cy="430" r="7"/>
-        <circle class="jnode final" cx="60" cy="720" r="9"/>
-      </svg>
-
-      <div class="jcity jcity-utrecht">
-        <h3>Utrecht</h3>
-        <p data-i18n="journey.utrecht.cap">Economics &amp; Business Economics · Honours Programme</p>
-        <div class="plx-wrap"><img class="plx" src="images/utrecht.jpg" alt="Utrecht"></div>
-      </div>
-      <div class="jcity jcity-rio">
-        <h3>Rio de Janeiro</h3>
-        <p data-i18n="journey.rio.cap">Exchange semester · first time leaving Europe</p>
-        <div class="plx-wrap"><img class="plx" src="images/rio.jpg" alt="Rio de Janeiro"></div>
-      </div>
-      <div class="jcity jcity-rdam">
-        <h3>Rotterdam</h3>
-        <p data-i18n="journey.rdam.cap">MSc Finance &amp; Investments · September 2026</p>
-        <p class="cap2" data-i18n="journey.rdam.cap2">Where I'm headed next.</p>
-        <div class="plx-wrap"><img class="plx" src="images/rotterdam.jpg" alt="Rotterdam"></div>
-      </div>
-
-      <p class="jclose" id="jClose" data-i18n="journey.closing">Three universities, three countries, one direction.</p>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       8. THESIS — data reveal
-       ============================================================ -->
-  <section id="thesis" class="thesis">
-    <div class="wrap unfold">
-      <span class="eyebrow stg" data-i18n="thesis.eyebrow">Research</span>
-      <h2 class="thesis-title stg" data-i18n="thesis.title">Do Chinese Capital Controls Raise the Cost of Debt for European Firms?</h2>
-      <p class="thesis-sub stg" data-i18n="thesis.sub">Bachelor Thesis · Utrecht University · Graded 9.2 / 10</p>
-      <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
-
-      <!-- Stylised chart (not real data) draws itself behind the stats;
-           the numbers count up in sync with the line. -->
-      <div class="thesis-viz stg" id="thesisViz">
-        <svg class="tchart" viewBox="0 0 900 260" preserveAspectRatio="none" aria-hidden="true">
-          <path class="tline" id="tLine" d="M0,205 C60,198 90,212 150,192 C210,172 250,180 310,168 C370,156 420,130 480,138 C540,146 590,108 650,96 C710,84 770,88 830,64 C860,52 880,48 900,40"/>
-        </svg>
-        <div class="tstats">
-          <div><span class="tnum" data-target="600" data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
-          <div><span class="tnum" data-target="22"  data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
-          <div><span class="tnum" data-target="9.2" data-decimals="1">0.0</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       9. EXPERIENCE — dark chapter, cinematic photo break on top
+       3. EXPERIENCE — ordered by importance, Ex Primo lead
        ============================================================ -->
   <section id="experience">
     <div class="wrap unfold">
@@ -1026,7 +902,7 @@
           <div>
             <h3 class="xp-role" data-i18n="exp1.role">Accounting Assistant</h3>
             <div class="xp-org" data-i18n="exp1.org">Ex Primo · Communication &amp; Marketing Agency — Italy</div>
-            <p class="xp-desc" data-i18n="exp1.desc">Supporting pension-fund accounting alongside a team whose daily work is campaigns, content and digital communication — one reason I chose it.</p>
+            <p class="xp-desc" data-i18n="exp1.desc">Support client accounting for a pension fund at a communication and marketing agency, reporting to the Head of Administration.</p>
           </div>
         </div>
 
@@ -1035,7 +911,7 @@
           <div>
             <h3 class="xp-role" data-i18n="exp2.role">Mathematics &amp; Statistics Tutor</h3>
             <div class="xp-org" data-i18n="exp2.org">AthenaSummary</div>
-            <p class="xp-desc" data-i18n="exp2.desc">Built all online course material from scratch — slides, worked examples and statistics exercises — tailored to student level.</p>
+            <p class="xp-desc" data-i18n="exp2.desc">Built the full online course material from scratch — slides, worked examples and statistics exercises.</p>
             <div class="xp-photo plx-wrap"><img class="plx" src="images/athena-1.png" alt="AthenaSummary course material"></div>
           </div>
         </div>
@@ -1054,7 +930,64 @@
   </section>
 
   <!-- ============================================================
-       11. CONTACT
+       4. PROJECTS — ROTATING PANEL SHOWCASE (pinned).
+       Three identical 4:5 panels rotate through the single front
+       position, scroll-linked with expo-out settling. Panel 1 hosts
+       the LIVE Noce Three.js map (interactive only when front-flat),
+       panel 2 a generated editorial cover, panel 3 the volunteers
+       photo with a scale-up on settle. JS adds .stacked on mobile /
+       reduced motion, which degrades everything to static cards.
+       ============================================================ -->
+  <section id="projects" class="showcase" aria-label="Selected projects">
+    <div class="show-sticky" id="showSticky">
+      <div class="show-head">
+        <span class="eyebrow" data-i18n="show.eyebrow">Selected Projects</span>
+      </div>
+      <div class="show-stage">
+        <div class="carousel" id="carousel">
+          <div class="panel panel-noce">
+            <!-- Three.js canvas is inserted here by JS -->
+            <div class="noce-card" id="noceCard"></div>
+          </div>
+          <div class="panel panel-news">
+            <!-- generated editorial cover: design element, stays English -->
+            <div class="nl-cover" aria-hidden="true">
+              <div class="nl-mast">Honours</div>
+              <div class="nl-sub">Utrecht University · Programme Newsletter</div>
+              <div class="nl-rule"></div>
+              <div class="nl-head">Voices from the Programme — the Interview Issue</div>
+              <div class="nl-cols"><div class="nl-col"></div><div class="nl-col"></div></div>
+              <div class="nl-foot">Edition 12 · Spring</div>
+            </div>
+          </div>
+          <div class="panel panel-vol">
+            <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive">
+          </div>
+        </div>
+        <div class="show-meta" id="showMeta">
+          <div class="meta-item">
+            <span class="meta-index">01 / 03</span>
+            <h3 data-i18n="sp1.title">Noce</h3>
+            <p data-i18n="sp1.cap">Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.</p>
+            <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span></div>
+          </div>
+          <div class="meta-item">
+            <span class="meta-index">02 / 03</span>
+            <h3 data-i18n="sp2.title">Honours Newsletter</h3>
+            <p data-i18n="sp2.cap">Led the editorial team and LinkedIn of the Utrecht Honours Programme for two years.</p>
+          </div>
+          <div class="meta-item">
+            <span class="meta-index">03 / 03</span>
+            <h3 data-i18n="sp3.title">Volunteers</h3>
+            <p data-i18n="sp3.cap">Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. CONTACT
        ============================================================ -->
   <section id="contact" class="teal">
     <div class="wrap unfold">
@@ -1097,28 +1030,29 @@
        ========================================================== */
     var translations = {
       en: {
-        'nav.about': 'About', 'nav.projects': 'Projects', 'nav.journey': 'Journey',
-        'nav.thesis': 'Thesis', 'nav.experience': 'Experience', 'nav.contact': 'Contact',
+        'nav.about': 'About', 'nav.experience': 'Experience', 'nav.projects': 'Projects', 'nav.contact': 'Contact',
 
         'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
         'hero.line': 'A portfolio, built by hand, for the work I want to do next.',
         'hero.cta1': 'See my work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'About',
-        'about.quote': '[PULL QUOTE — I will write this]',
-        'about.body': '[ABOUT TEXT — I will write this]',
+        'about.p1': 'I’m Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.',
+        'about.p2': 'Since then I’ve followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I’ve built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.',
+        'about.p3': 'This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I’m in the middle of something I don’t yet know how to finish.',
+        'edu.eyebrow': 'Education',
+        'edu.uu': 'BSc Economics &amp; Business Economics · Honours Programme',
+        'edu.puc': 'Exchange semester · first time leaving Europe',
+        'edu.rsm': 'MSc Finance &amp; Investments · September 2026',
 
-        'projects.eyebrow': 'Selected Projects',
-        'projects.title': 'Built on the side.',
-        'p1.tag': 'Editorial', 'p1.title': 'Honours Newsletter',
-        'p1.desc': 'Led the editorial team and LinkedIn of the Utrecht University Honours Programme for two years — editorial calendar, copy review, contributor coordination, designed in Canva.',
-        'p2.tag': 'Community', 'p2.title': 'Volunteers',
-        'p2.desc': 'Launched the first Utrecht food drive: approached the manager of five local Jumbo stores, produced bilingual EN/NL materials, and recruited and coordinated student volunteers.',
+        'show.eyebrow': 'Selected Projects',
+        'sp1.title': 'Noce',
+        'sp1.cap': 'Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.',
+        'sp2.title': 'Honours Newsletter',
+        'sp2.cap': 'Led the editorial team and LinkedIn of the Utrecht Honours Programme for two years.',
+        'sp3.title': 'Volunteers',
+        'sp3.cap': 'Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.',
 
-        'noce.eyebrow': 'Noce',
-        'noce.title': 'Noce — a map of what maps miss.',
-        'noce.sub': 'Local knowledge residents hold but Google Maps never captures. Hover a point.',
-        'noce.desc': 'Built during AI Scouts — a selective programme I was admitted to — and named after my grandmother’s surname.',
         'noce.spot1': 'Hidden thermal spring',
         'noce.spot2': 'Unmarked Roman ruin',
         'noce.spot3': 'A statue only locals can name',
@@ -1128,27 +1062,12 @@
         'noce.spot7': 'A roadside shrine',
         'noce.spot8': 'Where the best view actually is',
 
-        'journey.eyebrow': 'Education',
-        'journey.utrecht.cap': 'Economics &amp; Business Economics · Honours Programme',
-        'journey.rio.cap': 'Exchange semester · first time leaving Europe',
-        'journey.rdam.cap': 'MSc Finance &amp; Investments · September 2026',
-        'journey.rdam.cap2': 'Where I’m headed next.',
-        'journey.closing': 'Three universities, three countries, one direction.',
-
-        'thesis.eyebrow': 'Research',
-        'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
-        'thesis.sub': 'Bachelor Thesis · Utrecht University · Graded 9.2 / 10',
-        'thesis.p': 'My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I’m proudest of, not for the number but because the question was mine.',
-        'thesis.s1': 'STOXX Europe 600 firms',
-        'thesis.s2': 'years of panel data',
-        'thesis.s3': 'final grade',
-
         'exp.eyebrow': 'Experience',
         'exp.title': 'Work, study, and everything in between.',
         'exp1.role': 'Accounting Assistant', 'exp1.org': 'Ex Primo · Communication &amp; Marketing Agency — Italy',
-        'exp1.desc': 'Supporting pension-fund accounting alongside a team whose daily work is campaigns, content and digital communication — one reason I chose it.',
+        'exp1.desc': 'Support client accounting for a pension fund at a communication and marketing agency, reporting to the Head of Administration.',
         'exp2.role': 'Mathematics &amp; Statistics Tutor', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Built all online course material from scratch — slides, worked examples and statistics exercises — tailored to student level.',
+        'exp2.desc': 'Built the full online course material from scratch — slides, worked examples and statistics exercises.',
         'exp3.role': 'Warehouse Operations', 'exp3.org': 'Picnic &amp; Jumbo',
         'exp3.desc': 'Steady, practical work alongside my studies.',
 
@@ -1160,21 +1079,17 @@
 
       /* ------- ITALIAN — replace every value with a real translation ------- */
       it: {
-        'nav.about': '[IT: translate]', 'nav.projects': '[IT: translate]', 'nav.journey': '[IT: translate]',
-        'nav.thesis': '[IT: translate]', 'nav.experience': '[IT: translate]', 'nav.contact': '[IT: translate]',
+        'nav.about': '[IT: translate]', 'nav.experience': '[IT: translate]', 'nav.projects': '[IT: translate]', 'nav.contact': '[IT: translate]',
         'hero.eyebrow': '[IT: translate]', 'hero.line': '[IT: translate]',
         'hero.cta1': '[IT: translate]', 'hero.cta2': '[IT: translate]', 'hero.scroll': '[IT: translate]',
-        'about.eyebrow': '[IT: translate]', 'about.quote': '[IT: translate]', 'about.body': '[IT: translate]',
-        'projects.eyebrow': '[IT: translate]', 'projects.title': '[IT: translate]',
-        'p1.tag': '[IT: translate]', 'p1.title': '[IT: translate]', 'p1.desc': '[IT: translate]',
-        'p2.tag': '[IT: translate]', 'p2.title': '[IT: translate]', 'p2.desc': '[IT: translate]',
-        'noce.eyebrow': '[IT: translate]', 'noce.title': '[IT: translate]', 'noce.sub': '[IT: translate]', 'noce.desc': '[IT: translate]',
+        'about.eyebrow': '[IT: translate]', 'about.p1': '[IT: translate]', 'about.p2': '[IT: translate]', 'about.p3': '[IT: translate]',
+        'edu.eyebrow': '[IT: translate]', 'edu.uu': '[IT: translate]', 'edu.puc': '[IT: translate]', 'edu.rsm': '[IT: translate]',
+        'show.eyebrow': '[IT: translate]',
+        'sp1.title': 'Noce', 'sp1.cap': '[IT: translate]',
+        'sp2.title': '[IT: translate]', 'sp2.cap': '[IT: translate]',
+        'sp3.title': '[IT: translate]', 'sp3.cap': '[IT: translate]',
         'noce.spot1': '[IT: translate]', 'noce.spot2': '[IT: translate]', 'noce.spot3': '[IT: translate]', 'noce.spot4': '[IT: translate]',
         'noce.spot5': '[IT: translate]', 'noce.spot6': '[IT: translate]', 'noce.spot7': '[IT: translate]', 'noce.spot8': '[IT: translate]',
-        'journey.eyebrow': '[IT: translate]', 'journey.utrecht.cap': '[IT: translate]',
-        'journey.rio.cap': '[IT: translate]', 'journey.rdam.cap': '[IT: translate]', 'journey.rdam.cap2': '[IT: translate]', 'journey.closing': '[IT: translate]',
-        'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
-        'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]',
         'exp.eyebrow': '[IT: translate]', 'exp.title': '[IT: translate]',
         'exp1.role': '[IT: translate]', 'exp1.org': '[IT: translate]', 'exp1.desc': '[IT: translate]',
         'exp2.role': '[IT: translate]', 'exp2.org': '[IT: translate]', 'exp2.desc': '[IT: translate]',
@@ -1185,21 +1100,17 @@
 
       /* ------- DUTCH — replace every value with a real translation ------- */
       nl: {
-        'nav.about': '[NL: translate]', 'nav.projects': '[NL: translate]', 'nav.journey': '[NL: translate]',
-        'nav.thesis': '[NL: translate]', 'nav.experience': '[NL: translate]', 'nav.contact': '[NL: translate]',
+        'nav.about': '[NL: translate]', 'nav.experience': '[NL: translate]', 'nav.projects': '[NL: translate]', 'nav.contact': '[NL: translate]',
         'hero.eyebrow': '[NL: translate]', 'hero.line': '[NL: translate]',
         'hero.cta1': '[NL: translate]', 'hero.cta2': '[NL: translate]', 'hero.scroll': '[NL: translate]',
-        'about.eyebrow': '[NL: translate]', 'about.quote': '[NL: translate]', 'about.body': '[NL: translate]',
-        'projects.eyebrow': '[NL: translate]', 'projects.title': '[NL: translate]',
-        'p1.tag': '[NL: translate]', 'p1.title': '[NL: translate]', 'p1.desc': '[NL: translate]',
-        'p2.tag': '[NL: translate]', 'p2.title': '[NL: translate]', 'p2.desc': '[NL: translate]',
-        'noce.eyebrow': '[NL: translate]', 'noce.title': '[NL: translate]', 'noce.sub': '[NL: translate]', 'noce.desc': '[NL: translate]',
+        'about.eyebrow': '[NL: translate]', 'about.p1': '[NL: translate]', 'about.p2': '[NL: translate]', 'about.p3': '[NL: translate]',
+        'edu.eyebrow': '[NL: translate]', 'edu.uu': '[NL: translate]', 'edu.puc': '[NL: translate]', 'edu.rsm': '[NL: translate]',
+        'show.eyebrow': '[NL: translate]',
+        'sp1.title': 'Noce', 'sp1.cap': '[NL: translate]',
+        'sp2.title': '[NL: translate]', 'sp2.cap': '[NL: translate]',
+        'sp3.title': '[NL: translate]', 'sp3.cap': '[NL: translate]',
         'noce.spot1': '[NL: translate]', 'noce.spot2': '[NL: translate]', 'noce.spot3': '[NL: translate]', 'noce.spot4': '[NL: translate]',
         'noce.spot5': '[NL: translate]', 'noce.spot6': '[NL: translate]', 'noce.spot7': '[NL: translate]', 'noce.spot8': '[NL: translate]',
-        'journey.eyebrow': '[NL: translate]', 'journey.utrecht.cap': '[NL: translate]',
-        'journey.rio.cap': '[NL: translate]', 'journey.rdam.cap': '[NL: translate]', 'journey.rdam.cap2': '[NL: translate]', 'journey.closing': '[NL: translate]',
-        'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
-        'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]',
         'exp.eyebrow': '[NL: translate]', 'exp.title': '[NL: translate]',
         'exp1.role': '[NL: translate]', 'exp1.org': '[NL: translate]', 'exp1.desc': '[NL: translate]',
         'exp2.role': '[NL: translate]', 'exp2.org': '[NL: translate]', 'exp2.desc': '[NL: translate]',
@@ -1333,17 +1244,37 @@
       }, { threshold: 0.12 });
       document.querySelectorAll('.unfold').forEach(function (el) { unfoldIO.observe(el); });
 
-      /* clip-path wipe for images — journey photos are excluded: they are
-         revealed by the pinned-scroll logic when their city activates */
+      /* clip-path wipe for images on first reveal */
       var wipeIO = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (en.isIntersecting) { en.target.classList.add('seen'); wipeIO.unobserve(en.target); }
         });
       }, { threshold: 0.25 });
-      document.querySelectorAll('.plx-wrap').forEach(function (el) {
-        if (!el.closest('.jcity')) wipeIO.observe(el);
-      });
+      document.querySelectorAll('.plx-wrap').forEach(function (el) { wipeIO.observe(el); });
     }
+
+    /* ==========================================================
+       4b. IMAGE FALLBACKS — an image file that fails to load
+       becomes a clean neutral fill in the site palette instead of
+       the browser's broken-image icon.
+       ========================================================== */
+    document.querySelectorAll('img').forEach(function (img) {
+      function fail() {
+        if (img.classList.contains('hero-photo')) {
+          var d = document.createElement('div');   /* initials medallion */
+          d.className = 'hero-photo-ph';
+          d.textContent = 'AD';
+          img.replaceWith(d);
+        } else if (img.id === 'heroBg') {
+          img.style.display = 'none';               /* gradient + off-white remain */
+        } else {
+          var host = img.closest('.plx-wrap, .panel') || img.parentNode;
+          if (host && host.classList) host.classList.add('ph');
+        }
+      }
+      if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) fail();
+      else img.addEventListener('error', fail, { once: true });
+    });
 
     /* ==========================================================
        5. NAV — frosted after 60px, brand appears after the hero,
@@ -1375,88 +1306,146 @@
     });
 
     /* ==========================================================
-       6. ACADEMIC JOURNEY — pinned scroll storytelling.
-       Progress through the tall .journey wrapper is mapped onto the
-       SVG stroke-dashoffset (scroll-driven, NOT time-driven) and
-       onto the three city reveals. All measurements are cached and
-       recomputed on resize so the pin never breaks.
+       6. VERTICAL UNIVERSITY JOURNEY (About) — the line draws
+       downward as the rail moves through the viewport (scroll-
+       linked stroke-dashoffset; pathLength="1" makes the offset
+       simply 1 − progress). Each node reveals when the line
+       reaches its badge. Reduced motion: CSS shows everything.
        ========================================================== */
-    var jWrap   = document.querySelector('.journey');
-    var jCities = Array.prototype.slice.call(document.querySelectorAll('.jcity'));
-    var jClose  = document.getElementById('jClose');
-    var jState  = { path: null, nodes: [], len: 0, top: 0, runway: 1 };
-    /* fraction of the drawn line at which each city lights up
-       (Utrecht ≈ start, Rio ≈ midpoint, Rotterdam ≈ end) */
-    var J_THRESHOLDS = [0.03, 0.52, 0.97];
+    var vjRail  = document.getElementById('vjRail');
+    var vjDraw  = document.getElementById('vjDraw');
+    var vjItems = Array.prototype.slice.call(document.querySelectorAll('.vj-item'));
 
-    function journeyMeasure() {
-      if (REDUCED || !jWrap) return;
-      var svg = document.querySelector(window.innerWidth > 768 ? '.jmap-d' : '.jmap-m');
-      jState.path  = svg.querySelector('.jpath');
-      jState.nodes = Array.prototype.slice.call(svg.querySelectorAll('.jnode'));
-      jState.len   = jState.path.getTotalLength();
-      jState.path.style.strokeDasharray = jState.len;
-      var r = jWrap.getBoundingClientRect();
-      jState.top    = r.top + window.scrollY;
-      jState.runway = Math.max(1, jWrap.offsetHeight - window.innerHeight);
-    }
-
-    function journeyUpdate(scY) {
-      if (!jState.path) return;
-      var p = Math.min(1, Math.max(0, (scY - jState.top) / jState.runway));
-      /* the line finishes at 90% progress; the last 10% is dwell time
-         for Rotterdam's glow and the closing line */
-      var d = Math.min(1, p / 0.9);
-      jState.path.style.strokeDashoffset = jState.len * (1 - d);
-      for (var i = 0; i < 3; i++) {
-        var on = d >= J_THRESHOLDS[i];
-        jState.nodes[i].classList.toggle('on', on);
-        jCities[i].classList.toggle('on', on);
-        if (on) {
-          var w = jCities[i].querySelector('.plx-wrap');
-          if (w) w.classList.add('seen');
-        }
+    function vjourneyUpdate() {
+      if (!vjRail) return;
+      var r = vjRail.getBoundingClientRect();
+      var p = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - r.top) / r.height));
+      vjDraw.style.strokeDashoffset = 1 - p;
+      for (var i = 0; i < vjItems.length; i++) {
+        /* fraction of the rail at which this node's badge sits */
+        var f = (vjItems[i].offsetTop + 32) / vjRail.offsetHeight;
+        vjItems[i].classList.toggle('on', p >= f);
       }
-      jClose.classList.toggle('on', p > 0.93);
     }
 
     /* ==========================================================
-       7. THESIS DATA-REVEAL — the background line chart draws over
-       1.8s while the three stats count up in sync with it.
+       7. PROJECTS SHOWCASE — pinned rotating panels.
+       Scroll progress maps to a wheel position (0..2) through a
+       piecewise dwell/transition curve with expo-out easing, so
+       each panel decelerates crisply into a dwell where it rests
+       PERFECTLY flat. The rendered position lerps toward the
+       target every frame (inside the one shared main loop) and
+       snaps when close — the settled state is exactly 0°: sharp,
+       no wobble. Panels away from front fade + blur for depth;
+       only the front panel receives pointer events.
+       In .stacked mode (mobile / reduced motion) the panels are
+       static cards and each meta block moves beneath its panel.
        ========================================================== */
-    var tLine = document.getElementById('tLine');
-    var tViz  = document.getElementById('thesisViz');
-    var tNums = Array.prototype.slice.call(document.querySelectorAll('.tnum'));
+    var showEl    = document.getElementById('projects');
+    var panels    = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+    var metaBox   = document.getElementById('showMeta');
+    var metaItems = Array.prototype.slice.call(document.querySelectorAll('.meta-item'));
+    var volImg    = document.getElementById('volImg');
+    var noceTick = null, noceOnResize = null;   /* wired up by the Noce module below */
 
-    function setStatsFinal() {
-      tNums.forEach(function (n) {
-        n.textContent = parseFloat(n.getAttribute('data-target'))
-          .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
-      });
+    var show = { s: 0, target: 0, active: -1, stacked: false, modeSet: false, volFront: false };
+    var SHOW_DWELL = 0.18;                      /* scroll fraction spent flat per panel */
+    var SHOW_TRANS = (1 - 3 * SHOW_DWELL) / 2;  /* scroll fraction per transition */
+    var WHEEL_R = 300;                          /* px — wheel radius, axis behind the panels */
+
+    function expoOut(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
+    function showTarget(p) {                    /* progress 0..1 → wheel position 0..2 */
+      var d = SHOW_DWELL, t = SHOW_TRANS;
+      if (p <= d) return 0;
+      if (p <= d + t) return expoOut((p - d) / t);
+      if (p <= 2 * d + t) return 1;
+      if (p <= 2 * d + 2 * t) return 1 + expoOut((p - 2 * d - t) / t);
+      return 2;
     }
 
-    if (REDUCED) {
-      setStatsFinal();               /* chart is already fully drawn (no dasharray) */
-    } else if (tLine && tViz) {
-      var tLen = tLine.getTotalLength();
-      tLine.style.strokeDasharray  = tLen;
-      tLine.style.strokeDashoffset = tLen;   /* hidden until triggered */
+    function volPop() {                         /* volunteers photo scale-up */
+      if (!volImg) return;
+      volImg.classList.remove('pop');
+      void volImg.offsetWidth;                  /* restart the keyframe animation */
+      volImg.classList.add('pop');
+    }
 
-      new IntersectionObserver(function (entries, obs) {
-        if (!entries[0].isIntersecting) return;
-        obs.disconnect();
-        var t0 = performance.now();
-        (function tick(now) {
-          var tt = Math.min(1, (now - t0) / 1800);
-          var e  = 1 - Math.pow(1 - tt, 3);          /* ease-out cubic */
-          tLine.style.strokeDashoffset = tLen * (1 - e);
-          tNums.forEach(function (n) {
-            n.textContent = (parseFloat(n.getAttribute('data-target')) * e)
-              .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
-          });
-          if (tt < 1) requestAnimationFrame(tick); else setStatsFinal();
-        })(t0);
-      }, { threshold: 0.35 }).observe(tViz);
+    /* choose stacked vs carousel; idempotent, safe to call on resize */
+    function showApplyMode() {
+      if (!showEl) return;
+      var st = REDUCED || isMobile();
+      if (show.modeSet && st === show.stacked) return;
+      show.stacked = st; show.modeSet = true;
+      showEl.classList.toggle('stacked', st);
+      var i;
+      if (st) {
+        for (i = 0; i < 3; i++) panels[i].insertAdjacentElement('afterend', metaItems[i]);
+        for (i = 0; i < 3; i++) {
+          metaItems[i].classList.add('on');
+          panels[i].style.transform = ''; panels[i].style.opacity = '';
+          panels[i].style.filter = ''; panels[i].style.visibility = '';
+          panels[i].classList.add('front');
+        }
+      } else {
+        for (i = 0; i < 3; i++) metaBox.appendChild(metaItems[i]);
+        for (i = 0; i < 3; i++) metaItems[i].classList.toggle('on', i === Math.max(0, show.active));
+      }
+      if (noceOnResize) noceOnResize();
+    }
+
+    function showMeasure() { showApplyMode(); }
+
+    /* on scroll: recompute the target. Progress comes straight from a
+       live getBoundingClientRect(), so it can never go stale when the
+       layout above the section shifts (fonts, images, resizes). */
+    function showUpdate() {
+      if (!showEl || show.stacked) return;
+      var r = showEl.getBoundingClientRect();
+      var run = r.height - window.innerHeight;
+      if (run <= 0) { show.target = 0; return; }
+      var p = Math.min(1, Math.max(0, -r.top / run));
+      show.target = showTarget(p);
+    }
+
+    function showFrame() {                      /* every frame: lerp + write transforms */
+      if (!showEl || show.stacked) return;
+      var diff = show.target - show.s;
+      if (Math.abs(diff) < 0.0006) show.s = show.target;   /* snap → perfectly flat */
+      else show.s += diff * 0.14;
+
+      for (var i = 0; i < 3; i++) {
+        var ang = (i - show.s) * 90;
+        var abs = Math.abs(ang);
+        var el = panels[i];
+        if (abs > 100) { el.style.visibility = 'hidden'; el.classList.remove('front'); continue; }
+        el.style.visibility = 'visible';
+        el.style.transform = 'translateZ(' + (-WHEEL_R) + 'px) rotateX(' + ang.toFixed(3) + 'deg) translateZ(' + WHEEL_R + 'px)';
+        el.style.opacity = (1 - Math.min(abs, 90) / 90 * 0.55).toFixed(3);
+        el.style.filter = abs < 0.5 ? '' : 'blur(' + Math.min(abs / 22, 5).toFixed(2) + 'px)';
+        var front = abs < 8;
+        el.classList.toggle('front', front);
+        if (i === 2) {                          /* volunteers settles front → pop */
+          if (front && !show.volFront) volPop();
+          show.volFront = front;
+        }
+      }
+
+      var a = Math.round(show.s);               /* cross-fade the side meta */
+      if (a !== show.active && Math.abs(show.s - a) < 0.35) {
+        show.active = a;
+        for (var m = 0; m < 3; m++) metaItems[m].classList.toggle('on', m === a);
+      }
+    }
+
+    /* degrees panel 0 (the live Noce map) is away from front-flat */
+    function noceAngle() { return show.stacked ? 0 : Math.abs(show.s * 90); }
+
+    /* stacked mode: volunteers pop once on scroll-into-view instead */
+    if (!REDUCED && panels.length === 3) {
+      new IntersectionObserver(function (en, obs) {
+        if (en[0].isIntersecting && show.stacked) { volPop(); obs.disconnect(); }
+      }, { threshold: 0.5 }).observe(panels[2]);
     }
 
     /* ==========================================================
@@ -1500,7 +1489,7 @@
     /* ring state via event delegation — cheaper than per-frame hit tests */
     document.addEventListener('mouseover', function (e) {
       cursorEl.classList.toggle('ring',
-        !!(e.target.closest && e.target.closest('a, button, .pcard, canvas')));
+        !!(e.target.closest && e.target.closest('a, button, .panel, canvas')));
     }, { passive: true });
 
     var magnets = Array.prototype.slice.call(document.querySelectorAll('.magnetic'))
@@ -1563,15 +1552,18 @@
         if (!REDUCED) {
           heroBgUpdate(scY);
           parallaxUpdate();
-          journeyUpdate(scY);
+          vjourneyUpdate();
+          showUpdate();
         }
       }
+      if (!REDUCED) showFrame();          /* wheel lerp + transforms — every frame */
+      if (noceTick) noceTick();           /* live Noce render — SAME loop, no second rAF */
       if (desktopFx()) { cursorFrame(); magneticFrame(); }
       requestAnimationFrame(mainFrame);
     }
 
     /* Re-measure everything that depends on layout. Throttled resize. */
-    function measureAll() { journeyMeasure(); scrollDirty = true; fxUpdate(); }
+    function measureAll() { showMeasure(); scrollDirty = true; fxUpdate(); }
     var resizeTimer = null;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
@@ -1583,36 +1575,38 @@
     requestAnimationFrame(mainFrame);
 
     /* ==========================================================
-       11. NOCE — Three.js low-poly map of "Europe".
-       - flat-shaded displaced plane in teal, slowly auto-rotating
-       - 9 pulsing terracotta markers; hover (desktop) or tap
-         (mobile) grows one and shows a floating card
-       - map tilts a few degrees toward the cursor
-       - pixel ratio capped (1 on mobile), loop paused offscreen,
-         everything disposed on pagehide
+       11. NOCE — live Three.js low-poly map on the FRONT FACE of
+       showcase panel 1.
+       - flat-shaded displaced plane in teal, slowly auto-rotating,
+         9 pulsing terracotta markers with hover/tap cards
+       - tilts a few degrees toward the cursor
+       - pointer input counts ONLY while the panel is within 8° of
+         front-flat (noceAngle() — always 0 in stacked mode)
+       - rendered from the ONE shared main loop via noceTick; only
+         while the showcase is on screen; no second rAF anywhere
+       - pixelRatio capped at 2 (1.5 mobile); disposed on pagehide
        ========================================================== */
     (function initNoce() {
-      var stage = document.getElementById('noceStage');
-      var card  = document.getElementById('noceCard');
-      if (!stage || !window.THREE) return;           /* CDN blocked → static page */
-
-      var W = stage.clientWidth, H = stage.clientHeight;
+      var host = document.querySelector('.panel-noce');
+      var card = document.getElementById('noceCard');
+      if (!host || !showEl || !window.THREE) return; /* CDN blocked → static panel */
 
       /* WebGL can be unavailable (old GPU, blocklist, headless).
-         In that case the section simply stays static — no crash. */
+         In that case the panel simply stays a quiet blank card. */
       var renderer;
       try {
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       } catch (err) {
         return;
       }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5));
+      var W = host.clientWidth || 420, H = host.clientHeight || 525;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1.5 : 2));
       renderer.setSize(W, H);
-      stage.insertBefore(renderer.domElement, card);
+      host.insertBefore(renderer.domElement, card);
 
       var scene  = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 100);
-      camera.position.set(0, 5.2, 7.6);
+      var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+      camera.position.set(0, 4.8, 6.2);
       camera.lookAt(0, 0.2, 0);
 
       scene.add(new THREE.HemisphereLight(0xFAFAF7, 0x0E2A29, 1.0));
@@ -1630,8 +1624,9 @@
              + 0.08 * Math.cos(x * 3.3 + z * 2.6);
       }
 
-      /* terrain: displaced plane, non-indexed so flat shading shows facets */
-      var geo = new THREE.PlaneGeometry(11, 7.5, 34, 24);
+      /* terrain: displaced plane, non-indexed so flat shading shows facets
+         (portrait-ish proportions to suit the 4:5 panel) */
+      var geo = new THREE.PlaneGeometry(7.4, 8.4, 26, 30);
       geo.rotateX(-Math.PI / 2);
       var pos = geo.attributes.position;
       for (var i = 0; i < pos.count; i++) {
@@ -1645,8 +1640,8 @@
       group.add(terrain);
 
       /* markers — pulsing terracotta points */
-      var SPOTS = [[-3.6, -1.8], [-2.2, 0.9], [-1.0, -2.2], [0.3, 1.8], [1.2, -0.6],
-                   [2.4, -2.1], [3.3, 1.2], [-0.5, -0.2], [2.0, 2.4]];
+      var SPOTS = [[-2.4, -2.6], [-1.5, 0.9], [-0.6, -1.6], [0.4, 2.4], [0.9, -0.4],
+                   [1.8, -2.3], [2.3, 1.3], [-0.3, -0.1], [1.4, 3.0]];
       var markerGeo = new THREE.SphereGeometry(0.09, 16, 16);
       var markers = SPOTS.map(function (s, idx) {
         var m = new THREE.Mesh(markerGeo, new THREE.MeshBasicMaterial({ color: 0xC7623F }));
@@ -1661,6 +1656,10 @@
       var hovered = -1;                              /* marker index or -1 */
       var autoY = 0;                                 /* auto-rotation angle */
       var vec = new THREE.Vector3();
+      var showVisible = false;
+
+      /* the interaction gate: stacked mode, or within 8° of flat */
+      function interactive() { return noceAngle() < 8; }
 
       function toNDC(clientX, clientY) {
         var r = renderer.domElement.getBoundingClientRect();
@@ -1668,6 +1667,7 @@
         pointer.y = -((clientY - r.top) / r.height) * 2 + 1;
       }
       renderer.domElement.addEventListener('mousemove', function (e) {
+        if (!interactive()) return;
         toNDC(e.clientX, e.clientY); pointer.active = true;
       }, { passive: true });
       renderer.domElement.addEventListener('mouseleave', function () {
@@ -1675,24 +1675,36 @@
       }, { passive: true });
       /* tap-to-select on touch devices (click also fires after a tap) */
       renderer.domElement.addEventListener('click', function (e) {
+        if (!interactive()) return;
         toNDC(e.clientX, e.clientY);
         raycaster.setFromCamera(pointer, camera);
         var hit = raycaster.intersectObjects(markers);
         hovered = hit.length ? hit[0].object.userData.idx : -1;
       });
 
-      function noceFrame(now) {
-        /* auto-rotate + tilt toward cursor (skipped under reduced motion) */
-        if (!REDUCED) {
-          autoY += 0.0016;
-          var nx = (mx / window.innerWidth) * 2 - 1;
-          var ny = (my / window.innerHeight) * 2 - 1;
-          group.rotation.y = autoY + (isMobile() ? 0 : nx * 0.10);
-          group.rotation.x = isMobile() ? 0 : ny * 0.06;
+      /* one frame of the map — called from the shared main loop */
+      noceTick = function () {
+        if (!showVisible) return;
+        var now = performance.now();
+
+        /* leaving the front angle cleanly cancels any hover state */
+        if (!interactive() && (pointer.active || hovered !== -1)) {
+          pointer.active = false;
+          hovered = -1;
+          card.classList.remove('show');
         }
 
-        /* hover detection (desktop) */
-        if (pointer.active) {
+        if (!REDUCED) {
+          autoY += 0.0016;
+          var tiltOK = interactive() && FINE && !isMobile();
+          var nx = tiltOK ? (mx / window.innerWidth) * 2 - 1 : 0;
+          var ny = tiltOK ? (my / window.innerHeight) * 2 - 1 : 0;
+          group.rotation.y = autoY + nx * 0.10;
+          group.rotation.x = ny * 0.06;
+        }
+
+        /* hover detection (desktop, only while front-flat) */
+        if (pointer.active && interactive()) {
           raycaster.setFromCamera(pointer, camera);
           var hit = raycaster.intersectObjects(markers);
           hovered = hit.length ? hit[0].object.userData.idx : -1;
@@ -1721,33 +1733,27 @@
         }
 
         renderer.render(scene, camera);
-      }
+      };
 
-      /* run the loop only while the section is on screen */
-      var rafId = null, visible = false;
-      function loop(now) {
-        if (!visible) { rafId = null; return; }
-        noceFrame(now || performance.now());
-        rafId = requestAnimationFrame(loop);
-      }
+      /* render only while the showcase is on screen */
       new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        if (visible && rafId === null) rafId = requestAnimationFrame(loop);
-      }, { threshold: 0.05 }).observe(stage);
+        showVisible = entries[0].isIntersecting;
+      }, { threshold: 0.02 }).observe(showEl);
 
-      function noceResize() {
-        W = stage.clientWidth; H = stage.clientHeight;
+      /* resize: keep the canvas matched to the panel (also called by
+         showApplyMode when the layout mode flips) */
+      noceOnResize = function () {
+        W = host.clientWidth || W; H = host.clientHeight || H;
         camera.aspect = W / H;
         camera.updateProjectionMatrix();
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1.5 : 2));
         renderer.setSize(W, H);
-      }
-      window.addEventListener('resize', function () { setTimeout(noceResize, 160); });
+      };
+      window.addEventListener('resize', function () { setTimeout(noceOnResize, 160); });
 
-      /* proper teardown: stop the loop, free GPU resources */
+      /* proper teardown: unhook from the loop, free GPU resources */
       window.addEventListener('pagehide', function () {
-        visible = false;
-        if (rafId !== null) cancelAnimationFrame(rafId);
+        noceTick = null;
         markerGeo.dispose();
         terrain.geometry.dispose();
         terrain.material.dispose();
