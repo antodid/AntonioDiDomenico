@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antonio Di Domenico — Portfolio</title>
+  <meta name="description" content="Antonio Di Domenico — MSc Finance & Investments candidate at RSM Rotterdam. Curious about the places where economic thinking, technology and communication meet.">
+
+  <!-- ============================================================
+       EXTERNAL DEPENDENCIES — the only two allowed:
+       1. Google Fonts  (Fraunces / Inter / JetBrains Mono)
+       2. Three.js r128 (cdnjs) — used only for the Noce 3D map
+       ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Mark the document as JS-capable ASAP. All "hidden until animated"
+       styles are scoped to html.js, so with JS disabled the page renders
+       fully, statically — nothing is ever lost. -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <style>
+    /* ============================================================
+       1. DESIGN TOKENS
+       ============================================================ */
+    :root {
+      --bg:     #FAFAF7;   /* warm off-white                         */
+      --ink:    #141414;   /* near-black text / dark sections        */
+      --teal:   #1B4D4B;   /* primary accent                         */
+      --terra:  #C7623F;   /* secondary accent — micro-details only  */
+      --line:   #E4E2DB;   /* soft borders                           */
+      --mut:    #6E6C66;   /* secondary text                         */
+      --mut-d:  rgba(250, 250, 247, 0.55); /* secondary text on dark */
+      --line-d: rgba(250, 250, 247, 0.14); /* borders on dark        */
+      --ease:   cubic-bezier(0.16, 1, 0.3, 1); /* "expo-out" feel    */
+      --serif:  'Fraunces', Georgia, serif;
+      --sans:   'Inter', -apple-system, sans-serif;
+      --mono:   'JetBrains Mono', monospace;
+    }
+
+    /* ============================================================
+       2. RESET + BASE
+       ============================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.05;
+      /* Fraunces variable optical sizing: let big headings use the
+         display cut automatically. */
+      font-optical-sizing: auto;
+    }
+
+    img { max-width: 100%; display: block; }
+    a   { color: inherit; text-decoration: none; }
+    button { font: inherit; background: none; border: none; cursor: pointer; color: inherit; }
+
+    ::selection { background: var(--teal); color: var(--bg); }
+
+    /* When the custom cursor is active (desktop, fine pointer, motion OK)
+       the native cursor is hidden everywhere. */
+    html.cur, html.cur * { cursor: none !important; }
+
+    /* Layout helpers */
+    .wrap   { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+    section { padding: 8rem 0; position: relative; }
+    .dark   { background: var(--ink); color: var(--bg); }
+
+    .eyebrow {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      color: var(--teal);
+      margin-bottom: 2.5rem;
+    }
+    .dark .section-title { color: var(--bg); }
+
+    /* ============================================================
+       3. SCROLL PROGRESS INDICATOR — ultra-thin terracotta line
+       ============================================================ */
+    #progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--terra);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      z-index: 1200;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       4. CUSTOM CURSOR — teal dot, lags behind pointer, becomes a
+          soft ring over interactive elements. Desktop only (JS gates).
+       ============================================================ */
+    #cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 1.5px solid transparent;
+      pointer-events: none;
+      z-index: 1100;
+      transform: translate(-50%, -50%);
+      transition: width 0.25s var(--ease), height 0.25s var(--ease),
+                  background 0.25s var(--ease), border-color 0.25s var(--ease);
+      display: none; /* JS enables it */
+    }
+    html.cur #cursor { display: block; }
+    #cursor.ring {
+      width: 38px; height: 38px;
+      background: rgba(27, 77, 75, 0.08);
+      border-color: var(--teal);
+    }
+
+    /* ============================================================
+       5. NAV — transparent over the hero, frosted after 60px scroll
+       ============================================================ */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.05rem 2rem;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s, border-color 0.4s, backdrop-filter 0.4s;
+    }
+    #nav.scrolled {
+      background: rgba(250, 250, 247, 0.82);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      border-bottom-color: var(--line);
+    }
+
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: var(--teal);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+      white-space: nowrap;
+    }
+    .nav-brand.show { opacity: 1; transform: none; }
+
+    .nav-links {
+      display: flex;
+      gap: 1.6rem;
+      margin-left: auto;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--mut);
+    }
+    .nav-links a { transition: color 0.25s; }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* Language switcher — EN · IT · NL */
+    .lang {
+      display: flex;
+      gap: 0.15rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--mut);
+    }
+    .lang button {
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      transition: color 0.25s, background 0.25s;
+    }
+    .lang button.on { color: var(--teal); text-decoration: underline; text-underline-offset: 4px; }
+    .lang button:hover { color: var(--teal); }
+    .lang span { opacity: 0.4; }
+
+    /* Hamburger (mobile only) */
+    #burger {
+      display: none;
+      width: 40px; height: 40px;
+      margin-left: auto;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      align-items: center;
+    }
+    #burger i {
+      display: block;
+      width: 20px; height: 2px;
+      background: var(--ink);
+      transition: transform 0.3s var(--ease), opacity 0.3s;
+    }
+    #burger.open i:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #burger.open i:nth-child(2) { opacity: 0; }
+    #burger.open i:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile dropdown menu */
+    #mobileMenu {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 990;
+      padding: 5.5rem 1.5rem 2rem;
+      background: rgba(250, 250, 247, 0.96);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      display: none;
+      flex-direction: column;
+      gap: 1.2rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      transform: translateY(-8px);
+      opacity: 0;
+      transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+    #mobileMenu.open { opacity: 1; transform: none; }
+
+    /* ============================================================
+       6. HERO
+       ============================================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 8rem 0 6rem;
+    }
+
+    .hero-photo {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--line);
+      margin-bottom: 2rem;
+    }
+
+    /* The big name. JS splits it into .ch spans; each character fades
+       up from blur. Without JS the plain text simply shows. */
+    .hero-name {
+      font-size: clamp(3rem, 9vw, 6.5rem);
+      color: var(--teal);
+      margin-bottom: 1.8rem;
+      letter-spacing: -0.01em;
+    }
+    .hero-name .word { display: inline-block; white-space: nowrap; }
+    .hero-name .ch {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px);
+      filter: blur(8px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease);
+      /* per-character transition-delay is set inline by JS */
+    }
+    .hero-name.go .ch { opacity: 1; transform: none; filter: blur(0); }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--mut);
+      max-width: 34rem;
+      margin-bottom: 2.6rem;
+    }
+
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 1.7rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      will-change: transform; /* magnetic effect */
+    }
+    .btn-fill  { background: var(--teal); color: var(--bg); }
+    .btn-fill:hover  { background: #163f3d; }
+    .btn-ghost { border: 1px solid var(--line); color: var(--ink); }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* "Scroll" indicator, bottom-left */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mut);
+    }
+    .scroll-hint i {
+      display: block;
+      width: 1px; height: 34px;
+      background: var(--mut);
+      animation: hintPulse 2.2s var(--ease) infinite;
+      transform-origin: top;
+    }
+    @keyframes hintPulse {
+      0%   { transform: scaleY(0); opacity: 0; }
+      40%  { transform: scaleY(1); opacity: 1; }
+      100% { transform: scaleY(1) translateY(10px); opacity: 0; }
+    }
+
+    /* ============================================================
+       7. COMMIT-LINE STRIP — self-writing terminal on dark
+       ============================================================ */
+    .commit {
+      background: var(--ink);
+      padding: 2.6rem 2rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 2;
+      overflow-x: auto;
+    }
+    .commit .inner { max-width: 900px; margin: 0 auto; white-space: pre-wrap; word-break: break-word; }
+    .c-dim { color: var(--mut); }
+    .c-lit { color: var(--bg); }
+    .c-cursor {
+      display: inline-block;
+      width: 0.55em; height: 1.1em;
+      background: var(--terra);
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    /* JS empties the lines and retypes them; hide originals only when JS runs */
+    html.js .commit .typed-target { visibility: hidden; }
+    html.js .commit.typing .typed-target,
+    html.js .commit.done   .typed-target { visibility: visible; }
+
+    /* ============================================================
+       8. SECTION ENTRANCE — the "unfold"
+          scale 0.96 + fade + rise + clip-path reveal from the bottom.
+          Children marked .stg stagger in 100ms apart.
+       ============================================================ */
+    html.js .unfold {
+      opacity: 0;
+      transform: translateY(40px) scale(0.96);
+      clip-path: inset(12% 0 0 0);
+      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease), clip-path 0.9s var(--ease);
+    }
+    html.js .unfold.in {
+      opacity: 1;
+      transform: none;
+      clip-path: inset(0 0 0 0);
+    }
+    html.js .unfold .stg {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+    html.js .unfold.in .stg { opacity: 1; transform: none; }
+    /* stagger: each successive child waits 100ms longer */
+    html.js .unfold.in .stg:nth-child(1) { transition-delay: 0.00s; }
+    html.js .unfold.in .stg:nth-child(2) { transition-delay: 0.10s; }
+    html.js .unfold.in .stg:nth-child(3) { transition-delay: 0.20s; }
+    html.js .unfold.in .stg:nth-child(4) { transition-delay: 0.30s; }
+    html.js .unfold.in .stg:nth-child(5) { transition-delay: 0.40s; }
+    html.js .unfold.in .stg:nth-child(6) { transition-delay: 0.50s; }
+    html.js .unfold.in .stg:nth-child(7) { transition-delay: 0.60s; }
+    html.js .unfold.in .stg:nth-child(8) { transition-delay: 0.70s; }
+
+    /* ============================================================
+       9. ABOUT
+       ============================================================ */
+    .about-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+      line-height: 1.35;
+      color: var(--teal);
+      margin-bottom: 3rem;
+      max-width: 44rem;
+    }
+    .about p { color: var(--mut); margin-bottom: 1.6rem; max-width: 40rem; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* ============================================================
+       10. IMAGES — parallax + clip-wipe reveal.
+           .plx-wrap  : clips the image, gets the wipe-in
+           .plx       : the <img>, translated/scaled every frame by JS
+       ============================================================ */
+    .plx-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    html.js .plx-wrap {
+      clip-path: inset(0 100% 0 0); /* hidden — revealed left→right */
+      transition: clip-path 0.7s var(--ease);
+    }
+    html.js .plx-wrap.seen { clip-path: inset(0 0 0 0); }
+    /* The image is 12% taller than its clipping wrap and starts offset
+       upward, so the JS parallax shift (±6%) never exposes an edge. */
+    .plx {
+      position: absolute;
+      top: -6%; left: 0;
+      width: 100%;
+      height: 112%;
+      object-fit: cover;
+      will-change: transform;
+    }
+    .about-grid .plx-wrap { aspect-ratio: 3 / 4; }
+
+    /* ============================================================
+       11. PROJECTS — thin-border newspaper grid, no shadows
+       ============================================================ */
+    .pgrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--line);
+    }
+    .pcard {
+      position: relative;
+      padding: 2.2rem 1.8rem;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      background: var(--bg);
+      transition: background 0.35s;
+    }
+    .pcard:last-child { border-right: none; }
+    /* left-border-slide on hover */
+    .pcard::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--teal);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.45s var(--ease);
+    }
+    .pcard:hover::before { transform: scaleY(1); }
+
+    .ptag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--terra);
+    }
+    .pcard h3 { font-size: 1.5rem; color: var(--teal); }
+    .pcard p  { font-size: 0.92rem; color: var(--mut); flex: 1; }
+    .pimgs { display: flex; gap: 0.6rem; }
+    .pimgs .plx-wrap { aspect-ratio: 4 / 3; flex: 1; }
+    .plink { font-size: 0.9rem; font-weight: 600; color: var(--teal); }
+    .plink:hover { color: var(--terra); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .chip {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.22rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--mut);
+      white-space: nowrap;
+    }
+    .dark .chip { border-color: var(--line-d); color: var(--mut-d); }
+
+    /* ============================================================
+       12. NOCE — Three.js interactive map section
+       ============================================================ */
+    .noce-head { text-align: center; }
+    .noce-sub  { color: var(--mut); margin: 0 auto 1rem; max-width: 36rem; }
+    .noce-desc { color: var(--mut); font-size: 0.95rem; margin: 0 auto 2rem; max-width: 40rem; }
+
+    .noce-stage {
+      position: relative;
+      width: 100%;
+      height: min(72vh, 600px);
+      margin: 1rem 0 2rem;
+    }
+    .noce-stage canvas { display: block; width: 100%; height: 100%; }
+
+    /* Floating card shown beside a hovered/tapped point */
+    .noce-card {
+      position: absolute;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 14px)) scale(0.96);
+      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+      z-index: 5;
+    }
+    .noce-card.show { opacity: 1; transform: translate(-50%, calc(-100% - 14px)) scale(1); }
+    .noce-card::before {
+      content: '';
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--terra);
+      margin-right: 0.5rem;
+    }
+
+    /* ============================================================
+       13. MARQUEE TICKER — pure CSS, pauses on hover
+       ============================================================ */
+    .marquee {
+      background: var(--ink);
+      overflow: hidden;
+      padding: 1.05rem 0;
+      border-top: 1px solid var(--line-d);
+      border-bottom: 1px solid var(--line-d);
+    }
+    .marquee-track {
+      display: inline-flex;
+      white-space: nowrap;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mut-d);
+      animation: marquee 30s linear infinite;
+      will-change: transform;
+    }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+    .marquee-track span { padding-right: 2.5rem; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); } /* content is duplicated once */
+    }
+
+    /* ============================================================
+       14. ACADEMIC JOURNEY — pinned scroll storytelling.
+           Outer .journey is very tall; the inner .journey-sticky pins
+           for the whole distance while JS maps scroll progress onto
+           the SVG stroke-dashoffset and city reveals.
+       ============================================================ */
+    .journey {
+      height: 420vh;      /* the "scroll runway" for the pinned scene */
+      background: var(--ink);
+      color: var(--bg);
+      padding: 0;
+    }
+    .journey-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .journey-eyebrow {
+      position: absolute;
+      top: 5.5rem; left: 2.5rem;
+      z-index: 3;
+    }
+
+    .jmap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .jmap-m { display: none; } /* mobile variant, swapped in media query */
+
+    /* faint "ghost" of the full route */
+    .jpath-bg { fill: none; stroke: rgba(250,250,247,0.10); stroke-width: 2; }
+    /* the drawn route — dashoffset driven by scroll progress in JS */
+    .jpath    { fill: none; stroke: var(--bg); stroke-width: 2.5; stroke-linecap: round; }
+
+    .jnode { fill: var(--ink); stroke: rgba(250,250,247,0.4); stroke-width: 2; r: 7px; transition: fill 0.5s, stroke 0.5s; }
+    .jnode.on { fill: var(--bg); stroke: var(--bg); }
+    /* Rotterdam — the final, emphasised node: terracotta + glow */
+    .jnode.final.on {
+      fill: var(--terra);
+      stroke: var(--terra);
+      filter: drop-shadow(0 0 8px rgba(199, 98, 63, 0.9));
+    }
+
+    /* City blocks — absolutely positioned over the map */
+    .jcity {
+      position: absolute;
+      max-width: 300px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+      z-index: 2;
+    }
+    .jcity.on { opacity: 1; transform: none; }
+    .jcity h3 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); margin-bottom: 0.5rem; }
+    .jcity p  { font-size: 0.88rem; color: var(--mut-d); line-height: 1.55; margin-bottom: 0.9rem; max-width: 26ch; }
+    .jcity .plx-wrap { width: 150px; aspect-ratio: 3 / 2; }
+    .jcity-rdam h3 { color: var(--terra); }
+
+    /* Desktop positions — tuned to the SVG path coordinates */
+    .jcity-utrecht { left: 8%;  top: 19%; }
+    .jcity-rio     { left: 38%; top: 62%; }
+    .jcity-rdam    { right: 3%; top: 16%; }
+
+    .jclose {
+      position: absolute;
+      bottom: 8vh;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+      color: var(--mut-d);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+      padding: 0 2rem;
+      z-index: 2;
+    }
+    .jclose.on { opacity: 1; transform: none; color: var(--bg); }
+
+    /* ============================================================
+       15. THESIS — data reveal: background line chart draws itself
+           while the three stats count up in sync.
+       ============================================================ */
+    .thesis-title { font-size: clamp(1.9rem, 4vw, 2.9rem); color: var(--teal); margin-bottom: 0.8rem; }
+    .thesis-sub   { color: var(--mut); font-size: 0.95rem; margin-bottom: 2rem; }
+    .thesis p.body { color: var(--mut); max-width: 44rem; margin-bottom: 3.5rem; }
+
+    .thesis-viz { position: relative; padding: 2.5rem 0 1rem; }
+    .tchart {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .tline {
+      fill: none;
+      stroke: var(--teal);
+      stroke-width: 2;
+      /* dasharray/offset set by JS to the measured path length */
+    }
+    .tstats {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+    .tnum {
+      display: block;
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      line-height: 1;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .tlabel { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.04em; }
+
+    /* ============================================================
+       16. EXPERIENCE — dark chapter with cinematic photo break
+       ============================================================ */
+    .xp-break {
+      height: 62vh;
+      margin-bottom: 5rem;
+    }
+    .xp-break .plx-wrap { height: 100%; border-radius: 0; }
+
+    .xp {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 2.2rem;
+      padding: 2.4rem 0;
+      border-top: 1px solid var(--line-d);
+    }
+    .xp-period { font-size: 0.82rem; color: var(--mut-d); letter-spacing: 0.03em; padding-top: 0.45rem; }
+    .xp-role   { font-family: var(--serif); font-size: 1.45rem; margin-bottom: 0.15rem; }
+    .xp-org    { font-size: 0.85rem; font-weight: 600; color: var(--terra); letter-spacing: 0.05em; margin-bottom: 0.7rem; }
+    .xp-desc   { font-size: 0.92rem; color: var(--mut-d); max-width: 38rem; }
+    .xp-photo  { margin-top: 1.2rem; width: 220px; aspect-ratio: 3 / 2; }
+
+    /* ============================================================
+       17. SKILLS — three quiet columns
+       ============================================================ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+    }
+    .skills-grid h3 {
+      font-size: 1.25rem;
+      color: var(--teal);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .skills-grid ul { list-style: none; }
+    .skills-grid li {
+      font-size: 0.92rem;
+      color: var(--mut);
+      padding: 0.35rem 0;
+    }
+    .skills-grid li strong { color: var(--ink); font-weight: 500; }
+
+    /* ============================================================
+       18. CONTACT + FOOTER
+       ============================================================ */
+    .contact-title {
+      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      color: var(--bg);
+      max-width: 20ch;
+      margin-bottom: 3rem;
+    }
+    .contact-links { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+    .contact-links a {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      color: var(--bg);
+      border-bottom: 1px solid var(--line-d);
+      padding-bottom: 0.3rem;
+      transition: color 0.3s, border-color 0.3s;
+      will-change: transform;
+    }
+    .contact-links a:hover { color: var(--terra); border-color: var(--terra); }
+    .contact-links .arrow { color: var(--terra); }
+
+    footer {
+      background: var(--ink);
+      color: var(--mut-d);
+      font-size: 0.8rem;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--line-d);
+    }
+
+    /* ============================================================
+       19. LANGUAGE FADE — main content fades while texts swap
+       ============================================================ */
+    #page { transition: opacity 0.22s ease; }
+    #page.langfade { opacity: 0; }
+
+    /* Narrow desktops / tablets: the nav row gets tight (the brand
+       reserves its space even while invisible), so compress it a bit
+       before the hamburger takes over at 768px. */
+    @media (max-width: 980px) {
+      #nav { gap: 1rem; padding: 1rem 1.25rem; }
+      .nav-links { gap: 0.9rem; font-size: 0.82rem; }
+      .nav-brand { font-size: 0.95rem; }
+    }
+
+    /* ============================================================
+       20. MOBILE (max-width 768px)
+       ============================================================ */
+    @media (max-width: 768px) {
+      section { padding: 4.5rem 0; }
+      .wrap { padding: 0 1.5rem; }
+
+      .nav-links { display: none; }
+      #burger { display: flex; }
+      #mobileMenu { display: flex; visibility: hidden; }
+      #mobileMenu.open { visibility: visible; }
+      .lang { margin-left: 0; }
+      #nav { gap: 1rem; padding: 0.9rem 1.25rem; }
+
+      .hero { padding: 7rem 0 5rem; }
+      .scroll-hint { left: 1.5rem; }
+
+      .about-grid { grid-template-columns: 1fr; }
+      .about-grid .plx-wrap { max-width: 320px; }
+
+      .pgrid { grid-template-columns: 1fr; }
+      .pcard { border-right: none; border-bottom: 1px solid var(--line); }
+      .pcard:last-child { border-bottom: none; }
+
+      .noce-stage { height: 62vh; }
+
+      /* Journey: vertical map, same pinning */
+      .jmap-d { display: none; }
+      .jmap-m { display: block; }
+      .journey { height: 380vh; }
+      .journey-eyebrow { left: 1.5rem; top: 4.5rem; }
+      .jcity { left: 96px !important; right: 1.25rem; max-width: none; }
+      .jcity-utrecht { top: 13%; }
+      .jcity-rio     { top: 41%; }
+      .jcity-rdam    { top: 69%; }
+      .jcity h3 { font-size: 1.6rem; }
+      .jcity .plx-wrap { width: 120px; }
+      .jclose { bottom: 4vh; }
+
+      .tstats { gap: 1rem; }
+
+      .xp { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.8rem 0; }
+      .xp-photo { width: 180px; }
+      .xp-break { height: 40vh; margin-bottom: 3rem; }
+
+      .skills-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    /* ============================================================
+       21. REDUCED MOTION — all motion off, final states shown.
+           JS also checks this and skips its animation work entirely.
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      html.js .hero-name .ch { opacity: 1; transform: none; filter: none; }
+      html.js .unfold { opacity: 1; transform: none; clip-path: none; }
+      html.js .unfold .stg { opacity: 1; transform: none; }
+      html.js .plx-wrap { clip-path: none; }
+      html.js .commit .typed-target { visibility: visible; }
+      .c-cursor { display: none; }
+      .jcity, .jclose { opacity: 1 !important; transform: none !important; }
+      .jnode { fill: var(--bg); stroke: var(--bg); }
+      .jnode.final { fill: var(--terra); stroke: var(--terra); }
+      .scroll-hint i { display: none; }
+      /* No pinning: the journey collapses to a single static screen
+         with the full route and all three cities visible. */
+      .journey { height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll progress line + custom cursor (both driven by JS) -->
+  <div id="progress" aria-hidden="true"></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <nav id="nav" aria-label="Main navigation">
+    <a href="#top" class="nav-brand" id="navBrand">Antonio Di Domenico</a>
+    <div class="nav-links">
+      <a href="#about"      data-i18n="nav.about">About</a>
+      <a href="#projects"   data-i18n="nav.projects">Projects</a>
+      <a href="#journey"    data-i18n="nav.journey">Journey</a>
+      <a href="#thesis"     data-i18n="nav.thesis">Thesis</a>
+      <a href="#experience" data-i18n="nav.experience">Experience</a>
+      <a href="#contact"    data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-lang="en" class="on">EN</button><span>·</span><button data-lang="it">IT</button><span>·</span><button data-lang="nl">NL</button>
+    </div>
+    <button id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+  </nav>
+
+  <!-- Mobile dropdown (mirrors the nav links) -->
+  <div id="mobileMenu">
+    <a href="#about"      data-i18n="nav.about">About</a>
+    <a href="#projects"   data-i18n="nav.projects">Projects</a>
+    <a href="#journey"    data-i18n="nav.journey">Journey</a>
+    <a href="#thesis"     data-i18n="nav.thesis">Thesis</a>
+    <a href="#experience" data-i18n="nav.experience">Experience</a>
+    <a href="#contact"    data-i18n="nav.contact">Contact</a>
+  </div>
+
+  <div id="page">
+
+  <!-- ============================================================
+       1. HERO
+       ============================================================ -->
+  <header id="top" class="hero">
+    <div class="wrap">
+      <img class="hero-photo" src="images/antonio.jpg" alt="Portrait of Antonio Di Domenico" width="72" height="72">
+      <span class="eyebrow" data-i18n="hero.eyebrow">MSc Finance · RSM Rotterdam</span>
+      <!-- JS splits this into per-character spans for the filmic reveal -->
+      <h1 class="hero-name" id="heroName">Antonio Di Domenico</h1>
+      <p class="hero-desc" data-i18n="hero.desc">Curious about the places where economic thinking, technology and communication meet.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-fill magnetic"  data-i18n="hero.cta1">See my work</a>
+        <a href="#contact"  class="btn btn-ghost magnetic" data-i18n="hero.cta2">Get in touch</a>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span data-i18n="hero.scroll">Scroll</span><i></i></div>
+  </header>
+
+  <!-- ============================================================
+       2. COMMIT-LINE STRIP — self-writing terminal.
+       The full text lives in the HTML (so no-JS / reduced-motion users
+       see it); JS retypes it character by character. The commit message
+       and stack list deliberately stay in English in all languages.
+       ============================================================ -->
+  <div class="commit" id="commit" aria-label="Terminal commit line">
+    <div class="inner"><span class="typed-target" id="commitText"><span class="c-dim">$ git commit -m </span><span class="c-lit">"portfolio: built for RSM Digital Content Optimisation Project"</span>
+<span class="c-dim">— DP&amp;S · July 2026 · Claude Code · Google Stitch · GitHub · Netlify</span></span><span class="c-cursor" id="commitCursor" aria-hidden="true"></span></div>
+  </div>
+
+  <!-- ============================================================
+       3. ABOUT
+       ============================================================ -->
+  <section id="about" class="about">
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="about.eyebrow">About</span>
+      <p class="about-quote stg" data-i18n="about.quote">“I learned that connection with people does not require a shared background — only a shared willingness to be present.”</p>
+      <p class="stg" data-i18n="about.p1">I studied Economics and Business Economics at Utrecht University, where I completed the Honours Programme alongside my degree and graduated with a 7.85 GPA. My bachelor thesis — an econometric study of whether Chinese capital controls raise borrowing costs for European firms — was graded a 9.2, and it taught me that the questions I care about most sit somewhere between data and the real world.</p>
+      <div class="about-grid stg">
+        <p data-i18n="about.p2">In my third year I spent a semester at PUC-Rio in Rio de Janeiro — the first time I had ever left Europe. I learned Portuguese not in a classroom but through everyday life: buying fruit at the market, asking for directions, dancing samba badly and being corrected kindly. Travelling through South America afterwards quietly changed my sense of what is far away and what is possible.</p>
+        <div class="plx-wrap"><img class="plx" src="images/exchange.jpg" alt="Antonio during his exchange semester in Rio de Janeiro"></div>
+      </div>
+      <p class="stg" data-i18n="about.p3">These days I build things on the side — most recently Noce, a map of the local knowledge that never makes it onto Google Maps — while working part-time at Ex Primo, an Italian communication and marketing agency. In September 2026 I start the MSc in Finance and Investments at RSM Rotterdam. I learn fastest in the middle of something I don't yet know how to finish.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. PROJECTS — thin-border newspaper grid
+       ============================================================ -->
+  <section id="projects">
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="projects.eyebrow">Selected Projects</span>
+      <h2 class="section-title stg" data-i18n="projects.title">Built on the side.</h2>
+      <div class="pgrid stg">
+
+        <article class="pcard">
+          <span class="ptag" data-i18n="p1.tag">Editorial &amp; PR</span>
+          <h3 data-i18n="p1.title">Honours Newsletter</h3>
+          <p data-i18n="p1.desc">As PR officer of the Honours Programme I designed and wrote the programme's newsletter — layout, interviews and all — turning a mailing-list obligation into something students actually opened.</p>
+          <div class="pimgs">
+            <div class="plx-wrap"><img class="plx" src="images/newsletter-1.png" alt="Honours newsletter, first spread"></div>
+            <div class="plx-wrap"><img class="plx" src="images/newsletter-2.png" alt="Honours newsletter, second spread"></div>
+          </div>
+          <div class="chips"><span class="chip">Canva</span><span class="chip">WordPress</span></div>
+        </article>
+
+        <article class="pcard">
+          <span class="ptag" data-i18n="p2.tag">AI &amp; Education</span>
+          <h3 data-i18n="p2.title">AI Scouts</h3>
+          <p data-i18n="p2.desc">A student initiative exploring how AI tools are actually used in study and work. I helped run hands-on sessions where students tested tools on real tasks — and reported back honestly on what worked and what didn't.</p>
+          <div class="pimgs">
+            <div class="plx-wrap"><img class="plx" src="images/aiscouts.png" alt="AI Scouts session material"></div>
+          </div>
+          <div class="chips"><span class="chip">Claude</span><span class="chip">Canva</span><span class="chip">GitHub</span></div>
+        </article>
+
+        <article class="pcard">
+          <span class="ptag" data-i18n="p3.tag">Side Project</span>
+          <h3 data-i18n="p3.title">Noce</h3>
+          <p data-i18n="p3.desc">A map of what maps miss — the local knowledge residents hold but Google Maps never captures. Named after my grandmother's surname. Explored in full below.</p>
+          <a class="plink" href="#noce" data-i18n="p3.link">Explore the map ↓</a>
+          <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. NOCE — Three.js 3D map (full-width signature moment)
+       ============================================================ -->
+  <section id="noce">
+    <div class="unfold">
+      <div class="wrap noce-head">
+        <span class="eyebrow stg" data-i18n="noce.eyebrow">Noce</span>
+        <h2 class="section-title stg" data-i18n="noce.title">Noce — a map of what maps miss.</h2>
+        <p class="noce-sub stg" data-i18n="noce.sub">Local knowledge residents hold but Google Maps never captures. Hover a point.</p>
+      </div>
+      <!-- The Three.js canvas mounts here; the floating card follows points -->
+      <div class="noce-stage stg" id="noceStage" aria-label="Interactive 3D map of Europe with hidden local places">
+        <div class="noce-card" id="noceCard"></div>
+      </div>
+      <div class="wrap noce-head">
+        <p class="noce-desc stg" data-i18n="noce.desc">Noce is a side project about the knowledge that lives in people rather than databases: the hidden thermal spring, the unmarked ruin, the street corner with a story. Residents pin what they know; the map keeps it. It's named after my grandmother's surname — she is exactly the kind of person this knowledge lives with.</p>
+        <div class="chips stg" style="justify-content:center">
+          <span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span><span class="chip">Google Stitch</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. MARQUEE TICKER — dark strip, pure CSS scroll
+       (content duplicated once so the -50% loop is seamless)
+       ============================================================ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Lovable</span><span>·</span><span>Supabase</span><span>·</span><span>Antigravity</span><span>·</span><span>Google Maps API</span><span>·</span><span>Stata</span><span>·</span><span>R</span><span>·</span><span>Econometrics</span><span>·</span><span>Canva</span><span>·</span><span>GitHub</span><span>·</span><span>Blender</span><span>·</span><span>Claude</span><span>·</span><span>Google Stitch</span><span>·</span>
+      <span>Lovable</span><span>·</span><span>Supabase</span><span>·</span><span>Antigravity</span><span>·</span><span>Google Maps API</span><span>·</span><span>Stata</span><span>·</span><span>R</span><span>·</span><span>Econometrics</span><span>·</span><span>Canva</span><span>·</span><span>GitHub</span><span>·</span><span>Blender</span><span>·</span><span>Claude</span><span>·</span><span>Google Stitch</span><span>·</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       7. ACADEMIC JOURNEY — pinned scroll storytelling.
+       Two SVGs: horizontal route (desktop) and vertical route (mobile).
+       JS drives stroke-dashoffset + node/city reveals from progress.
+       ============================================================ -->
+  <section id="journey" class="journey" aria-label="Academic journey: Utrecht, Rio de Janeiro, Rotterdam">
+    <div class="journey-sticky" id="journeySticky">
+      <span class="eyebrow journey-eyebrow" data-i18n="journey.eyebrow">Academic Journey</span>
+
+      <!-- Desktop map: Utrecht (top-left) → Rio (bottom-centre) → Rotterdam (top-right) -->
+      <svg class="jmap jmap-d" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path class="jpath-bg" d="M240,170 C360,300 430,450 580,440 C760,428 790,200 960,205"/>
+        <path class="jpath" id="jpathD" d="M240,170 C360,300 430,450 580,440 C760,428 790,200 960,205"/>
+        <circle class="jnode"       cx="240" cy="170" r="7"/>
+        <circle class="jnode"       cx="580" cy="440" r="7"/>
+        <circle class="jnode final" cx="960" cy="205" r="9"/>
+      </svg>
+
+      <!-- Mobile map: a vertical route, top to bottom -->
+      <svg class="jmap jmap-m" viewBox="0 0 400 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path class="jpath-bg" d="M60,120 C110,240 20,330 60,430 C100,530 30,610 60,720"/>
+        <path class="jpath" id="jpathM" d="M60,120 C110,240 20,330 60,430 C100,530 30,610 60,720"/>
+        <circle class="jnode"       cx="60" cy="120" r="7"/>
+        <circle class="jnode"       cx="60" cy="430" r="7"/>
+        <circle class="jnode final" cx="60" cy="720" r="9"/>
+      </svg>
+
+      <div class="jcity jcity-utrecht">
+        <h3>Utrecht</h3>
+        <p data-i18n="journey.utrecht.cap">BSc Economics &amp; Business Economics · Honours Programme · GPA 7.85</p>
+        <div class="plx-wrap"><img class="plx" src="images/utrecht.jpg" alt="Utrecht"></div>
+      </div>
+      <div class="jcity jcity-rio">
+        <h3>Rio de Janeiro</h3>
+        <p data-i18n="journey.rio.cap">Exchange semester at PUC-Rio — the first time I left Europe.</p>
+        <div class="plx-wrap"><img class="plx" src="images/rio.jpg" alt="Rio de Janeiro"></div>
+      </div>
+      <div class="jcity jcity-rdam">
+        <h3>Rotterdam</h3>
+        <p data-i18n="journey.rdam.cap">Where I'm headed — and where this role is.</p>
+        <div class="plx-wrap"><img class="plx" src="images/rotterdam.jpg" alt="Rotterdam"></div>
+      </div>
+
+      <p class="jclose" id="jClose" data-i18n="journey.closing">Three universities, three countries, one direction.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8. THESIS — data reveal
+       ============================================================ -->
+  <section id="thesis" class="thesis">
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="thesis.eyebrow">Research</span>
+      <h2 class="thesis-title stg" data-i18n="thesis.title">Do Chinese Capital Controls Raise the Cost of Debt for European Firms?</h2>
+      <p class="thesis-sub stg" data-i18n="thesis.sub">Bachelor Thesis · Utrecht University · Graded 9.2 / 10</p>
+      <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. When capital cannot move freely out of China, it shifts global liquidity in ways that ripple into European credit markets. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years, pairing econometric methods with a question that was genuinely my own. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
+
+      <!-- Stylised chart (not real data) draws itself behind the stats;
+           the numbers count up in sync with the line. -->
+      <div class="thesis-viz stg" id="thesisViz">
+        <svg class="tchart" viewBox="0 0 900 260" preserveAspectRatio="none" aria-hidden="true">
+          <path class="tline" id="tLine" d="M0,205 C60,198 90,212 150,192 C210,172 250,180 310,168 C370,156 420,130 480,138 C540,146 590,108 650,96 C710,84 770,88 830,64 C860,52 880,48 900,40"/>
+        </svg>
+        <div class="tstats">
+          <div><span class="tnum" data-target="600" data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
+          <div><span class="tnum" data-target="22"  data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
+          <div><span class="tnum" data-target="9.2" data-decimals="1">0.0</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       9. EXPERIENCE — dark chapter, cinematic photo break on top
+       ============================================================ -->
+  <section id="experience" class="dark" style="padding-top:0">
+    <div class="xp-break">
+      <div class="plx-wrap"><img class="plx" src="images/graduation.jpg" alt="Graduation day at Utrecht University"></div>
+    </div>
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="exp.eyebrow">Experience</span>
+      <h2 class="section-title stg" data-i18n="exp.title">Work, study, and everything in between.</h2>
+
+      <div class="stg">
+        <div class="xp">
+          <div class="xp-period">Sep 2026 →</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp1.role">MSc Finance and Investments</h3>
+            <div class="xp-org" data-i18n="exp1.org">RSM · Rotterdam School of Management</div>
+            <p class="xp-desc" data-i18n="exp1.desc">Incoming graduate student — the destination of the journey drawn above.</p>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Jun 2026 – present</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp2.role">Accounting Assistant</h3>
+            <div class="xp-org" data-i18n="exp2.org">Ex Primo · Communication &amp; Marketing Agency</div>
+            <p class="xp-desc" data-i18n="exp2.desc">Supporting pension-fund accounting alongside a team whose daily work is campaigns and digital communication — one reason I chose it.</p>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Feb – May 2026</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp3.role">AI Scout</h3>
+            <div class="xp-org" data-i18n="exp3.org">AI Scouts</div>
+            <p class="xp-desc" data-i18n="exp3.desc">Explored how students actually use AI tools, running hands-on sessions and sharing honestly what worked and what didn't.</p>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Jan 2026 – present</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp4.role">Volunteers Co-Organizer</h3>
+            <div class="xp-org" data-i18n="exp4.org">Local Food Drive · Utrecht</div>
+            <p class="xp-desc" data-i18n="exp4.desc">Co-organising a local food drive: planning collections, recruiting volunteers and producing bilingual EN/NL materials.</p>
+            <div class="xp-photo plx-wrap"><img class="plx" src="images/volunteers.jpg" alt="Volunteers at the food drive"></div>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Aug 2025 – Jan 2026</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp5.role">Exchange Semester</h3>
+            <div class="xp-org" data-i18n="exp5.org">PUC-Rio · Rio de Janeiro</div>
+            <p class="xp-desc" data-i18n="exp5.desc">A semester of economics in Portuguese — and a crash course in everything else.</p>
+            <div class="xp-photo plx-wrap"><img class="plx" src="images/exchange.jpg" alt="Exchange semester in Rio de Janeiro"></div>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Feb 2024 – Jul 2025</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp6.role">PR Officer</h3>
+            <div class="xp-org" data-i18n="exp6.org">Honours Programme · Utrecht University</div>
+            <p class="xp-desc" data-i18n="exp6.desc">Ran communications for the Honours community — the newsletter, events, and the programme's public face.</p>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Oct 2024 – Jun 2025</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp7.role">Tutor</h3>
+            <div class="xp-org" data-i18n="exp7.org">AthenaSummary</div>
+            <p class="xp-desc" data-i18n="exp7.desc">Built all online course material from scratch — slides, worked examples, statistics exercises.</p>
+            <div class="xp-photo plx-wrap"><img class="plx" src="images/athena-1.png" alt="AthenaSummary course material"></div>
+          </div>
+        </div>
+
+        <div class="xp">
+          <div class="xp-period">Feb 2024 – present</div>
+          <div>
+            <h3 class="xp-role" data-i18n="exp8.role">Part-time Work</h3>
+            <div class="xp-org" data-i18n="exp8.org">Picnic &amp; Jumbo</div>
+            <p class="xp-desc" data-i18n="exp8.desc">Deliveries and supermarket shifts alongside my studies — the kind of work that keeps you organised and humble.</p>
+            <div class="xp-photo plx-wrap"><img class="plx" src="images/jumbo.jpg" alt="Working at Jumbo"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       10. SKILLS — three quiet columns
+       ============================================================ -->
+  <section id="skills">
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="skills.eyebrow">Skills</span>
+      <div class="skills-grid stg">
+        <div>
+          <h3 data-i18n="skills.c1">Tools &amp; Tech</h3>
+          <ul>
+            <li>Lovable</li><li>Supabase</li><li>Antigravity</li><li>GitHub</li><li>Claude</li><li>WordPress</li><li>Blender</li><li>Canva</li><li>Google Stitch</li>
+          </ul>
+        </div>
+        <div>
+          <h3 data-i18n="skills.c2">Research &amp; Data</h3>
+          <ul>
+            <li>Stata</li><li>R</li><li>MS Excel</li><li>Econometrics</li><li>Panel data</li>
+          </ul>
+        </div>
+        <div>
+          <h3 data-i18n="skills.c3">Languages</h3>
+          <ul>
+            <li data-i18n="skills.l1"><strong>Italian</strong> — Native</li>
+            <li data-i18n="skills.l2"><strong>English</strong> — Fluent</li>
+            <li data-i18n="skills.l3"><strong>Portuguese</strong> — Conversational</li>
+            <li data-i18n="skills.l4"><strong>Spanish</strong> — Basic</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       11. CONTACT
+       ============================================================ -->
+  <section id="contact" class="dark">
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="contact.eyebrow">Contact</span>
+      <h2 class="contact-title stg" data-i18n="contact.title">Always open to interesting projects and conversations.</h2>
+      <div class="contact-links stg">
+        <a class="magnetic" href="mailto:madlamps.co@gmail.com"><span data-i18n="contact.email">Email</span> <span class="arrow">↗</span></a>
+        <!-- TODO: replace with the real LinkedIn profile URL before going live -->
+        <a class="magnetic" href="https://www.linkedin.com/in/antonio-di-domenico" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <footer data-i18n="footer.text">© 2026 Antonio Di Domenico · Utrecht / Rotterdam</footer>
+
+  </div><!-- /#page -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ==========================================================
+       0. ENVIRONMENT FLAGS
+       All motion features check these. REDUCED short-circuits every
+       animation and lets the CSS "final state" rules take over.
+       ========================================================== */
+    var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var FINE    = window.matchMedia('(pointer: fine)').matches;
+    function isMobile() { return window.innerWidth <= 768; }
+    /* cursor + magnetic effects are desktop-only */
+    function desktopFx() { return FINE && !REDUCED && !isMobile(); }
+
+    /* ==========================================================
+       1. TRANSLATIONS
+       Full English; IT/NL are placeholders to be filled by a human
+       translator — they are intentionally NOT machine-translated.
+       Values are injected with innerHTML (all values are authored
+       in this file, never user input), so simple inline markup like
+       <strong> is allowed.
+       The commit line and the tool/stack names stay English always.
+       ========================================================== */
+    var translations = {
+      en: {
+        'nav.about': 'About', 'nav.projects': 'Projects', 'nav.journey': 'Journey',
+        'nav.thesis': 'Thesis', 'nav.experience': 'Experience', 'nav.contact': 'Contact',
+
+        'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
+        'hero.desc': 'Curious about the places where economic thinking, technology and communication meet.',
+        'hero.cta1': 'See my work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
+
+        'about.eyebrow': 'About',
+        'about.quote': '“I learned that connection with people does not require a shared background — only a shared willingness to be present.”',
+        'about.p1': 'I studied Economics and Business Economics at Utrecht University, where I completed the Honours Programme alongside my degree and graduated with a 7.85 GPA. My bachelor thesis — an econometric study of whether Chinese capital controls raise borrowing costs for European firms — was graded a 9.2, and it taught me that the questions I care about most sit somewhere between data and the real world.',
+        'about.p2': 'In my third year I spent a semester at PUC-Rio in Rio de Janeiro — the first time I had ever left Europe. I learned Portuguese not in a classroom but through everyday life: buying fruit at the market, asking for directions, dancing samba badly and being corrected kindly. Travelling through South America afterwards quietly changed my sense of what is far away and what is possible.',
+        'about.p3': 'These days I build things on the side — most recently Noce, a map of the local knowledge that never makes it onto Google Maps — while working part-time at Ex Primo, an Italian communication and marketing agency. In September 2026 I start the MSc in Finance and Investments at RSM Rotterdam. I learn fastest in the middle of something I don’t yet know how to finish.',
+
+        'projects.eyebrow': 'Selected Projects',
+        'projects.title': 'Built on the side.',
+        'p1.tag': 'Editorial &amp; PR', 'p1.title': 'Honours Newsletter',
+        'p1.desc': 'As PR officer of the Honours Programme I designed and wrote the programme’s newsletter — layout, interviews and all — turning a mailing-list obligation into something students actually opened.',
+        'p2.tag': 'AI &amp; Education', 'p2.title': 'AI Scouts',
+        'p2.desc': 'A student initiative exploring how AI tools are actually used in study and work. I helped run hands-on sessions where students tested tools on real tasks — and reported back honestly on what worked and what didn’t.',
+        'p3.tag': 'Side Project', 'p3.title': 'Noce',
+        'p3.desc': 'A map of what maps miss — the local knowledge residents hold but Google Maps never captures. Named after my grandmother’s surname. Explored in full below.',
+        'p3.link': 'Explore the map ↓',
+
+        'noce.eyebrow': 'Noce',
+        'noce.title': 'Noce — a map of what maps miss.',
+        'noce.sub': 'Local knowledge residents hold but Google Maps never captures. Hover a point.',
+        'noce.desc': 'Noce is a side project about the knowledge that lives in people rather than databases: the hidden thermal spring, the unmarked ruin, the street corner with a story. Residents pin what they know; the map keeps it. It’s named after my grandmother’s surname — she is exactly the kind of person this knowledge lives with.',
+        'noce.spot1': 'Hidden thermal spring',
+        'noce.spot2': 'Unmarked Roman ruin',
+        'noce.spot3': 'A statue only locals can name',
+        'noce.spot4': 'Forgotten mountain path',
+        'noce.spot5': 'The story behind a street corner',
+        'noce.spot6': 'Ancient olive tree',
+        'noce.spot7': 'A roadside shrine',
+        'noce.spot8': 'Where the best view actually is',
+
+        'journey.eyebrow': 'Academic Journey',
+        'journey.utrecht.cap': 'BSc Economics &amp; Business Economics · Honours Programme · GPA 7.85',
+        'journey.rio.cap': 'Exchange semester at PUC-Rio — the first time I left Europe.',
+        'journey.rdam.cap': 'Where I’m headed — and where this role is.',
+        'journey.closing': 'Three universities, three countries, one direction.',
+
+        'thesis.eyebrow': 'Research',
+        'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
+        'thesis.sub': 'Bachelor Thesis · Utrecht University · Graded 9.2 / 10',
+        'thesis.p': 'My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. When capital cannot move freely out of China, it shifts global liquidity in ways that ripple into European credit markets. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years, pairing econometric methods with a question that was genuinely my own. The result was a 9.2 — the grade I’m proudest of, not for the number but because the question was mine.',
+        'thesis.s1': 'STOXX Europe 600 firms',
+        'thesis.s2': 'years of panel data',
+        'thesis.s3': 'final grade',
+
+        'exp.eyebrow': 'Experience',
+        'exp.title': 'Work, study, and everything in between.',
+        'exp1.role': 'MSc Finance and Investments', 'exp1.org': 'RSM · Rotterdam School of Management',
+        'exp1.desc': 'Incoming graduate student — the destination of the journey drawn above.',
+        'exp2.role': 'Accounting Assistant', 'exp2.org': 'Ex Primo · Communication &amp; Marketing Agency',
+        'exp2.desc': 'Supporting pension-fund accounting alongside a team whose daily work is campaigns and digital communication — one reason I chose it.',
+        'exp3.role': 'AI Scout', 'exp3.org': 'AI Scouts',
+        'exp3.desc': 'Explored how students actually use AI tools, running hands-on sessions and sharing honestly what worked and what didn’t.',
+        'exp4.role': 'Volunteers Co-Organizer', 'exp4.org': 'Local Food Drive · Utrecht',
+        'exp4.desc': 'Co-organising a local food drive: planning collections, recruiting volunteers and producing bilingual EN/NL materials.',
+        'exp5.role': 'Exchange Semester', 'exp5.org': 'PUC-Rio · Rio de Janeiro',
+        'exp5.desc': 'A semester of economics in Portuguese — and a crash course in everything else.',
+        'exp6.role': 'PR Officer', 'exp6.org': 'Honours Programme · Utrecht University',
+        'exp6.desc': 'Ran communications for the Honours community — the newsletter, events, and the programme’s public face.',
+        'exp7.role': 'Tutor', 'exp7.org': 'AthenaSummary',
+        'exp7.desc': 'Built all online course material from scratch — slides, worked examples, statistics exercises.',
+        'exp8.role': 'Part-time Work', 'exp8.org': 'Picnic &amp; Jumbo',
+        'exp8.desc': 'Deliveries and supermarket shifts alongside my studies — the kind of work that keeps you organised and humble.',
+
+        'skills.eyebrow': 'Skills',
+        'skills.c1': 'Tools &amp; Tech', 'skills.c2': 'Research &amp; Data', 'skills.c3': 'Languages',
+        'skills.l1': '<strong>Italian</strong> — Native',
+        'skills.l2': '<strong>English</strong> — Fluent',
+        'skills.l3': '<strong>Portuguese</strong> — Conversational',
+        'skills.l4': '<strong>Spanish</strong> — Basic',
+
+        'contact.eyebrow': 'Contact',
+        'contact.title': 'Always open to interesting projects and conversations.',
+        'contact.email': 'Email',
+        'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
+      },
+
+      /* ------- ITALIAN — replace every value with a real translation ------- */
+      it: {
+        'nav.about': '[IT: translate]', 'nav.projects': '[IT: translate]', 'nav.journey': '[IT: translate]',
+        'nav.thesis': '[IT: translate]', 'nav.experience': '[IT: translate]', 'nav.contact': '[IT: translate]',
+        'hero.eyebrow': '[IT: translate]', 'hero.desc': '[IT: translate]',
+        'hero.cta1': '[IT: translate]', 'hero.cta2': '[IT: translate]', 'hero.scroll': '[IT: translate]',
+        'about.eyebrow': '[IT: translate]', 'about.quote': '[IT: translate]',
+        'about.p1': '[IT: translate]', 'about.p2': '[IT: translate]', 'about.p3': '[IT: translate]',
+        'projects.eyebrow': '[IT: translate]', 'projects.title': '[IT: translate]',
+        'p1.tag': '[IT: translate]', 'p1.title': '[IT: translate]', 'p1.desc': '[IT: translate]',
+        'p2.tag': '[IT: translate]', 'p2.title': '[IT: translate]', 'p2.desc': '[IT: translate]',
+        'p3.tag': '[IT: translate]', 'p3.title': '[IT: translate]', 'p3.desc': '[IT: translate]', 'p3.link': '[IT: translate]',
+        'noce.eyebrow': '[IT: translate]', 'noce.title': '[IT: translate]', 'noce.sub': '[IT: translate]', 'noce.desc': '[IT: translate]',
+        'noce.spot1': '[IT: translate]', 'noce.spot2': '[IT: translate]', 'noce.spot3': '[IT: translate]', 'noce.spot4': '[IT: translate]',
+        'noce.spot5': '[IT: translate]', 'noce.spot6': '[IT: translate]', 'noce.spot7': '[IT: translate]', 'noce.spot8': '[IT: translate]',
+        'journey.eyebrow': '[IT: translate]', 'journey.utrecht.cap': '[IT: translate]',
+        'journey.rio.cap': '[IT: translate]', 'journey.rdam.cap': '[IT: translate]', 'journey.closing': '[IT: translate]',
+        'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
+        'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]',
+        'exp.eyebrow': '[IT: translate]', 'exp.title': '[IT: translate]',
+        'exp1.role': '[IT: translate]', 'exp1.org': '[IT: translate]', 'exp1.desc': '[IT: translate]',
+        'exp2.role': '[IT: translate]', 'exp2.org': '[IT: translate]', 'exp2.desc': '[IT: translate]',
+        'exp3.role': '[IT: translate]', 'exp3.org': '[IT: translate]', 'exp3.desc': '[IT: translate]',
+        'exp4.role': '[IT: translate]', 'exp4.org': '[IT: translate]', 'exp4.desc': '[IT: translate]',
+        'exp5.role': '[IT: translate]', 'exp5.org': '[IT: translate]', 'exp5.desc': '[IT: translate]',
+        'exp6.role': '[IT: translate]', 'exp6.org': '[IT: translate]', 'exp6.desc': '[IT: translate]',
+        'exp7.role': '[IT: translate]', 'exp7.org': '[IT: translate]', 'exp7.desc': '[IT: translate]',
+        'exp8.role': '[IT: translate]', 'exp8.org': '[IT: translate]', 'exp8.desc': '[IT: translate]',
+        'skills.eyebrow': '[IT: translate]', 'skills.c1': '[IT: translate]', 'skills.c2': '[IT: translate]', 'skills.c3': '[IT: translate]',
+        'skills.l1': '[IT: translate]', 'skills.l2': '[IT: translate]', 'skills.l3': '[IT: translate]', 'skills.l4': '[IT: translate]',
+        'contact.eyebrow': '[IT: translate]', 'contact.title': '[IT: translate]', 'contact.email': '[IT: translate]',
+        'footer.text': '[IT: translate]'
+      },
+
+      /* ------- DUTCH — replace every value with a real translation ------- */
+      nl: {
+        'nav.about': '[NL: translate]', 'nav.projects': '[NL: translate]', 'nav.journey': '[NL: translate]',
+        'nav.thesis': '[NL: translate]', 'nav.experience': '[NL: translate]', 'nav.contact': '[NL: translate]',
+        'hero.eyebrow': '[NL: translate]', 'hero.desc': '[NL: translate]',
+        'hero.cta1': '[NL: translate]', 'hero.cta2': '[NL: translate]', 'hero.scroll': '[NL: translate]',
+        'about.eyebrow': '[NL: translate]', 'about.quote': '[NL: translate]',
+        'about.p1': '[NL: translate]', 'about.p2': '[NL: translate]', 'about.p3': '[NL: translate]',
+        'projects.eyebrow': '[NL: translate]', 'projects.title': '[NL: translate]',
+        'p1.tag': '[NL: translate]', 'p1.title': '[NL: translate]', 'p1.desc': '[NL: translate]',
+        'p2.tag': '[NL: translate]', 'p2.title': '[NL: translate]', 'p2.desc': '[NL: translate]',
+        'p3.tag': '[NL: translate]', 'p3.title': '[NL: translate]', 'p3.desc': '[NL: translate]', 'p3.link': '[NL: translate]',
+        'noce.eyebrow': '[NL: translate]', 'noce.title': '[NL: translate]', 'noce.sub': '[NL: translate]', 'noce.desc': '[NL: translate]',
+        'noce.spot1': '[NL: translate]', 'noce.spot2': '[NL: translate]', 'noce.spot3': '[NL: translate]', 'noce.spot4': '[NL: translate]',
+        'noce.spot5': '[NL: translate]', 'noce.spot6': '[NL: translate]', 'noce.spot7': '[NL: translate]', 'noce.spot8': '[NL: translate]',
+        'journey.eyebrow': '[NL: translate]', 'journey.utrecht.cap': '[NL: translate]',
+        'journey.rio.cap': '[NL: translate]', 'journey.rdam.cap': '[NL: translate]', 'journey.closing': '[NL: translate]',
+        'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
+        'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]',
+        'exp.eyebrow': '[NL: translate]', 'exp.title': '[NL: translate]',
+        'exp1.role': '[NL: translate]', 'exp1.org': '[NL: translate]', 'exp1.desc': '[NL: translate]',
+        'exp2.role': '[NL: translate]', 'exp2.org': '[NL: translate]', 'exp2.desc': '[NL: translate]',
+        'exp3.role': '[NL: translate]', 'exp3.org': '[NL: translate]', 'exp3.desc': '[NL: translate]',
+        'exp4.role': '[NL: translate]', 'exp4.org': '[NL: translate]', 'exp4.desc': '[NL: translate]',
+        'exp5.role': '[NL: translate]', 'exp5.org': '[NL: translate]', 'exp5.desc': '[NL: translate]',
+        'exp6.role': '[NL: translate]', 'exp6.org': '[NL: translate]', 'exp6.desc': '[NL: translate]',
+        'exp7.role': '[NL: translate]', 'exp7.org': '[NL: translate]', 'exp7.desc': '[NL: translate]',
+        'exp8.role': '[NL: translate]', 'exp8.org': '[NL: translate]', 'exp8.desc': '[NL: translate]',
+        'skills.eyebrow': '[NL: translate]', 'skills.c1': '[NL: translate]', 'skills.c2': '[NL: translate]', 'skills.c3': '[NL: translate]',
+        'skills.l1': '[NL: translate]', 'skills.l2': '[NL: translate]', 'skills.l3': '[NL: translate]', 'skills.l4': '[NL: translate]',
+        'contact.eyebrow': '[NL: translate]', 'contact.title': '[NL: translate]', 'contact.email': '[NL: translate]',
+        'footer.text': '[NL: translate]'
+      }
+    };
+
+    var currentLang = 'en';
+    try { currentLang = localStorage.getItem('lang') || 'en'; } catch (e) {}
+    if (!translations[currentLang]) currentLang = 'en';
+
+    /* Read a JS-side string (used by the Noce cards) in the active language */
+    function t(key) {
+      var d = translations[currentLang];
+      return (d && d[key] != null) ? d[key] : translations.en[key];
+    }
+
+    function renderLang(lang) {
+      var dict = translations[lang] || translations.en;
+      var nodes = document.querySelectorAll('[data-i18n]');
+      for (var i = 0; i < nodes.length; i++) {
+        var key = nodes[i].getAttribute('data-i18n');
+        var val = (dict[key] != null) ? dict[key] : translations.en[key];
+        if (val != null) nodes[i].innerHTML = val;
+      }
+      document.documentElement.lang = lang;
+      var btns = document.querySelectorAll('.lang button');
+      for (var j = 0; j < btns.length; j++) {
+        btns[j].classList.toggle('on', btns[j].getAttribute('data-lang') === lang);
+      }
+    }
+
+    /* Switch with a short fade-out → swap → fade-in */
+    var page = document.getElementById('page');
+    function setLang(lang) {
+      if (lang === currentLang) return;
+      currentLang = lang;
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+      if (REDUCED) { renderLang(lang); return; }
+      page.classList.add('langfade');
+      setTimeout(function () {
+        renderLang(lang);
+        page.classList.remove('langfade');
+      }, 230);
+    }
+    document.querySelectorAll('.lang button').forEach(function (b) {
+      b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
+    });
+    if (currentLang !== 'en') renderLang(currentLang); else renderLang('en');
+
+    /* ==========================================================
+       2. HERO NAME REVEAL — per-character fade/rise/deblur.
+       First char at 400ms, then 50ms apart. Words are wrapped so
+       lines never break mid-word.
+       ========================================================== */
+    var heroName = document.getElementById('heroName');
+    var heroDone = REDUCED;      /* reduced motion: treat as finished */
+    var onHeroDone = null;       /* commit-line hook */
+
+    if (!REDUCED && heroName) {
+      var words = heroName.textContent.trim().split(/\s+/);
+      heroName.textContent = '';
+      var charIndex = 0;
+      words.forEach(function (word, w) {
+        var wSpan = document.createElement('span');
+        wSpan.className = 'word';
+        for (var c = 0; c < word.length; c++) {
+          var ch = document.createElement('span');
+          ch.className = 'ch';
+          ch.textContent = word[c];
+          ch.style.transitionDelay = (400 + charIndex * 50) + 'ms';
+          wSpan.appendChild(ch);
+          charIndex++;
+        }
+        heroName.appendChild(wSpan);
+        if (w < words.length - 1) heroName.appendChild(document.createTextNode(' '));
+      });
+      /* double rAF: ensure initial styles are committed before animating */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { heroName.classList.add('go'); });
+      });
+      /* name is done when the last char's delay + transition elapse */
+      setTimeout(function () {
+        heroDone = true;
+        if (onHeroDone) onHeroDone();
+      }, 400 + (charIndex - 1) * 50 + 750);
+    }
+
+    /* ==========================================================
+       3. COMMIT-LINE TYPEWRITER — 35ms/char.
+       The finished text already lives in the HTML; we capture its
+       segments (span colour classes + line breaks), empty it, and
+       retype. Starts only after BOTH the hero name has finished AND
+       the strip has scrolled into view. Runs once, stays forever.
+       ========================================================== */
+    var commitBox  = document.getElementById('commit');
+    var commitText = document.getElementById('commitText');
+
+    if (!REDUCED && commitBox && commitText) {
+      /* capture segments: [{cls, text}] — '\n' text nodes become breaks */
+      var segs = [];
+      commitText.childNodes.forEach(function (n) {
+        if (n.nodeType === 1) segs.push({ cls: n.className, text: n.textContent });
+        else if (/\n/.test(n.textContent)) segs.push({ cls: null, text: '\n' });
+      });
+
+      var commitVisible = false, commitStarted = false;
+
+      function typeCommit() {
+        if (commitStarted || !heroDone || !commitVisible) return;
+        commitStarted = true;
+        commitText.innerHTML = '';
+        commitBox.classList.add('typing');   /* reveals the (now empty) target */
+
+        var s = 0, c = 0, span = null;
+        (function step() {
+          if (s >= segs.length) { commitBox.classList.add('done'); return; }
+          var seg = segs[s];
+          if (seg.cls === null) {            /* line break — one tick */
+            commitText.appendChild(document.createTextNode('\n'));
+            s++; c = 0; span = null;
+            setTimeout(step, 35);
+            return;
+          }
+          if (!span) { span = document.createElement('span'); span.className = seg.cls; commitText.appendChild(span); }
+          span.textContent += seg.text[c++];
+          if (c >= seg.text.length) { s++; c = 0; span = null; }
+          setTimeout(step, 35);
+        })();
+      }
+
+      new IntersectionObserver(function (entries, obs) {
+        if (entries[0].isIntersecting) {
+          commitVisible = true;
+          obs.disconnect();
+          typeCommit();
+        }
+      }, { threshold: 0.4 }).observe(commitBox);
+
+      onHeroDone = typeCommit;
+    } else if (commitBox) {
+      commitBox.classList.add('done');       /* reduced motion: show complete */
+    }
+
+    /* ==========================================================
+       4. SECTION "UNFOLD" ENTRANCES + IMAGE WIPE-INS
+       IntersectionObserver only — no scroll math needed here.
+       ========================================================== */
+    if (!REDUCED) {
+      var unfoldIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); unfoldIO.unobserve(en.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.unfold').forEach(function (el) { unfoldIO.observe(el); });
+
+      /* clip-path wipe for images — journey photos are excluded: they are
+         revealed by the pinned-scroll logic when their city activates */
+      var wipeIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('seen'); wipeIO.unobserve(en.target); }
+        });
+      }, { threshold: 0.25 });
+      document.querySelectorAll('.plx-wrap').forEach(function (el) {
+        if (!el.closest('.jcity')) wipeIO.observe(el);
+      });
+    }
+
+    /* ==========================================================
+       5. NAV — frosted after 60px, brand appears after the hero,
+       mobile hamburger menu.
+       ========================================================== */
+    var nav = document.getElementById('nav');
+    var navBrand = document.getElementById('navBrand');
+    var burger = document.getElementById('burger');
+    var mobileMenu = document.getElementById('mobileMenu');
+    var hero = document.getElementById('top');
+
+    function updateNav(scY) {
+      nav.classList.toggle('scrolled', scY > 60);
+      navBrand.classList.toggle('show', scY > hero.offsetHeight * 0.55);
+    }
+
+    burger.addEventListener('click', function () {
+      var open = !mobileMenu.classList.contains('open');
+      mobileMenu.classList.toggle('open', open);
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        mobileMenu.classList.remove('open');
+        burger.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    /* ==========================================================
+       6. ACADEMIC JOURNEY — pinned scroll storytelling.
+       Progress through the tall .journey wrapper is mapped onto the
+       SVG stroke-dashoffset (scroll-driven, NOT time-driven) and
+       onto the three city reveals. All measurements are cached and
+       recomputed on resize so the pin never breaks.
+       ========================================================== */
+    var jWrap   = document.querySelector('.journey');
+    var jCities = Array.prototype.slice.call(document.querySelectorAll('.jcity'));
+    var jClose  = document.getElementById('jClose');
+    var jState  = { path: null, nodes: [], len: 0, top: 0, runway: 1 };
+    /* fraction of the drawn line at which each city lights up
+       (Utrecht ≈ start, Rio ≈ midpoint, Rotterdam ≈ end) */
+    var J_THRESHOLDS = [0.03, 0.52, 0.97];
+
+    function journeyMeasure() {
+      if (REDUCED || !jWrap) return;
+      var svg = document.querySelector(window.innerWidth > 768 ? '.jmap-d' : '.jmap-m');
+      jState.path  = svg.querySelector('.jpath');
+      jState.nodes = Array.prototype.slice.call(svg.querySelectorAll('.jnode'));
+      jState.len   = jState.path.getTotalLength();
+      jState.path.style.strokeDasharray = jState.len;
+      var r = jWrap.getBoundingClientRect();
+      jState.top    = r.top + window.scrollY;
+      jState.runway = Math.max(1, jWrap.offsetHeight - window.innerHeight);
+    }
+
+    function journeyUpdate(scY) {
+      if (!jState.path) return;
+      var p = Math.min(1, Math.max(0, (scY - jState.top) / jState.runway));
+      /* the line finishes at 90% progress; the last 10% is dwell time
+         for Rotterdam's glow and the closing line */
+      var d = Math.min(1, p / 0.9);
+      jState.path.style.strokeDashoffset = jState.len * (1 - d);
+      for (var i = 0; i < 3; i++) {
+        var on = d >= J_THRESHOLDS[i];
+        jState.nodes[i].classList.toggle('on', on);
+        jCities[i].classList.toggle('on', on);
+        if (on) {
+          var w = jCities[i].querySelector('.plx-wrap');
+          if (w) w.classList.add('seen');
+        }
+      }
+      jClose.classList.toggle('on', p > 0.93);
+    }
+
+    /* ==========================================================
+       7. THESIS DATA-REVEAL — the background line chart draws over
+       1.8s while the three stats count up in sync with it.
+       ========================================================== */
+    var tLine = document.getElementById('tLine');
+    var tViz  = document.getElementById('thesisViz');
+    var tNums = Array.prototype.slice.call(document.querySelectorAll('.tnum'));
+
+    function setStatsFinal() {
+      tNums.forEach(function (n) {
+        n.textContent = parseFloat(n.getAttribute('data-target'))
+          .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
+      });
+    }
+
+    if (REDUCED) {
+      setStatsFinal();               /* chart is already fully drawn (no dasharray) */
+    } else if (tLine && tViz) {
+      var tLen = tLine.getTotalLength();
+      tLine.style.strokeDasharray  = tLen;
+      tLine.style.strokeDashoffset = tLen;   /* hidden until triggered */
+
+      new IntersectionObserver(function (entries, obs) {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        var t0 = performance.now();
+        (function tick(now) {
+          var tt = Math.min(1, (now - t0) / 1800);
+          var e  = 1 - Math.pow(1 - tt, 3);          /* ease-out cubic */
+          tLine.style.strokeDashoffset = tLen * (1 - e);
+          tNums.forEach(function (n) {
+            n.textContent = (parseFloat(n.getAttribute('data-target')) * e)
+              .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
+          });
+          if (tt < 1) requestAnimationFrame(tick); else setStatsFinal();
+        })(t0);
+      }, { threshold: 0.35 }).observe(tViz);
+    }
+
+    /* ==========================================================
+       8. PARALLAX IMAGES — every .plx drifts slightly slower than
+       scroll (max ±6% of its height, halved on mobile) and scales
+       1.00 → 1.05 as it passes through the viewport.
+       ========================================================== */
+    var plxItems = Array.prototype.slice.call(document.querySelectorAll('.plx'));
+
+    function parallaxUpdate() {
+      var vh = window.innerHeight;
+      var factor = isMobile() ? 0.04 : 0.08;
+      for (var i = 0; i < plxItems.length; i++) {
+        var img = plxItems[i];
+        var r = img.parentNode.getBoundingClientRect();
+        if (r.bottom < -80 || r.top > vh + 80) continue;    /* offscreen */
+        var shift = (r.top + r.height / 2 - vh / 2) * factor;
+        var lim = r.height * 0.06;
+        if (shift >  lim) shift =  lim;
+        if (shift < -lim) shift = -lim;
+        var pr = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+        img.style.transform = 'translate3d(0,' + shift.toFixed(2) + 'px,0) scale(' + (1 + 0.05 * pr).toFixed(4) + ')';
+      }
+    }
+
+    /* ==========================================================
+       9. CUSTOM CURSOR + MAGNETIC ELEMENTS (desktop only)
+       Both live inside the single rAF loop below and lerp toward
+       their targets, so everything feels springy but cheap.
+       ========================================================== */
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;   /* pointer */
+    window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+    var cursorEl = document.getElementById('cursor');
+    var curX = mx, curY = my;
+    function cursorFrame() {
+      curX += (mx - curX) * 0.12;                                  /* the lag */
+      curY += (my - curY) * 0.12;
+      cursorEl.style.transform = 'translate3d(' + curX + 'px,' + curY + 'px,0) translate(-50%,-50%)';
+    }
+    /* ring state via event delegation — cheaper than per-frame hit tests */
+    document.addEventListener('mouseover', function (e) {
+      cursorEl.classList.toggle('ring',
+        !!(e.target.closest && e.target.closest('a, button, .pcard, canvas')));
+    }, { passive: true });
+
+    var magnets = Array.prototype.slice.call(document.querySelectorAll('.magnetic'))
+      .map(function (el) { return { el: el, x: 0, y: 0 }; });
+    function magneticFrame() {
+      for (var i = 0; i < magnets.length; i++) {
+        var m = magnets[i], r = m.el.getBoundingClientRect();
+        /* distance from pointer to the nearest edge of the element */
+        var nx = Math.max(r.left, Math.min(mx, r.right));
+        var ny = Math.max(r.top,  Math.min(my, r.bottom));
+        var dist = Math.hypot(mx - nx, my - ny);
+        var tx = 0, ty = 0;
+        if (dist < 60) {                                            /* within pull range */
+          tx = Math.max(-8, Math.min(8, (mx - (r.left + r.width  / 2)) * 0.18));
+          ty = Math.max(-8, Math.min(8, (my - (r.top  + r.height / 2)) * 0.18));
+        }
+        m.x += (tx - m.x) * 0.16;                                   /* lerp = spring feel */
+        m.y += (ty - m.y) * 0.16;
+        m.el.style.transform = (Math.abs(m.x) + Math.abs(m.y) > 0.05)
+          ? 'translate3d(' + m.x.toFixed(2) + 'px,' + m.y.toFixed(2) + 'px,0)' : '';
+      }
+    }
+
+    /* Enable/disable the cursor (and its cursor:none CSS) on the fly —
+       e.g. when a window is resized across the 768px breakpoint. */
+    function fxUpdate() {
+      document.documentElement.classList.toggle('cur', desktopFx());
+    }
+
+    /* ==========================================================
+       10. MAIN LOOP — one rAF for everything scroll- and
+       pointer-driven. Scroll work only runs on frames where the
+       scroll position actually changed (flag set by a passive
+       listener), which is the throttle.
+       ========================================================== */
+    var progressEl = document.getElementById('progress');
+    var lastScY = -1, scrollDirty = true;
+    window.addEventListener('scroll', function () { scrollDirty = true; }, { passive: true });
+
+    function mainFrame() {
+      var scY = window.scrollY;
+      if (scrollDirty || scY !== lastScY) {
+        lastScY = scY; scrollDirty = false;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        progressEl.style.transform = 'scaleX(' + (max > 0 ? scY / max : 0) + ')';
+        updateNav(scY);
+        if (!REDUCED) {
+          parallaxUpdate();
+          journeyUpdate(scY);
+        }
+      }
+      if (desktopFx()) { cursorFrame(); magneticFrame(); }
+      requestAnimationFrame(mainFrame);
+    }
+
+    /* Re-measure everything that depends on layout. Throttled resize. */
+    function measureAll() { journeyMeasure(); scrollDirty = true; fxUpdate(); }
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measureAll, 150);
+    });
+    window.addEventListener('load', measureAll);   /* fonts/images shift layout */
+
+    measureAll();
+    requestAnimationFrame(mainFrame);
+
+    /* ==========================================================
+       11. NOCE — Three.js low-poly map of "Europe".
+       - flat-shaded displaced plane in teal, slowly auto-rotating
+       - 9 pulsing terracotta markers; hover (desktop) or tap
+         (mobile) grows one and shows a floating card
+       - map tilts a few degrees toward the cursor
+       - pixel ratio capped (1 on mobile), loop paused offscreen,
+         everything disposed on pagehide
+       ========================================================== */
+    (function initNoce() {
+      var stage = document.getElementById('noceStage');
+      var card  = document.getElementById('noceCard');
+      if (!stage || !window.THREE) return;           /* CDN blocked → static page */
+
+      var W = stage.clientWidth, H = stage.clientHeight;
+
+      /* WebGL can be unavailable (old GPU, blocklist, headless).
+         In that case the section simply stays static — no crash. */
+      var renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      } catch (err) {
+        return;
+      }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5));
+      renderer.setSize(W, H);
+      stage.insertBefore(renderer.domElement, card);
+
+      var scene  = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(38, W / H, 0.1, 100);
+      camera.position.set(0, 5.2, 7.6);
+      camera.lookAt(0, 0.2, 0);
+
+      scene.add(new THREE.HemisphereLight(0xFAFAF7, 0x0E2A29, 1.0));
+      var sun = new THREE.DirectionalLight(0xFFFFFF, 0.75);
+      sun.position.set(4, 7, 3);
+      scene.add(sun);
+
+      var group = new THREE.Group();
+      scene.add(group);
+
+      /* gentle pseudo-noise height field — shared by terrain + markers */
+      function terrainH(x, z) {
+        return 0.22 * Math.sin(x * 0.9 + 1.2) * Math.cos(z * 1.1)
+             + 0.14 * Math.sin(x * 2.1) * Math.sin(z * 1.7 + 0.5)
+             + 0.08 * Math.cos(x * 3.3 + z * 2.6);
+      }
+
+      /* terrain: displaced plane, non-indexed so flat shading shows facets */
+      var geo = new THREE.PlaneGeometry(11, 7.5, 34, 24);
+      geo.rotateX(-Math.PI / 2);
+      var pos = geo.attributes.position;
+      for (var i = 0; i < pos.count; i++) {
+        pos.setY(i, terrainH(pos.getX(i), pos.getZ(i)));
+      }
+      geo = geo.toNonIndexed();
+      geo.computeVertexNormals();
+      var terrain = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+        color: 0x1B4D4B, flatShading: true, roughness: 0.95, metalness: 0
+      }));
+      group.add(terrain);
+
+      /* markers — pulsing terracotta points */
+      var SPOTS = [[-3.6, -1.8], [-2.2, 0.9], [-1.0, -2.2], [0.3, 1.8], [1.2, -0.6],
+                   [2.4, -2.1], [3.3, 1.2], [-0.5, -0.2], [2.0, 2.4]];
+      var markerGeo = new THREE.SphereGeometry(0.09, 16, 16);
+      var markers = SPOTS.map(function (s, idx) {
+        var m = new THREE.Mesh(markerGeo, new THREE.MeshBasicMaterial({ color: 0xC7623F }));
+        m.position.set(s[0], terrainH(s[0], s[1]) + 0.14, s[1]);
+        m.userData = { idx: idx, s: 1 };            /* s = current scale (lerped) */
+        group.add(m);
+        return m;
+      });
+
+      var raycaster = new THREE.Raycaster();
+      var pointer = { x: 0, y: 0, active: false };  /* NDC coords over the canvas */
+      var hovered = -1;                              /* marker index or -1 */
+      var autoY = 0;                                 /* auto-rotation angle */
+      var vec = new THREE.Vector3();
+
+      function toNDC(clientX, clientY) {
+        var r = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((clientX - r.left) / r.width) * 2 - 1;
+        pointer.y = -((clientY - r.top) / r.height) * 2 + 1;
+      }
+      renderer.domElement.addEventListener('mousemove', function (e) {
+        toNDC(e.clientX, e.clientY); pointer.active = true;
+      }, { passive: true });
+      renderer.domElement.addEventListener('mouseleave', function () {
+        pointer.active = false; hovered = -1;
+      }, { passive: true });
+      /* tap-to-select on touch devices (click also fires after a tap) */
+      renderer.domElement.addEventListener('click', function (e) {
+        toNDC(e.clientX, e.clientY);
+        raycaster.setFromCamera(pointer, camera);
+        var hit = raycaster.intersectObjects(markers);
+        hovered = hit.length ? hit[0].object.userData.idx : -1;
+      });
+
+      function noceFrame(now) {
+        /* auto-rotate + tilt toward cursor (skipped under reduced motion) */
+        if (!REDUCED) {
+          autoY += 0.0016;
+          var nx = (mx / window.innerWidth) * 2 - 1;
+          var ny = (my / window.innerHeight) * 2 - 1;
+          group.rotation.y = autoY + (isMobile() ? 0 : nx * 0.10);
+          group.rotation.x = isMobile() ? 0 : ny * 0.06;
+        }
+
+        /* hover detection (desktop) */
+        if (pointer.active) {
+          raycaster.setFromCamera(pointer, camera);
+          var hit = raycaster.intersectObjects(markers);
+          hovered = hit.length ? hit[0].object.userData.idx : -1;
+        }
+
+        /* pulse + grow */
+        for (var i = 0; i < markers.length; i++) {
+          var m = markers[i];
+          var target = (i === hovered) ? 1.9
+                     : REDUCED ? 1
+                     : 1 + 0.2 * Math.sin(now * 0.0024 + i * 0.7);
+          m.userData.s += (target - m.userData.s) * 0.15;
+          m.scale.setScalar(m.userData.s);
+        }
+
+        /* floating card beside the active marker */
+        if (hovered >= 0) {
+          var hm = markers[hovered];
+          hm.getWorldPosition(vec).project(camera);
+          card.style.left = ((vec.x * 0.5 + 0.5) * renderer.domElement.clientWidth) + 'px';
+          card.style.top  = ((-vec.y * 0.5 + 0.5) * renderer.domElement.clientHeight) + 'px';
+          card.textContent = t('noce.spot' + ((hovered % 8) + 1));
+          card.classList.add('show');
+        } else {
+          card.classList.remove('show');
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      /* run the loop only while the section is on screen */
+      var rafId = null, visible = false;
+      function loop(now) {
+        if (!visible) { rafId = null; return; }
+        noceFrame(now || performance.now());
+        rafId = requestAnimationFrame(loop);
+      }
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (visible && rafId === null) rafId = requestAnimationFrame(loop);
+      }, { threshold: 0.05 }).observe(stage);
+
+      function noceResize() {
+        W = stage.clientWidth; H = stage.clientHeight;
+        camera.aspect = W / H;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1 : 1.5));
+        renderer.setSize(W, H);
+      }
+      window.addEventListener('resize', function () { setTimeout(noceResize, 160); });
+
+      /* proper teardown: stop the loop, free GPU resources */
+      window.addEventListener('pagehide', function () {
+        visible = false;
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        markerGeo.dispose();
+        terrain.geometry.dispose();
+        terrain.material.dispose();
+        markers.forEach(function (m) { m.material.dispose(); });
+        renderer.dispose();
+      }, { once: true });
+    })();
+
+  })();
+  </script>
+</body>
+</html>

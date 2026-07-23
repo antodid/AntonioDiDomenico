@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antonio Di Domenico — Portfolio</title>
+  <meta name="description" content="Antonio Di Domenico — MSc Finance & Investments candidate at RSM Rotterdam. Curious about the places where economic thinking, technology and communication meet.">
+
+  <!-- ============================================================
+       FONTS — the only external dependency on the whole site.
+       DM Serif Display : headings (never bold)
+       Inter            : body text
+       JetBrains Mono   : commit-line animation ONLY
+       ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+       ============================================================ */
+    :root {
+      --navy:        #1A2B5E;
+      --red:         #C8392B;
+      --white:       #FFFFFF;
+      --tint:        #F0F3F8;
+      --near-black:  #0F0F0F;
+      --text-2:      #6B6B6B;
+      --border:      #E8E8E4;
+
+      --serif: 'DM Serif Display', serif;
+      --sans:  'Inter', sans-serif;
+      --mono:  'JetBrains Mono', monospace;
+
+      --max-w: 860px;
+    }
+
+    /* ============================================================
+       RESET / BASE
+       ============================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--navy);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--serif);
+      font-weight: 400; /* DM Serif Display is never bold */
+      line-height: 1.05;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { scroll-margin-top: 72px; }
+
+    .section { padding: 7rem 0; }
+
+    /* Eyebrow labels — small red uppercase markers above each section */
+    .eyebrow {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      font-weight: 500;
+      margin-bottom: 2.5rem;
+      display: block;
+    }
+
+    /* ============================================================
+       LANGUAGE-SWITCH FADE
+       All translatable elements fade out 150ms, text updates,
+       then fade back in (class toggled from JS).
+       ============================================================ */
+    [data-i18n] { transition: opacity 150ms ease; }
+    body.i18n-fade [data-i18n] { opacity: 0 !important; }
+
+    /* ============================================================
+       NAVIGATION
+       Fixed. Transparent over the hero; after 60px of scroll it
+       gains a white background + bottom border (300ms).
+       ============================================================ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 300ms ease, border-color 300ms ease;
+    }
+    .nav.scrolled {
+      background: var(--white);
+      border-bottom-color: var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 1.1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    /* Site name — hidden until the user scrolls past the hero */
+    .nav-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--navy);
+      opacity: 0;
+      transition: opacity 400ms ease;
+      white-space: nowrap;
+    }
+    .nav.past-hero .nav-name { opacity: 1; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      margin-left: auto;
+    }
+    .nav-links a {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-2);
+      transition: color 200ms ease;
+    }
+    .nav-links a:hover { color: var(--navy); }
+
+    /* Language switcher — EN · IT · NL */
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-left: 1.6rem;
+    }
+    .lang-switch button {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-2);
+      padding: 0;
+      transition: color 200ms ease;
+    }
+    .lang-switch button.active { color: var(--navy); }
+    .lang-switch .dot {
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: var(--text-2);
+    }
+
+    /* Hamburger (mobile only) */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 20px; height: 1.5px;
+      background: var(--navy);
+    }
+    /* Mobile dropdown */
+    .mobile-menu {
+      display: none;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem 1.5rem;
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block;
+      padding: 0.7rem 0;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu .lang-switch { margin: 1.2rem 0 0; }
+
+    /* ============================================================
+       HERO
+       Full viewport height minus the commit strip, so the strip
+       is visible in the same first viewport. Content vertically
+       centered, left-aligned.
+       ============================================================ */
+    .hero {
+      min-height: calc(100vh - 88px);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--white);
+    }
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-photo {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1.6rem;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 1.2rem;
+    }
+    .hero-name {
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: var(--navy);
+      margin-bottom: 1.4rem;
+    }
+    .hero-name .word { display: block; white-space: nowrap; }
+    /* Each character animates in individually (delays set from JS) */
+    .hero-name .ch {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 400ms ease, transform 400ms ease;
+    }
+    .hero-name.play .ch { opacity: 1; transform: translateY(0); }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text-2);
+      max-width: 34rem;
+      margin-bottom: 2.4rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+      padding: 0.9rem 1.8rem;
+      cursor: pointer;
+      transition: background 220ms ease, color 220ms ease;
+      will-change: transform;
+    }
+    .btn-primary {
+      background: var(--navy);
+      color: var(--white);
+      border: 1px solid var(--navy);
+    }
+    .btn-primary:hover { background: #223772; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+    }
+    .btn-ghost:hover { background: var(--tint); }
+
+    /* --- Hero background: slow-drifting soft navy blobs ---------- */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      transition: opacity 300ms linear;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.5;
+      animation: drift 20s ease-in-out infinite;
+    }
+    .blob-1 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(26,43,94,0.08), transparent 70%);
+      top: -10%; right: 5%;
+    }
+    .blob-2 {
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(26,43,94,0.06), transparent 70%);
+      bottom: 5%; left: -5%;
+      animation-delay: -7s;
+    }
+    .blob-3 {
+      width: 260px; height: 260px;
+      background: radial-gradient(circle, rgba(200,57,43,0.04), transparent 70%);
+      top: 40%; left: 45%;
+      animation-delay: -13s;
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(40px, -30px) scale(1.08); }
+      66%  { transform: translate(-30px, 25px) scale(0.95); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* ============================================================
+       COMMIT-LINE STRIP — the signature animation
+       Terminal-style line that types itself out on page load.
+       The ONLY place monospace type appears on the site.
+       ============================================================ */
+    .commit-strip {
+      background: var(--near-black);
+      padding: 1.4rem 2rem;
+      width: 100%;
+    }
+    .commit-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+    /* pre-wrap only on the lines themselves — keeps the trailing
+       space after `-m` visible without rendering markup whitespace */
+    .commit-line-1, .commit-line-2 { white-space: pre-wrap; }
+    .commit-dim   { color: var(--text-2); }
+    .commit-white { color: var(--white); }
+    .commit-line-2 { display: none; }          /* revealed when part 3 starts */
+    .commit-line-2.show { display: block; }
+    /* Blinking block cursor — #C8392B, 530ms on / 530ms off */
+    .commit-cursor {
+      display: inline-block;
+      width: 0.55em; height: 1.05em;
+      background: var(--red);
+      vertical-align: text-bottom;
+      margin-left: 1px;
+      animation: cursor-blink 1060ms step-end infinite;
+    }
+    @keyframes cursor-blink {
+      0%, 49%   { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+       Containers marked data-reveal get .in-view from an
+       IntersectionObserver; direct children stagger 80ms
+       (delays assigned from JS).
+       ============================================================ */
+    [data-reveal] > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 600ms ease, transform 600ms ease;
+    }
+    [data-reveal].in-view > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Image curtain wipe: clip-path reveals left → right on enter */
+    .wipe {
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 700ms ease-out;
+    }
+    .wipe.in-view { clip-path: inset(0 0% 0 0); }
+
+    /* ============================================================
+       ABOUT
+       ============================================================ */
+    .s-about { background: var(--tint); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.5rem;
+      line-height: 1.35;
+      color: var(--navy);
+    }
+    .about-text p {
+      font-size: 0.92rem;
+      line-height: 1.85;
+      color: var(--text-2);
+      margin-bottom: 1.4rem;
+    }
+    .about-img {
+      width: 160px;
+      float: right;
+      border-radius: 4px;
+      margin: 0 0 1rem 1.4rem;
+    }
+
+    /* ============================================================
+       PROJECTS — three flat cards, separated by hairlines.
+       No border-radius, no shadow.
+       ============================================================ */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+    }
+    .card {
+      padding: 2.5rem;
+      position: relative;
+      transition: background 220ms ease;
+    }
+    .card + .card { border-left: 1.5px solid var(--border); }
+    .card:hover { background: var(--tint); }
+    /* 3px navy left border slides in on hover */
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--navy);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 220ms ease;
+    }
+    .card:hover::before { transform: scaleX(1); }
+
+    .card-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--red);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+    .card-title {
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 0.9rem;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      margin-bottom: 1.4rem;
+    }
+    .card-imgs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1.4rem;
+    }
+    .card-imgs img {
+      width: calc(50% - 2px);
+      height: 130px;
+      object-fit: cover;
+    }
+    .card-img-single {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      object-position: top;
+      margin-bottom: 1.4rem;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      font-size: 0.65rem;
+      color: var(--text-2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.25rem 0.6rem;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       THESIS
+       ============================================================ */
+    .s-thesis { background: var(--tint); }
+    .thesis-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 0.8fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .thesis-title {
+      font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+      color: var(--navy);
+      margin-bottom: 1rem;
+    }
+    .thesis-sub {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      margin-bottom: 1.8rem;
+    }
+    .thesis-body {
+      font-size: 0.92rem;
+      line-height: 1.85;
+      color: var(--text-2);
+    }
+    .stat { margin-bottom: 2.2rem; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 3rem;
+      color: var(--navy);
+      line-height: 1.05;
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-2);
+      display: block;
+      margin-top: 0.3rem;
+    }
+
+    /* ============================================================
+       EXPERIENCE
+       Left column: period (140px). Right column: role / org / text.
+       ============================================================ */
+    .cinematic {
+      position: relative;
+      margin-bottom: 4rem;
+    }
+    .cinematic img {
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+    }
+    .cinematic::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 43, 94, 0.06);
+      pointer-events: none;
+    }
+    .exp-entry {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 2rem;
+      padding: 2.2rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .exp-period {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      padding-top: 0.3rem;
+    }
+    .exp-role {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: var(--navy);
+    }
+    .exp-org {
+      font-size: 0.78rem;
+      color: var(--red);
+      font-weight: 500;
+      margin: 0.15rem 0 0.6rem;
+    }
+    .exp-desc {
+      font-size: 0.85rem;
+      color: var(--text-2);
+    }
+    .exp-img {
+      width: 160px;
+      float: right;
+      border-radius: 4px;
+      margin: 0 0 1rem 1.4rem;
+    }
+    .exp-body::after { content: ''; display: block; clear: both; }
+
+    /* ============================================================
+       SKILLS
+       ============================================================ */
+    .s-skills { background: var(--tint); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+    }
+    .skills-col h3 {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--near-black);
+      margin-bottom: 1.2rem;
+    }
+    .skills-col li {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ============================================================
+       CONTACT + FOOTER
+       ============================================================ */
+    .s-contact {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .s-contact .eyebrow { color: var(--red); }
+    .contact-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--white);
+      max-width: 40rem;
+      margin-bottom: 3rem;
+    }
+    .contact-links { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+    .contact-links a {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-2);
+      transition: color 220ms ease;
+      display: inline-block;
+      will-change: transform;
+    }
+    .contact-links a:hover { color: var(--white); }
+    .contact-links .arrow {
+      display: inline-block;
+      opacity: 0;
+      transform: translate(-4px, 4px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+    .contact-links a:hover .arrow { opacity: 1; transform: translate(0, 0); }
+
+    .footer {
+      margin-top: 6rem;
+      font-size: 0.72rem;
+      color: #333;
+    }
+
+    /* ============================================================
+       CUSTOM CURSOR (desktop / fine pointers only)
+       6px navy dot that lerps behind the mouse; expands to a 28px
+       semi-transparent circle over interactive elements.
+       ============================================================ */
+    .cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--navy);
+      pointer-events: none;
+      z-index: 999;
+      transform: translate(-50%, -50%);
+      transition: width 200ms ease, height 200ms ease, opacity 200ms ease, background 200ms ease;
+      opacity: 0;
+    }
+    .cursor-dot.on { opacity: 1; }
+    .cursor-dot.grow {
+      width: 28px; height: 28px;
+      background: rgba(26, 43, 94, 0.18);
+    }
+
+    /* ============================================================
+       REDUCED MOTION — everything lands in its final state.
+       (JS also checks this and skips typing/counters/effects.)
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .hero-name .ch { opacity: 1; transform: none; }
+      [data-reveal] > * { opacity: 1; transform: none; }
+      .wipe { clip-path: inset(0 0 0 0); }
+      .blob { display: none; }
+      .commit-cursor { animation: none; opacity: 1; }
+    }
+
+    /* ============================================================
+       MOBILE (max-width 768px)
+       ============================================================ */
+    @media (max-width: 768px) {
+      .section { padding: 4rem 0; }
+      .container { padding: 0 1.5rem; }
+
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .hero { min-height: calc(100vh - 120px); }
+      .hero-name .word { white-space: normal; }
+
+      .commit-strip { padding: 1.4rem 1.5rem; }
+      .commit-inner { font-size: 0.68rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      .cards { grid-template-columns: 1fr; }
+      .card + .card { border-left: none; border-top: 1.5px solid var(--border); }
+      .card { padding: 2rem 1.5rem; }
+      .card-imgs { flex-direction: column; }
+      .card-imgs img { width: 100%; }
+
+      .thesis-grid { grid-template-columns: 1fr; gap: 3rem; }
+      /* Stats become a row of three below the text */
+      .thesis-stats { display: flex; gap: 2rem; }
+      .stat { margin-bottom: 0; }
+      .stat-num { font-size: 2.2rem; }
+
+      .exp-entry { grid-template-columns: 1fr; gap: 0.4rem; }
+      .cinematic img { height: 220px; }
+      .exp-img { width: 120px; margin-left: 1rem; }
+
+      .skills-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      .cursor-dot { display: none; }
+
+      /* Simplified background blobs on mobile */
+      .blob { filter: blur(40px); }
+      .blob-3 { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor dot (desktop only; driven by JS) -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#top" class="nav-name">Antonio Di Domenico</a>
+
+      <div class="nav-links">
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a href="#projects" data-i18n="navProjects">Projects</a>
+        <a href="#thesis" data-i18n="navThesis">Thesis</a>
+        <a href="#experience" data-i18n="navExperience">Experience</a>
+        <a href="#contact" data-i18n="navContact">Contact</a>
+
+        <!-- Language switcher: EN · IT · NL -->
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button data-lang="en" class="active">EN</button><span class="dot"></span><button data-lang="it">IT</button><span class="dot"></span><button data-lang="nl">NL</button>
+        </div>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile dropdown menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#about" data-i18n="navAbout">About</a>
+      <a href="#projects" data-i18n="navProjects">Projects</a>
+      <a href="#thesis" data-i18n="navThesis">Thesis</a>
+      <a href="#experience" data-i18n="navExperience">Experience</a>
+      <a href="#contact" data-i18n="navContact">Contact</a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button data-lang="en" class="active">EN</button><span class="dot"></span><button data-lang="it">IT</button><span class="dot"></span><button data-lang="nl">NL</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <header class="hero" id="top">
+    <!-- Drifting soft navy blobs; fade out on scroll past hero -->
+    <div class="hero-bg" id="heroBg" aria-hidden="true">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container hero-content">
+      <img src="images/antonio.jpg" alt="Antonio Di Domenico" class="hero-photo">
+      <span class="hero-eyebrow" data-i18n="heroEyebrow">MSc Finance · RSM Rotterdam</span>
+
+      <!-- Name reveals character by character (spans built in JS) -->
+      <h1 class="hero-name" id="heroName" aria-label="Antonio Di Domenico"></h1>
+
+      <p class="hero-desc" data-i18n="heroDescriptor">Curious about the places where economic thinking, technology and communication meet.</p>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary magnetic" data-i18n="heroBtnWork">See my work</a>
+        <a href="#contact" class="btn btn-ghost magnetic" data-i18n="heroBtnContact">Get in touch</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       COMMIT-LINE STRIP — the signature self-writing animation
+       ============================================================ -->
+  <div class="commit-strip" aria-label="git commit line">
+    <div class="commit-inner">
+      <div class="commit-line-1"
+        ><span class="commit-dim"   id="cmPrompt"></span
+        ><span class="commit-white" id="cmQuoteOpen"></span
+        ><span class="commit-white" id="cmMessage" data-i18n="commitMessage"></span
+        ><span class="commit-white" id="cmQuoteClose"></span
+        ><span class="commit-cursor" id="cmCursor" aria-hidden="true"></span
+      ></div>
+      <div class="commit-line-2" id="cmLine2"
+        ><span class="commit-dim" id="cmMeta"></span
+      ></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section class="section s-about" id="about">
+    <div class="container">
+      <span class="eyebrow" data-i18n="aboutEyebrow">About</span>
+      <div class="about-grid" data-reveal>
+        <blockquote class="about-quote" data-i18n="aboutQuote">“I learned that connection with people does not require a shared background — only a shared willingness to be present.”</blockquote>
+        <div class="about-text">
+          <p data-i18n="aboutP1">I studied Economics and Business Economics at Utrecht University, finishing with a 7.85 GPA, a completed Honours Programme and a bachelor thesis graded 9.2. The degree taught me to think in models and data; the Honours Programme taught me to work closely with people who think nothing like I do — and that the second skill is worth at least as much as the first.</p>
+          <img src="images/exchange.jpg" alt="Antonio in Rio de Janeiro" class="about-img wipe">
+          <p data-i18n="aboutP2">Then came Rio. A semester at PUC-Rio was the first time I had ever left Europe. I picked up Portuguese through everyday conversations rather than classrooms, learned samba because saying no felt like the wrong answer, and travelled across South America whenever the calendar allowed. I came back more independent, more curious, and much harder to unsettle.</p>
+          <p data-i18n="aboutP3">These days I build things on the side — most recently Noce, a community map of overlooked places — while working part-time at Ex Primo, an Italian communication and marketing agency. In September 2026 I start the MSc in Finance and Investments at RSM Rotterdam. I learn fastest when I am in the middle of something I do not yet know how to finish.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECTS
+       ============================================================ -->
+  <section class="section" id="projects">
+    <div class="container">
+      <span class="eyebrow" data-i18n="projectsEyebrow">Selected Projects</span>
+      <div class="cards" data-reveal>
+
+        <!-- Project 1: Noce -->
+        <article class="card">
+          <span class="card-tag" data-i18n="projNoceTag">Web App · Nonprofit Prototype</span>
+          <h3 class="card-title" data-i18n="projNoceTitle">Noce</h3>
+          <div class="card-imgs">
+            <img src="images/noce-1.png" alt="Noce app screenshot 1" class="wipe">
+            <img src="images/noce-2.png" alt="Noce app screenshot 2" class="wipe">
+          </div>
+          <p class="card-desc" data-i18n="projNoceDesc">A community map that collects the local knowledge Google Maps misses — hidden monuments, thermal springs, unmarked historical sites that residents know by heart. Named after my grandmother's surname, it gives visibility to overlooked places and rewards contributors with points. Nonprofit prototype, not yet public.</p>
+          <div class="chips">
+            <span class="chip">Lovable</span>
+            <span class="chip">Supabase</span>
+            <span class="chip">Antigravity</span>
+            <span class="chip">Google Maps API</span>
+            <span class="chip">Google Stitch</span>
+          </div>
+        </article>
+
+        <!-- Project 2: Honours Newsletter -->
+        <article class="card">
+          <span class="card-tag" data-i18n="projNewsTag">Editorial · Community</span>
+          <h3 class="card-title" data-i18n="projNewsTitle">Honours Newsletter</h3>
+          <div class="card-imgs">
+            <img src="images/newsletter-1.png" alt="Honours newsletter page 1" class="wipe">
+            <img src="images/newsletter-2.png" alt="Honours newsletter page 2" class="wipe">
+          </div>
+          <p class="card-desc" data-i18n="projNewsDesc">Led the editorial team and LinkedIn channel of the Utrecht University Honours Programme for two years — first as a contributor, then as team lead. Editorial calendar, copy review, contributor coordination and LinkedIn growth, with issues designed in Canva with AI support.</p>
+          <div class="chips">
+            <span class="chip">Canva</span>
+            <span class="chip">LinkedIn</span>
+            <span class="chip">AI-assisted design</span>
+          </div>
+        </article>
+
+        <!-- Project 3: AI Scouts -->
+        <article class="card">
+          <span class="card-tag" data-i18n="projScoutsTag">Programme · AI</span>
+          <h3 class="card-title" data-i18n="projScoutsTitle">AI Scouts</h3>
+          <img src="images/aiscouts.png" alt="AI Scouts welcome email" class="card-img-single wipe">
+          <p class="card-desc" data-i18n="projScoutsDesc">Selected from roughly 3,000 applicants (~3% admission rate) for a 40-hour programme led by a UC Berkeley instructor. Built Noce as my personal project and peer-mentored participants building educational games, writing-skill apps and free diet platforms.</p>
+          <div class="chips">
+            <span class="chip">AI-agent workflows</span>
+            <span class="chip">Web development</span>
+            <span class="chip">Peer mentoring</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       THESIS
+       ============================================================ -->
+  <section class="section s-thesis" id="thesis">
+    <div class="container">
+      <span class="eyebrow" data-i18n="thesisEyebrow">Research</span>
+      <div class="thesis-grid" data-reveal>
+        <div>
+          <h2 class="thesis-title" data-i18n="thesisTitle">Do Chinese Capital Controls Raise the Cost of Debt for European Firms?</h2>
+          <p class="thesis-sub" data-i18n="thesisSubtitle">Bachelor Thesis · Utrecht University · Applied Economics Research Course · Graded 9.2 / 10</p>
+          <p class="thesis-body" data-i18n="thesisBody">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow money. The intuition is that when capital cannot move freely out of China, it affects global liquidity conditions in ways that ripple through to European credit markets. I tested this using panel data on 600 firms from the STOXX Europe 600 index across 22 years, combining econometric methods with a question I had become genuinely curious about through my interest in international finance. The result was a 9.2 — the grade I am most proud of, not because of the number but because the question was genuinely mine.</p>
+        </div>
+        <!-- Stat counters: count up from 0 on scroll enter, once -->
+        <div class="thesis-stats">
+          <div class="stat">
+            <span class="stat-num"><span class="count" data-count="600" data-decimals="0">0</span></span>
+            <span class="stat-label" data-i18n="thesisStat1Label">STOXX Europe 600 firms</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num"><span class="count" data-count="22" data-decimals="0">0</span><span data-i18n="thesisStat2Suffix"> yrs</span></span>
+            <span class="stat-label" data-i18n="thesisStat2Label">Panel data 2002–2024</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num"><span class="count" data-count="9.2" data-decimals="1">0.0</span></span>
+            <span class="stat-label" data-i18n="thesisStat3Label">Final grade</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPERIENCE
+       ============================================================ -->
+  <section class="section" id="experience">
+    <div class="container">
+      <span class="eyebrow" data-i18n="expEyebrow">Experience</span>
+
+      <!-- 1. RSM -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp1Period">Sep 2026</div>
+        <div class="exp-body">
+          <h3 class="exp-role" data-i18n="exp1Role">MSc Finance and Investments</h3>
+          <div class="exp-org" data-i18n="exp1Org">RSM Erasmus University Rotterdam</div>
+        </div>
+      </div>
+
+      <!-- 2. Ex Primo -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp2Period">Jun 2026 — Present</div>
+        <div class="exp-body">
+          <h3 class="exp-role" data-i18n="exp2Role">Accounting Assistant</h3>
+          <div class="exp-org" data-i18n="exp2Org">Ex Primo · Communication &amp; Marketing Agency, Italy</div>
+          <p class="exp-desc" data-i18n="exp2Desc">Supporting client accounting operations for a pension fund alongside a team whose daily work is campaigns, content and digital communication — one reason I chose it.</p>
+        </div>
+      </div>
+
+      <!-- 3. AI Scouts -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp3Period">Feb — May 2026</div>
+        <div class="exp-body">
+          <h3 class="exp-role" data-i18n="exp3Role">Selected Participant</h3>
+          <div class="exp-org" data-i18n="exp3Org">AI Scouts</div>
+          <p class="exp-desc" data-i18n="exp3Desc">Built Noce and peer-mentored participants across a 40-hour curriculum on AI-agent workflows and web application development.</p>
+        </div>
+      </div>
+
+      <!-- 4. Volunteers -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp4Period">Jan 2026 — Present</div>
+        <div class="exp-body">
+          <img src="images/volunteers.jpg" alt="Volunteers Utrecht group photo" class="exp-img wipe">
+          <h3 class="exp-role" data-i18n="exp4Role">Co-Organizer, Utrecht Chapter</h3>
+          <div class="exp-org" data-i18n="exp4Org">Volunteers</div>
+          <p class="exp-desc" data-i18n="exp4Desc">Launched the first Utrecht food drive: approached the head manager of five local Jumbo stores, produced bilingual EN/NL outreach materials, recruited and coordinated student volunteers.</p>
+        </div>
+      </div>
+
+      <!-- 5. PUC-Rio -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp5Period">Aug 2025 — Jan 2026</div>
+        <div class="exp-body">
+          <img src="images/exchange.jpg" alt="Exchange semester in Rio de Janeiro" class="exp-img wipe">
+          <h3 class="exp-role" data-i18n="exp5Role">Exchange Semester</h3>
+          <div class="exp-org" data-i18n="exp5Org">PUC-Rio, Brazil</div>
+          <p class="exp-desc" data-i18n="exp5Desc">The first time I had ever left Europe. Took five courses including Corporate Law I entirely in Portuguese. Travelled across South America. Came back more independent, more curious, and far more confident.</p>
+        </div>
+      </div>
+
+      <!-- Cinematic break: graduation image above the Honours entry -->
+      <figure class="cinematic">
+        <img src="images/graduation.jpg" alt="Honours Programme graduation" class="wipe">
+      </figure>
+
+      <!-- 6. Honours PR -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp6Period">Feb 2024 — Jul 2025</div>
+        <div class="exp-body">
+          <h3 class="exp-role" data-i18n="exp6Role">Head of Public Relations</h3>
+          <div class="exp-org" data-i18n="exp6Org">Utrecht University Honours Programme</div>
+          <p class="exp-desc" data-i18n="exp6Desc">Led the monthly newsletter and LinkedIn channel across two years — first as contributor, then as team lead.</p>
+        </div>
+      </div>
+
+      <!-- 7. AthenaSummary -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp7Period">Oct 2024 — Jun 2025</div>
+        <div class="exp-body">
+          <img src="images/athena-1.png" alt="AthenaSummary course material" class="exp-img wipe">
+          <h3 class="exp-role" data-i18n="exp7Role">Mathematics and Statistics Tutor</h3>
+          <div class="exp-org" data-i18n="exp7Org">AthenaSummary</div>
+          <p class="exp-desc" data-i18n="exp7Desc">Built the full online course material from scratch — slides, worked examples and statistics exercises — tailored to student level.</p>
+        </div>
+      </div>
+
+      <!-- 8. Picnic & Jumbo -->
+      <div class="exp-entry" data-reveal>
+        <div class="exp-period" data-i18n="exp8Period">Feb 2024 — Present</div>
+        <div class="exp-body">
+          <img src="images/jumbo.jpg" alt="Warehouse operations at Jumbo" class="exp-img wipe">
+          <h3 class="exp-role" data-i18n="exp8Role">Warehouse Operations</h3>
+          <div class="exp-org" data-i18n="exp8Org">Picnic &amp; Jumbo</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS
+       ============================================================ -->
+  <section class="section s-skills" id="skills">
+    <div class="container">
+      <span class="eyebrow" data-i18n="skillsEyebrow">Skills</span>
+      <div class="skills-grid" data-reveal>
+
+        <div class="skills-col">
+          <h3 data-i18n="skillsCol1">Tools &amp; Tech</h3>
+          <ul>
+            <li>Lovable</li>
+            <li>Supabase</li>
+            <li>Antigravity</li>
+            <li>GitHub</li>
+            <li>Claude</li>
+            <li>WordPress</li>
+            <li>Blender</li>
+            <li>Canva</li>
+            <li>Google Stitch</li>
+          </ul>
+        </div>
+
+        <div class="skills-col">
+          <h3 data-i18n="skillsCol2">Research &amp; Data</h3>
+          <ul>
+            <li>Stata</li>
+            <li>R</li>
+            <li>MS Excel</li>
+            <li data-i18n="skillEconometrics">Econometrics</li>
+            <li data-i18n="skillPanelData">Panel data analysis</li>
+          </ul>
+        </div>
+
+        <div class="skills-col">
+          <h3 data-i18n="skillsCol3">Languages</h3>
+          <ul>
+            <li data-i18n="langIt">Italian — Native</li>
+            <li data-i18n="langEn">English — Fluent</li>
+            <li data-i18n="langPt">Portuguese — Conversational</li>
+            <li data-i18n="langEs">Spanish — Basic</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT + FOOTER
+       ============================================================ -->
+  <section class="section s-contact" id="contact">
+    <div class="container" data-reveal>
+      <span class="eyebrow" data-i18n="contactEyebrow">Contact</span>
+      <h2 class="contact-title" data-i18n="contactTitle">Always open to interesting projects and conversations.</h2>
+      <div class="contact-links">
+        <a href="mailto:madlamps.co@gmail.com" class="magnetic"><span data-i18n="contactEmail">Email</span> <span class="arrow">&#8599;</span></a>
+        <!-- TODO: replace with the real LinkedIn profile URL before going live -->
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener" class="magnetic"><span data-i18n="contactLinkedin">LinkedIn</span> <span class="arrow">&#8599;</span></a>
+      </div>
+      <div class="footer" data-i18n="footer">© 2026 Antonio Di Domenico · Utrecht / Rotterdam</div>
+    </div>
+  </section>
+
+  <script>
+  'use strict';
+
+  /* ==============================================================
+     1. TRANSLATIONS
+     English is complete. Italian and Dutch carry clearly labeled
+     placeholders — replace each "[IT: translate me]" /
+     "[NL: translate me]" with the real translation.
+     ============================================================== */
+  const translations = {
+    en: {
+      navAbout: "About",
+      navProjects: "Projects",
+      navThesis: "Thesis",
+      navExperience: "Experience",
+      navContact: "Contact",
+
+      heroEyebrow: "MSc Finance · RSM Rotterdam",
+      heroDescriptor: "Curious about the places where economic thinking, technology and communication meet.",
+      heroBtnWork: "See my work",
+      heroBtnContact: "Get in touch",
+
+      /* Typed inside quotes in the commit line; the surrounding
+         `$ git commit -m` and the stack list stay in English (code). */
+      commitMessage: "portfolio: built for RSM Digital Content Optimisation Project",
+
+      aboutEyebrow: "About",
+      aboutQuote: "“I learned that connection with people does not require a shared background — only a shared willingness to be present.”",
+      aboutP1: "I studied Economics and Business Economics at Utrecht University, finishing with a 7.85 GPA, a completed Honours Programme and a bachelor thesis graded 9.2. The degree taught me to think in models and data; the Honours Programme taught me to work closely with people who think nothing like I do — and that the second skill is worth at least as much as the first.",
+      aboutP2: "Then came Rio. A semester at PUC-Rio was the first time I had ever left Europe. I picked up Portuguese through everyday conversations rather than classrooms, learned samba because saying no felt like the wrong answer, and travelled across South America whenever the calendar allowed. I came back more independent, more curious, and much harder to unsettle.",
+      aboutP3: "These days I build things on the side — most recently Noce, a community map of overlooked places — while working part-time at Ex Primo, an Italian communication and marketing agency. In September 2026 I start the MSc in Finance and Investments at RSM Rotterdam. I learn fastest when I am in the middle of something I do not yet know how to finish.",
+
+      projectsEyebrow: "Selected Projects",
+      projNoceTag: "Web App · Nonprofit Prototype",
+      projNoceTitle: "Noce",
+      projNoceDesc: "A community map that collects the local knowledge Google Maps misses — hidden monuments, thermal springs, unmarked historical sites that residents know by heart. Named after my grandmother's surname, it gives visibility to overlooked places and rewards contributors with points. Nonprofit prototype, not yet public.",
+      projNewsTag: "Editorial · Community",
+      projNewsTitle: "Honours Newsletter",
+      projNewsDesc: "Led the editorial team and LinkedIn channel of the Utrecht University Honours Programme for two years — first as a contributor, then as team lead. Editorial calendar, copy review, contributor coordination and LinkedIn growth, with issues designed in Canva with AI support.",
+      projScoutsTag: "Programme · AI",
+      projScoutsTitle: "AI Scouts",
+      projScoutsDesc: "Selected from roughly 3,000 applicants (~3% admission rate) for a 40-hour programme led by a UC Berkeley instructor. Built Noce as my personal project and peer-mentored participants building educational games, writing-skill apps and free diet platforms.",
+
+      thesisEyebrow: "Research",
+      thesisTitle: "Do Chinese Capital Controls Raise the Cost of Debt for European Firms?",
+      thesisSubtitle: "Bachelor Thesis · Utrecht University · Applied Economics Research Course · Graded 9.2 / 10",
+      thesisBody: "My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow money. The intuition is that when capital cannot move freely out of China, it affects global liquidity conditions in ways that ripple through to European credit markets. I tested this using panel data on 600 firms from the STOXX Europe 600 index across 22 years, combining econometric methods with a question I had become genuinely curious about through my interest in international finance. The result was a 9.2 — the grade I am most proud of, not because of the number but because the question was genuinely mine.",
+      thesisStat1Label: "STOXX Europe 600 firms",
+      thesisStat2Label: "Panel data 2002–2024",
+      thesisStat2Suffix: " yrs",
+      thesisStat3Label: "Final grade",
+
+      expEyebrow: "Experience",
+      exp1Period: "Sep 2026",
+      exp1Role: "MSc Finance and Investments",
+      exp1Org: "RSM Erasmus University Rotterdam",
+      exp2Period: "Jun 2026 — Present",
+      exp2Role: "Accounting Assistant",
+      exp2Org: "Ex Primo · Communication & Marketing Agency, Italy",
+      exp2Desc: "Supporting client accounting operations for a pension fund alongside a team whose daily work is campaigns, content and digital communication — one reason I chose it.",
+      exp3Period: "Feb — May 2026",
+      exp3Role: "Selected Participant",
+      exp3Org: "AI Scouts",
+      exp3Desc: "Built Noce and peer-mentored participants across a 40-hour curriculum on AI-agent workflows and web application development.",
+      exp4Period: "Jan 2026 — Present",
+      exp4Role: "Co-Organizer, Utrecht Chapter",
+      exp4Org: "Volunteers",
+      exp4Desc: "Launched the first Utrecht food drive: approached the head manager of five local Jumbo stores, produced bilingual EN/NL outreach materials, recruited and coordinated student volunteers.",
+      exp5Period: "Aug 2025 — Jan 2026",
+      exp5Role: "Exchange Semester",
+      exp5Org: "PUC-Rio, Brazil",
+      exp5Desc: "The first time I had ever left Europe. Took five courses including Corporate Law I entirely in Portuguese. Travelled across South America. Came back more independent, more curious, and far more confident.",
+      exp6Period: "Feb 2024 — Jul 2025",
+      exp6Role: "Head of Public Relations",
+      exp6Org: "Utrecht University Honours Programme",
+      exp6Desc: "Led the monthly newsletter and LinkedIn channel across two years — first as contributor, then as team lead.",
+      exp7Period: "Oct 2024 — Jun 2025",
+      exp7Role: "Mathematics and Statistics Tutor",
+      exp7Org: "AthenaSummary",
+      exp7Desc: "Built the full online course material from scratch — slides, worked examples and statistics exercises — tailored to student level.",
+      exp8Period: "Feb 2024 — Present",
+      exp8Role: "Warehouse Operations",
+      exp8Org: "Picnic & Jumbo",
+
+      skillsEyebrow: "Skills",
+      skillsCol1: "Tools & Tech",
+      skillsCol2: "Research & Data",
+      skillsCol3: "Languages",
+      skillEconometrics: "Econometrics",
+      skillPanelData: "Panel data analysis",
+      langIt: "Italian — Native",
+      langEn: "English — Fluent",
+      langPt: "Portuguese — Conversational",
+      langEs: "Spanish — Basic",
+
+      contactEyebrow: "Contact",
+      contactTitle: "Always open to interesting projects and conversations.",
+      contactEmail: "Email",
+      contactLinkedin: "LinkedIn",
+      footer: "© 2026 Antonio Di Domenico · Utrecht / Rotterdam"
+    },
+
+    /* ---- ITALIAN — replace every placeholder ------------------- */
+    it: {
+      navAbout: "[IT: translate me]",
+      navProjects: "[IT: translate me]",
+      navThesis: "[IT: translate me]",
+      navExperience: "[IT: translate me]",
+      navContact: "[IT: translate me]",
+      heroEyebrow: "[IT: translate me]",
+      heroDescriptor: "[IT: translate me]",
+      heroBtnWork: "[IT: translate me]",
+      heroBtnContact: "[IT: translate me]",
+      commitMessage: "[IT: translate me]",
+      aboutEyebrow: "[IT: translate me]",
+      aboutQuote: "[IT: translate me]",
+      aboutP1: "[IT: translate me]",
+      aboutP2: "[IT: translate me]",
+      aboutP3: "[IT: translate me]",
+      projectsEyebrow: "[IT: translate me]",
+      projNoceTag: "[IT: translate me]",
+      projNoceTitle: "Noce",
+      projNoceDesc: "[IT: translate me]",
+      projNewsTag: "[IT: translate me]",
+      projNewsTitle: "[IT: translate me]",
+      projNewsDesc: "[IT: translate me]",
+      projScoutsTag: "[IT: translate me]",
+      projScoutsTitle: "AI Scouts",
+      projScoutsDesc: "[IT: translate me]",
+      thesisEyebrow: "[IT: translate me]",
+      thesisTitle: "[IT: translate me]",
+      thesisSubtitle: "[IT: translate me]",
+      thesisBody: "[IT: translate me]",
+      thesisStat1Label: "[IT: translate me]",
+      thesisStat2Label: "[IT: translate me]",
+      thesisStat2Suffix: "[IT: translate me]",
+      thesisStat3Label: "[IT: translate me]",
+      expEyebrow: "[IT: translate me]",
+      exp1Period: "[IT: translate me]",
+      exp1Role: "[IT: translate me]",
+      exp1Org: "RSM Erasmus University Rotterdam",
+      exp2Period: "[IT: translate me]",
+      exp2Role: "[IT: translate me]",
+      exp2Org: "[IT: translate me]",
+      exp2Desc: "[IT: translate me]",
+      exp3Period: "[IT: translate me]",
+      exp3Role: "[IT: translate me]",
+      exp3Org: "AI Scouts",
+      exp3Desc: "[IT: translate me]",
+      exp4Period: "[IT: translate me]",
+      exp4Role: "[IT: translate me]",
+      exp4Org: "Volunteers",
+      exp4Desc: "[IT: translate me]",
+      exp5Period: "[IT: translate me]",
+      exp5Role: "[IT: translate me]",
+      exp5Org: "PUC-Rio, Brazil",
+      exp5Desc: "[IT: translate me]",
+      exp6Period: "[IT: translate me]",
+      exp6Role: "[IT: translate me]",
+      exp6Org: "[IT: translate me]",
+      exp6Desc: "[IT: translate me]",
+      exp7Period: "[IT: translate me]",
+      exp7Role: "[IT: translate me]",
+      exp7Org: "AthenaSummary",
+      exp7Desc: "[IT: translate me]",
+      exp8Period: "[IT: translate me]",
+      exp8Role: "[IT: translate me]",
+      exp8Org: "Picnic & Jumbo",
+      skillsEyebrow: "[IT: translate me]",
+      skillsCol1: "[IT: translate me]",
+      skillsCol2: "[IT: translate me]",
+      skillsCol3: "[IT: translate me]",
+      skillEconometrics: "[IT: translate me]",
+      skillPanelData: "[IT: translate me]",
+      langIt: "[IT: translate me]",
+      langEn: "[IT: translate me]",
+      langPt: "[IT: translate me]",
+      langEs: "[IT: translate me]",
+      contactEyebrow: "[IT: translate me]",
+      contactTitle: "[IT: translate me]",
+      contactEmail: "[IT: translate me]",
+      contactLinkedin: "LinkedIn",
+      footer: "[IT: translate me]"
+    },
+
+    /* ---- DUTCH — replace every placeholder --------------------- */
+    nl: {
+      navAbout: "[NL: translate me]",
+      navProjects: "[NL: translate me]",
+      navThesis: "[NL: translate me]",
+      navExperience: "[NL: translate me]",
+      navContact: "[NL: translate me]",
+      heroEyebrow: "[NL: translate me]",
+      heroDescriptor: "[NL: translate me]",
+      heroBtnWork: "[NL: translate me]",
+      heroBtnContact: "[NL: translate me]",
+      commitMessage: "[NL: translate me]",
+      aboutEyebrow: "[NL: translate me]",
+      aboutQuote: "[NL: translate me]",
+      aboutP1: "[NL: translate me]",
+      aboutP2: "[NL: translate me]",
+      aboutP3: "[NL: translate me]",
+      projectsEyebrow: "[NL: translate me]",
+      projNoceTag: "[NL: translate me]",
+      projNoceTitle: "Noce",
+      projNoceDesc: "[NL: translate me]",
+      projNewsTag: "[NL: translate me]",
+      projNewsTitle: "[NL: translate me]",
+      projNewsDesc: "[NL: translate me]",
+      projScoutsTag: "[NL: translate me]",
+      projScoutsTitle: "AI Scouts",
+      projScoutsDesc: "[NL: translate me]",
+      thesisEyebrow: "[NL: translate me]",
+      thesisTitle: "[NL: translate me]",
+      thesisSubtitle: "[NL: translate me]",
+      thesisBody: "[NL: translate me]",
+      thesisStat1Label: "[NL: translate me]",
+      thesisStat2Label: "[NL: translate me]",
+      thesisStat2Suffix: "[NL: translate me]",
+      thesisStat3Label: "[NL: translate me]",
+      expEyebrow: "[NL: translate me]",
+      exp1Period: "[NL: translate me]",
+      exp1Role: "[NL: translate me]",
+      exp1Org: "RSM Erasmus University Rotterdam",
+      exp2Period: "[NL: translate me]",
+      exp2Role: "[NL: translate me]",
+      exp2Org: "[NL: translate me]",
+      exp2Desc: "[NL: translate me]",
+      exp3Period: "[NL: translate me]",
+      exp3Role: "[NL: translate me]",
+      exp3Org: "AI Scouts",
+      exp3Desc: "[NL: translate me]",
+      exp4Period: "[NL: translate me]",
+      exp4Role: "[NL: translate me]",
+      exp4Org: "Volunteers",
+      exp4Desc: "[NL: translate me]",
+      exp5Period: "[NL: translate me]",
+      exp5Role: "[NL: translate me]",
+      exp5Org: "PUC-Rio, Brazil",
+      exp5Desc: "[NL: translate me]",
+      exp6Period: "[NL: translate me]",
+      exp6Role: "[NL: translate me]",
+      exp6Org: "[NL: translate me]",
+      exp6Desc: "[NL: translate me]",
+      exp7Period: "[NL: translate me]",
+      exp7Role: "[NL: translate me]",
+      exp7Org: "AthenaSummary",
+      exp7Desc: "[NL: translate me]",
+      exp8Period: "[NL: translate me]",
+      exp8Role: "[NL: translate me]",
+      exp8Org: "Picnic & Jumbo",
+      skillsEyebrow: "[NL: translate me]",
+      skillsCol1: "[NL: translate me]",
+      skillsCol2: "[NL: translate me]",
+      skillsCol3: "[NL: translate me]",
+      skillEconometrics: "[NL: translate me]",
+      skillPanelData: "[NL: translate me]",
+      langIt: "[NL: translate me]",
+      langEn: "[NL: translate me]",
+      langPt: "[NL: translate me]",
+      langEs: "[NL: translate me]",
+      contactEyebrow: "[NL: translate me]",
+      contactTitle: "[NL: translate me]",
+      contactEmail: "[NL: translate me]",
+      contactLinkedin: "LinkedIn",
+      footer: "[NL: translate me]"
+    }
+  };
+
+  /* ==============================================================
+     2. GLOBAL FLAGS
+     ============================================================== */
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Fine pointer + desktop width = enable cursor / magnetic effects
+  const isDesktop = window.matchMedia('(pointer: fine)').matches && window.innerWidth > 768;
+
+  /* ==============================================================
+     3. I18N — language switching
+     Every visible string carries data-i18n="key". On switch, all
+     translatable text fades out 150ms, updates, fades back in.
+     Preference persists in localStorage.
+     ============================================================== */
+  let currentLang = 'en';
+  let commitTyping = false; // guard: don't clobber the commit line mid-animation
+
+  function applyLang(lang, animate) {
+    const dict = translations[lang];
+    if (!dict) return;
+    currentLang = lang;
+
+    const update = () => {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        // The commit message is written by the typing engine while it runs
+        if (commitTyping && el.id === 'cmMessage') return;
+        const key = el.getAttribute('data-i18n');
+        if (key in dict) el.textContent = dict[key];
+      });
+      document.documentElement.lang = lang;
+      // Highlight the active language in every switcher instance
+      document.querySelectorAll('.lang-switch button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+    };
+
+    if (animate && !reducedMotion) {
+      document.body.classList.add('i18n-fade');       // fade out (150ms)
+      setTimeout(() => {
+        update();
+        document.body.classList.remove('i18n-fade');  // fade back in
+      }, 150);
+    } else {
+      update();
+    }
+
+    try { localStorage.setItem('lang', lang); } catch (e) { /* private mode */ }
+  }
+
+  document.querySelectorAll('.lang-switch button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.lang !== currentLang) applyLang(btn.dataset.lang, true);
+    });
+  });
+
+  // Restore saved preference (no fade on first paint)
+  (function initLang() {
+    let saved = null;
+    try { saved = localStorage.getItem('lang'); } catch (e) { /* ignore */ }
+    if (saved && translations[saved] && saved !== 'en') applyLang(saved, false);
+  })();
+
+  /* ==============================================================
+     4. NAVIGATION — scrolled state, name fade-in, blob fade,
+        mobile menu
+     ============================================================== */
+  const nav = document.getElementById('nav');
+  const heroEl = document.querySelector('.hero');
+  const heroBg = document.getElementById('heroBg');
+
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 60);
+    // Site name appears once the hero has been scrolled past
+    nav.classList.toggle('past-hero', y > heroEl.offsetHeight - 120);
+    // Hero blobs fade out while scrolling past the hero
+    heroBg.style.opacity = Math.max(0, 1 - y / (heroEl.offsetHeight * 0.7)).toFixed(2);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Mobile hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', open);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ==============================================================
+     5. HERO NAME REVEAL
+     "Antonio" / "Di Domenico" split into characters. Each char
+     fades up over 400ms; 55ms between chars, first at 500ms,
+     extra 120ms pause between the two name parts.
+     ============================================================== */
+  const heroName = document.getElementById('heroName');
+  const NAME_PARTS = ['Antonio', 'Di Domenico'];
+  let nameFinishTime = 0; // ms from now until the last char has fully landed
+
+  (function buildName() {
+    let delay = 500;
+    NAME_PARTS.forEach((part, p) => {
+      if (p > 0) delay += 120; // pause between names
+      const word = document.createElement('span');
+      word.className = 'word';
+      for (const ch of part) {
+        const span = document.createElement('span');
+        span.className = 'ch';
+        // Non-breaking space keeps the inline-block span from collapsing
+        span.textContent = ch === ' ' ? ' ' : ch;
+        span.style.transitionDelay = delay + 'ms';
+        word.appendChild(span);
+        delay += 55;
+      }
+      heroName.appendChild(word);
+    });
+    nameFinishTime = delay - 55 + 400; // last char delay + its 400ms transition
+
+    if (reducedMotion) {
+      heroName.querySelectorAll('.ch').forEach(s => (s.style.transitionDelay = '0ms'));
+      heroName.classList.add('play');
+      nameFinishTime = 0;
+    } else {
+      // Kick off on the next frame so the hidden state paints first
+      requestAnimationFrame(() => requestAnimationFrame(() => heroName.classList.add('play')));
+    }
+  })();
+
+  /* ==============================================================
+     6. COMMIT-LINE ANIMATION — the signature piece
+     Types three staged parts at 35ms/char with a blinking cursor
+     that travels with the text. Runs once on page load; the strip
+     stays visible permanently and never re-animates.
+     Built on requestAnimationFrame (not setInterval).
+     ============================================================== */
+  const CHAR_MS = 35;
+  const cmPrompt     = document.getElementById('cmPrompt');
+  const cmQuoteOpen  = document.getElementById('cmQuoteOpen');
+  const cmMessage    = document.getElementById('cmMessage');
+  const cmQuoteClose = document.getElementById('cmQuoteClose');
+  const cmLine2      = document.getElementById('cmLine2');
+  const cmMeta       = document.getElementById('cmMeta');
+  const cmCursor     = document.getElementById('cmCursor');
+
+  // These two stay in English in every language — they are code
+  const CM_PROMPT = '$ git commit -m ';
+  const CM_META   = '— DP&S · July 2026 · stack: Claude Code, Google Stitch, GitHub, Netlify';
+
+  // Place the blinking cursor immediately after a given element
+  function moveCursorAfter(el) {
+    el.insertAdjacentElement('afterend', cmCursor);
+  }
+
+  // Type `text` into `el` at CHAR_MS per character, then call done()
+  function typeInto(el, text, done) {
+    let i = 0;
+    let last = performance.now();
+    function frame(now) {
+      // Catch up if a frame took longer than one character slot
+      while (now - last >= CHAR_MS && i < text.length) {
+        el.textContent += text[i++];
+        last += CHAR_MS;
+      }
+      if (i < text.length) requestAnimationFrame(frame);
+      else done();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function runCommitAnimation() {
+    if (reducedMotion) {
+      // Final state instantly — no typing
+      cmPrompt.textContent = CM_PROMPT;
+      cmQuoteOpen.textContent = '"';
+      cmMessage.textContent = translations[currentLang].commitMessage;
+      cmQuoteClose.textContent = '"';
+      cmMeta.textContent = CM_META;
+      cmLine2.classList.add('show');
+      moveCursorAfter(cmMeta);
+      return;
+    }
+
+    commitTyping = true;
+    moveCursorAfter(cmPrompt);
+
+    // Part 1 (dim): the git command
+    typeInto(cmPrompt, CM_PROMPT, () => {
+      setTimeout(() => {
+        // Part 2 (white): "message" — quotes + translatable message
+        moveCursorAfter(cmQuoteOpen);
+        typeInto(cmQuoteOpen, '"', () => {
+          moveCursorAfter(cmMessage);
+          typeInto(cmMessage, translations[currentLang].commitMessage, () => {
+            moveCursorAfter(cmQuoteClose);
+            typeInto(cmQuoteClose, '"', () => {
+              setTimeout(() => {
+                // Part 3 (dim, new line): attribution + stack
+                cmLine2.classList.add('show');
+                moveCursorAfter(cmMeta);
+                typeInto(cmMeta, CM_META, () => {
+                  commitTyping = false; // cursor keeps blinking at the end
+                  // If the language changed mid-animation, sync the message now
+                  cmMessage.textContent = translations[currentLang].commitMessage;
+                });
+              }, 300); // natural pause before part 3
+            });
+          });
+        });
+      }, 300); // natural pause after part 1
+    });
+  }
+
+  // Part 1 starts 400ms after the hero name finishes revealing
+  setTimeout(runCommitAnimation, nameFinishTime + 400);
+
+  /* ==============================================================
+     7. SCROLL REVEALS + IMAGE WIPES + STAT COUNTERS
+     One IntersectionObserver; every animation fires once.
+     ============================================================== */
+
+  // Stagger direct children of each reveal group by 80ms
+  document.querySelectorAll('[data-reveal]').forEach(group => {
+    Array.from(group.children).forEach((child, i) => {
+      child.style.transitionDelay = (i * 80) + 'ms';
+    });
+  });
+
+  // Stat counter: 0 → target over 1400ms with ease-out cubic
+  function animateCount(el) {
+    const target = parseFloat(el.dataset.count);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const DURATION = 1400;
+    const start = performance.now();
+    function frame(now) {
+      const p = Math.min((now - start) / DURATION, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      el.textContent = (target * eased).toFixed(decimals);
+      if (p < 1) requestAnimationFrame(frame);
+      else el.textContent = target.toFixed(decimals);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  if (reducedMotion) {
+    // Everything lands in its final state, counters included
+    document.querySelectorAll('[data-reveal]').forEach(g => g.classList.add('in-view'));
+    document.querySelectorAll('.wipe').forEach(w => w.classList.add('in-view'));
+    document.querySelectorAll('.count').forEach(c => {
+      c.textContent = parseFloat(c.dataset.count).toFixed(parseInt(c.dataset.decimals || '0', 10));
+    });
+  } else {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in-view');
+        // Kick off counters the first time the thesis stats appear
+        entry.target.querySelectorAll('.count:not(.done)').forEach(c => {
+          c.classList.add('done');
+          animateCount(c);
+        });
+        io.unobserve(entry.target); // run once
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('[data-reveal], .wipe').forEach(el => io.observe(el));
+  }
+
+  /* ==============================================================
+     8. MAGNETIC ELEMENTS (desktop only)
+     Within 60px of a .magnetic element the element drifts toward
+     the cursor (max 8px) with lerp; springs back on leave.
+     ============================================================== */
+  if (isDesktop && !reducedMotion) {
+    const RANGE = 60;   // activation distance beyond the element edges
+    const MAX_PULL = 8; // maximum shift in px
+    const magnets = Array.from(document.querySelectorAll('.magnetic')).map(el => ({
+      el, x: 0, y: 0, tx: 0, ty: 0
+    }));
+    let mouseX = -9999, mouseY = -9999;
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }, { passive: true });
+
+    (function magnetLoop() {
+      magnets.forEach(m => {
+        const r = m.el.getBoundingClientRect();
+        const inRange =
+          mouseX > r.left - RANGE && mouseX < r.right + RANGE &&
+          mouseY > r.top - RANGE && mouseY < r.bottom + RANGE;
+        if (inRange) {
+          const cx = r.left + r.width / 2;
+          const cy = r.top + r.height / 2;
+          // Pull proportionally toward the cursor, capped at MAX_PULL
+          m.tx = Math.max(-MAX_PULL, Math.min(MAX_PULL, (mouseX - cx) * 0.15));
+          m.ty = Math.max(-MAX_PULL, Math.min(MAX_PULL, (mouseY - cy) * 0.15));
+        } else {
+          m.tx = 0; m.ty = 0; // spring back
+        }
+        m.x += (m.tx - m.x) * 0.18;
+        m.y += (m.ty - m.y) * 0.18;
+        m.el.style.transform = 'translate(' + m.x.toFixed(2) + 'px,' + m.y.toFixed(2) + 'px)';
+      });
+      requestAnimationFrame(magnetLoop);
+    })();
+  }
+
+  /* ==============================================================
+     9. CUSTOM CURSOR (desktop only)
+     6px navy dot lerping behind the mouse (factor 0.12); grows to
+     28px semi-transparent over links, buttons and cards.
+     ============================================================== */
+  if (isDesktop && !reducedMotion) {
+    const dot = document.getElementById('cursorDot');
+    let cx = -100, cy = -100; // current (lerped) position
+    let px = -100, py = -100; // latest pointer position
+    let seen = false;
+
+    window.addEventListener('mousemove', e => {
+      px = e.clientX;
+      py = e.clientY;
+      if (!seen) { seen = true; cx = px; cy = py; dot.classList.add('on'); }
+    }, { passive: true });
+
+    // Grow over interactive elements (event delegation)
+    const HOVER_SELECTOR = 'a, button, .card';
+    document.addEventListener('mouseover', e => {
+      if (e.target.closest(HOVER_SELECTOR)) dot.classList.add('grow');
+    }, { passive: true });
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest(HOVER_SELECTOR)) dot.classList.remove('grow');
+    }, { passive: true });
+
+    (function cursorLoop() {
+      cx += (px - cx) * 0.12;
+      cy += (py - cy) * 0.12;
+      dot.style.left = cx + 'px';
+      dot.style.top = cy + 'px';
+      requestAnimationFrame(cursorLoop);
+    })();
+  }
+
+  /* ==============================================================
+     10. SMOOTH SCROLL for anchor links
+     CSS scroll-behavior handles most of it; this adds a JS
+     fallback and respects reduced motion.
+     ============================================================== */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+    });
+  });
+  </script>
+</body>
+</html>
