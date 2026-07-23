@@ -8,12 +8,12 @@
 
   <!-- ============================================================
        EXTERNAL DEPENDENCIES — the only two allowed:
-       1. Google Fonts  (Fraunces / Inter / JetBrains Mono)
+       1. Google Fonts  (Fraunces / Inter)
        2. Three.js r128 (cdnjs) — used only for the Noce 3D map
        ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <!-- Mark the document as JS-capable ASAP. All "hidden until animated"
@@ -37,7 +37,6 @@
       --ease:   cubic-bezier(0.16, 1, 0.3, 1); /* "expo-out" feel    */
       --serif:  'Fraunces', Georgia, serif;
       --sans:   'Inter', -apple-system, sans-serif;
-      --mono:   'JetBrains Mono', monospace;
     }
 
     /* ============================================================
@@ -79,7 +78,8 @@
     /* Layout helpers */
     .wrap   { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
     section { padding: 8rem 0; position: relative; }
-    .dark   { background: var(--ink); color: var(--bg); }
+    /* full-colour "chapter" sections: deep teal with off-white text */
+    .teal   { background: var(--teal); color: var(--bg); }
 
     .eyebrow {
       display: block;
@@ -96,7 +96,7 @@
       color: var(--teal);
       margin-bottom: 2.5rem;
     }
-    .dark .section-title { color: var(--bg); }
+    .teal .section-title { color: var(--bg); }
 
     /* ============================================================
        3. SCROLL PROGRESS INDICATOR — ultra-thin terracotta line
@@ -249,7 +249,29 @@
       align-items: center;
       position: relative;
       padding: 8rem 0 6rem;
+      overflow: hidden;
     }
+
+    /* Full-bleed background photo. The image is 30% taller than the
+       section and offset upward so the JS parallax drift (slower than
+       scroll) plus the 1.00 → 1.08 scale never expose an edge. A soft
+       off-white gradient keeps the hero text fully readable. */
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg img {
+      position: absolute;
+      top: -15%; left: 0;
+      width: 100%; height: 130%;
+      object-fit: cover;
+      will-change: transform;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(250,250,247,0.55) 0%, rgba(250,250,247,0.85) 100%);
+    }
+    .hero .wrap { position: relative; z-index: 1; }
+    .scroll-hint { z-index: 1; }   /* stays above the hero background */
 
     .hero-photo {
       width: 72px; height: 72px;
@@ -278,12 +300,18 @@
     }
     .hero-name.go .ch { opacity: 1; transform: none; filter: blur(0); }
 
-    .hero-desc {
+    /* The single human line that writes itself out after the name —
+       plain Inter, no terminal styling, no cursor. Each character is a
+       span that fades in; once written, it simply rests. */
+    .hero-line {
       font-size: 1.05rem;
       color: var(--mut);
-      max-width: 34rem;
+      max-width: 36rem;
       margin-bottom: 2.6rem;
+      min-height: 1.8em;   /* reserve the line before it types */
     }
+    .hero-line .hl { opacity: 0; transition: opacity 0.35s ease; }
+    .hero-line .hl.on { opacity: 1; }
 
     .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
@@ -328,43 +356,15 @@
     }
 
     /* ============================================================
-       7. COMMIT-LINE STRIP — self-writing terminal on dark
-       ============================================================ */
-    .commit {
-      background: var(--ink);
-      padding: 2.6rem 2rem;
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      line-height: 2;
-      overflow-x: auto;
-    }
-    .commit .inner { max-width: 900px; margin: 0 auto; white-space: pre-wrap; word-break: break-word; }
-    .c-dim { color: var(--mut); }
-    .c-lit { color: var(--bg); }
-    .c-cursor {
-      display: inline-block;
-      width: 0.55em; height: 1.1em;
-      background: var(--terra);
-      vertical-align: text-bottom;
-      margin-left: 2px;
-      animation: blink 1s steps(1) infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-    /* JS empties the lines and retypes them; hide originals only when JS runs */
-    html.js .commit .typed-target { visibility: hidden; }
-    html.js .commit.typing .typed-target,
-    html.js .commit.done   .typed-target { visibility: visible; }
-
-    /* ============================================================
        8. SECTION ENTRANCE — the "unfold"
           scale 0.96 + fade + rise + clip-path reveal from the bottom.
           Children marked .stg stagger in 100ms apart.
        ============================================================ */
     html.js .unfold {
       opacity: 0;
-      transform: translateY(40px) scale(0.96);
+      transform: translateY(30px) scale(0.97);
       clip-path: inset(12% 0 0 0);
-      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease), clip-path 0.9s var(--ease);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), clip-path 0.8s var(--ease);
     }
     html.js .unfold.in {
       opacity: 1;
@@ -440,7 +440,7 @@
        ============================================================ */
     .pgrid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       border: 1px solid var(--line);
     }
     .pcard {
@@ -491,7 +491,7 @@
       color: var(--mut);
       white-space: nowrap;
     }
-    .dark .chip { border-color: var(--line-d); color: var(--mut-d); }
+    .teal .chip { border-color: var(--line-d); color: var(--mut-d); }
 
     /* ============================================================
        12. NOCE — Three.js interactive map section
@@ -536,34 +536,6 @@
     }
 
     /* ============================================================
-       13. MARQUEE TICKER — pure CSS, pauses on hover
-       ============================================================ */
-    .marquee {
-      background: var(--ink);
-      overflow: hidden;
-      padding: 1.05rem 0;
-      border-top: 1px solid var(--line-d);
-      border-bottom: 1px solid var(--line-d);
-    }
-    .marquee-track {
-      display: inline-flex;
-      white-space: nowrap;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--mut-d);
-      animation: marquee 30s linear infinite;
-      will-change: transform;
-    }
-    .marquee:hover .marquee-track { animation-play-state: paused; }
-    .marquee-track span { padding-right: 2.5rem; }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); } /* content is duplicated once */
-    }
-
-    /* ============================================================
        14. ACADEMIC JOURNEY — pinned scroll storytelling.
            Outer .journey is very tall; the inner .journey-sticky pins
            for the whole distance while JS maps scroll progress onto
@@ -571,7 +543,7 @@
        ============================================================ */
     .journey {
       height: 420vh;      /* the "scroll runway" for the pinned scene */
-      background: var(--ink);
+      background: var(--teal);
       color: var(--bg);
       padding: 0;
     }
@@ -602,7 +574,7 @@
     /* the drawn route — dashoffset driven by scroll progress in JS */
     .jpath    { fill: none; stroke: var(--bg); stroke-width: 2.5; stroke-linecap: round; }
 
-    .jnode { fill: var(--ink); stroke: rgba(250,250,247,0.4); stroke-width: 2; r: 7px; transition: fill 0.5s, stroke 0.5s; }
+    .jnode { fill: var(--teal); stroke: rgba(250,250,247,0.4); stroke-width: 2; r: 7px; transition: fill 0.5s, stroke 0.5s; }
     .jnode.on { fill: var(--bg); stroke: var(--bg); }
     /* Rotterdam — the final, emphasised node: terracotta + glow */
     .jnode.final.on {
@@ -625,6 +597,14 @@
     .jcity p  { font-size: 0.88rem; color: var(--mut-d); line-height: 1.55; margin-bottom: 0.9rem; max-width: 26ch; }
     .jcity .plx-wrap { width: 150px; aspect-ratio: 3 / 2; }
     .jcity-rdam h3 { color: var(--terra); }
+    /* Rotterdam's short emphasis line under its caption */
+    .jcity .cap2 {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--terra);
+      margin-bottom: 0.9rem;
+    }
 
     /* Desktop positions — tuned to the SVG path coordinates */
     .jcity-utrecht { left: 8%;  top: 19%; }
@@ -690,49 +670,26 @@
     .tlabel { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.04em; }
 
     /* ============================================================
-       16. EXPERIENCE — dark chapter with cinematic photo break
+       16. EXPERIENCE — quiet editorial list on off-white.
+       Ordered by importance; the first entry (Ex Primo) is visually
+       lead: larger role, more breathing room.
        ============================================================ */
-    .xp-break {
-      height: 62vh;
-      margin-bottom: 5rem;
-    }
-    .xp-break .plx-wrap { height: 100%; border-radius: 0; }
-
     .xp {
       display: grid;
       grid-template-columns: 170px 1fr;
       gap: 2.2rem;
       padding: 2.4rem 0;
-      border-top: 1px solid var(--line-d);
+      border-top: 1px solid var(--line);
     }
-    .xp-period { font-size: 0.82rem; color: var(--mut-d); letter-spacing: 0.03em; padding-top: 0.45rem; }
+    .xp-period { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.03em; padding-top: 0.45rem; }
     .xp-role   { font-family: var(--serif); font-size: 1.45rem; margin-bottom: 0.15rem; }
     .xp-org    { font-size: 0.85rem; font-weight: 600; color: var(--terra); letter-spacing: 0.05em; margin-bottom: 0.7rem; }
-    .xp-desc   { font-size: 0.92rem; color: var(--mut-d); max-width: 38rem; }
+    .xp-desc   { font-size: 0.92rem; color: var(--mut); max-width: 38rem; }
     .xp-photo  { margin-top: 1.2rem; width: 220px; aspect-ratio: 3 / 2; }
 
-    /* ============================================================
-       17. SKILLS — three quiet columns
-       ============================================================ */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3rem;
-    }
-    .skills-grid h3 {
-      font-size: 1.25rem;
-      color: var(--teal);
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.8rem;
-      border-bottom: 1px solid var(--line);
-    }
-    .skills-grid ul { list-style: none; }
-    .skills-grid li {
-      font-size: 0.92rem;
-      color: var(--mut);
-      padding: 0.35rem 0;
-    }
-    .skills-grid li strong { color: var(--ink); font-weight: 500; }
+    .xp-lead { padding: 3.2rem 0; }
+    .xp-lead .xp-role { font-size: 2.1rem; color: var(--teal); }
+    .xp-lead .xp-desc { font-size: 1rem; }
 
     /* ============================================================
        18. CONTACT + FOOTER
@@ -757,7 +714,7 @@
     .contact-links .arrow { color: var(--terra); }
 
     footer {
-      background: var(--ink);
+      background: var(--teal);
       color: var(--mut-d);
       font-size: 0.8rem;
       padding: 2.5rem 2rem;
@@ -823,9 +780,8 @@
 
       .xp { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.8rem 0; }
       .xp-photo { width: 180px; }
-      .xp-break { height: 40vh; margin-bottom: 3rem; }
-
-      .skills-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .xp-lead { padding: 2.4rem 0; }
+      .xp-lead .xp-role { font-size: 1.7rem; }
     }
 
     /* ============================================================
@@ -839,11 +795,10 @@
         transition: none !important;
       }
       html.js .hero-name .ch { opacity: 1; transform: none; filter: none; }
+      html.js .hero-line .hl { opacity: 1; }
       html.js .unfold { opacity: 1; transform: none; clip-path: none; }
       html.js .unfold .stg { opacity: 1; transform: none; }
       html.js .plx-wrap { clip-path: none; }
-      html.js .commit .typed-target { visibility: visible; }
-      .c-cursor { display: none; }
       .jcity, .jclose { opacity: 1 !important; transform: none !important; }
       .jnode { fill: var(--bg); stroke: var(--bg); }
       .jnode.final { fill: var(--terra); stroke: var(--terra); }
@@ -894,12 +849,15 @@
        1. HERO
        ============================================================ -->
   <header id="top" class="hero">
+    <!-- background photo + readability gradient; JS drives the drift/scale -->
+    <div class="hero-bg" aria-hidden="true"><img id="heroBg" src="images/hero-bg.jpg" alt=""></div>
     <div class="wrap">
       <img class="hero-photo" src="images/antonio.jpg" alt="Portrait of Antonio Di Domenico" width="72" height="72">
       <span class="eyebrow" data-i18n="hero.eyebrow">MSc Finance · RSM Rotterdam</span>
       <!-- JS splits this into per-character spans for the filmic reveal -->
       <h1 class="hero-name" id="heroName">Antonio Di Domenico</h1>
-      <p class="hero-desc" data-i18n="hero.desc">Curious about the places where economic thinking, technology and communication meet.</p>
+      <!-- writes itself out once after the name finishes, then rests -->
+      <p class="hero-line" id="heroLine" data-i18n="hero.line">A portfolio, built by hand, for the work I want to do next.</p>
       <div class="hero-cta">
         <a href="#projects" class="btn btn-fill magnetic"  data-i18n="hero.cta1">See my work</a>
         <a href="#contact"  class="btn btn-ghost magnetic" data-i18n="hero.cta2">Get in touch</a>
@@ -909,29 +867,17 @@
   </header>
 
   <!-- ============================================================
-       2. COMMIT-LINE STRIP — self-writing terminal.
-       The full text lives in the HTML (so no-JS / reduced-motion users
-       see it); JS retypes it character by character. The commit message
-       and stack list deliberately stay in English in all languages.
-       ============================================================ -->
-  <div class="commit" id="commit" aria-label="Terminal commit line">
-    <div class="inner"><span class="typed-target" id="commitText"><span class="c-dim">$ git commit -m </span><span class="c-lit">"portfolio: built for RSM Digital Content Optimisation Project"</span>
-<span class="c-dim">— DP&amp;S · July 2026 · Claude Code · Google Stitch · GitHub · Netlify</span></span><span class="c-cursor" id="commitCursor" aria-hidden="true"></span></div>
-  </div>
-
-  <!-- ============================================================
-       3. ABOUT
+       2. ABOUT — body copy and pull quote are intentional placeholders;
+       Antonio writes these himself.
        ============================================================ -->
   <section id="about" class="about">
     <div class="wrap unfold">
       <span class="eyebrow stg" data-i18n="about.eyebrow">About</span>
-      <p class="about-quote stg" data-i18n="about.quote">“I learned that connection with people does not require a shared background — only a shared willingness to be present.”</p>
-      <p class="stg" data-i18n="about.p1">I studied Economics and Business Economics at Utrecht University, where I completed the Honours Programme alongside my degree and graduated with a 7.85 GPA. My bachelor thesis — an econometric study of whether Chinese capital controls raise borrowing costs for European firms — was graded a 9.2, and it taught me that the questions I care about most sit somewhere between data and the real world.</p>
+      <p class="about-quote stg" data-i18n="about.quote">[PULL QUOTE — I will write this]</p>
       <div class="about-grid stg">
-        <p data-i18n="about.p2">In my third year I spent a semester at PUC-Rio in Rio de Janeiro — the first time I had ever left Europe. I learned Portuguese not in a classroom but through everyday life: buying fruit at the market, asking for directions, dancing samba badly and being corrected kindly. Travelling through South America afterwards quietly changed my sense of what is far away and what is possible.</p>
+        <p data-i18n="about.body">[ABOUT TEXT — I will write this]</p>
         <div class="plx-wrap"><img class="plx" src="images/exchange.jpg" alt="Antonio during his exchange semester in Rio de Janeiro"></div>
       </div>
-      <p class="stg" data-i18n="about.p3">These days I build things on the side — most recently Noce, a map of the local knowledge that never makes it onto Google Maps — while working part-time at Ex Primo, an Italian communication and marketing agency. In September 2026 I start the MSc in Finance and Investments at RSM Rotterdam. I learn fastest in the middle of something I don't yet know how to finish.</p>
     </div>
   </section>
 
@@ -945,32 +891,24 @@
       <div class="pgrid stg">
 
         <article class="pcard">
-          <span class="ptag" data-i18n="p1.tag">Editorial &amp; PR</span>
+          <span class="ptag" data-i18n="p1.tag">Editorial</span>
           <h3 data-i18n="p1.title">Honours Newsletter</h3>
-          <p data-i18n="p1.desc">As PR officer of the Honours Programme I designed and wrote the programme's newsletter — layout, interviews and all — turning a mailing-list obligation into something students actually opened.</p>
+          <p data-i18n="p1.desc">Led the editorial team and LinkedIn of the Utrecht University Honours Programme for two years — editorial calendar, copy review, contributor coordination, designed in Canva.</p>
           <div class="pimgs">
             <div class="plx-wrap"><img class="plx" src="images/newsletter-1.png" alt="Honours newsletter, first spread"></div>
             <div class="plx-wrap"><img class="plx" src="images/newsletter-2.png" alt="Honours newsletter, second spread"></div>
           </div>
-          <div class="chips"><span class="chip">Canva</span><span class="chip">WordPress</span></div>
+          <div class="chips"><span class="chip">Canva</span><span class="chip">LinkedIn</span></div>
         </article>
 
         <article class="pcard">
-          <span class="ptag" data-i18n="p2.tag">AI &amp; Education</span>
-          <h3 data-i18n="p2.title">AI Scouts</h3>
-          <p data-i18n="p2.desc">A student initiative exploring how AI tools are actually used in study and work. I helped run hands-on sessions where students tested tools on real tasks — and reported back honestly on what worked and what didn't.</p>
+          <span class="ptag" data-i18n="p2.tag">Community</span>
+          <h3 data-i18n="p2.title">Volunteers</h3>
+          <p data-i18n="p2.desc">Launched the first Utrecht food drive: approached the manager of five local Jumbo stores, produced bilingual EN/NL materials, and recruited and coordinated student volunteers.</p>
           <div class="pimgs">
-            <div class="plx-wrap"><img class="plx" src="images/aiscouts.png" alt="AI Scouts session material"></div>
+            <div class="plx-wrap"><img class="plx" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive"></div>
           </div>
-          <div class="chips"><span class="chip">Claude</span><span class="chip">Canva</span><span class="chip">GitHub</span></div>
-        </article>
-
-        <article class="pcard">
-          <span class="ptag" data-i18n="p3.tag">Side Project</span>
-          <h3 data-i18n="p3.title">Noce</h3>
-          <p data-i18n="p3.desc">A map of what maps miss — the local knowledge residents hold but Google Maps never captures. Named after my grandmother's surname. Explored in full below.</p>
-          <a class="plink" href="#noce" data-i18n="p3.link">Explore the map ↓</a>
-          <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span></div>
+          <div class="chips"><span class="chip">EN / NL</span><span class="chip">Canva</span></div>
         </article>
 
       </div>
@@ -992,7 +930,7 @@
         <div class="noce-card" id="noceCard"></div>
       </div>
       <div class="wrap noce-head">
-        <p class="noce-desc stg" data-i18n="noce.desc">Noce is a side project about the knowledge that lives in people rather than databases: the hidden thermal spring, the unmarked ruin, the street corner with a story. Residents pin what they know; the map keeps it. It's named after my grandmother's surname — she is exactly the kind of person this knowledge lives with.</p>
+        <p class="noce-desc stg" data-i18n="noce.desc">Built during AI Scouts — a selective programme I was admitted to — and named after my grandmother's surname.</p>
         <div class="chips stg" style="justify-content:center">
           <span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span><span class="chip">Google Stitch</span>
         </div>
@@ -1001,24 +939,13 @@
   </section>
 
   <!-- ============================================================
-       6. MARQUEE TICKER — dark strip, pure CSS scroll
-       (content duplicated once so the -50% loop is seamless)
-       ============================================================ -->
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>Lovable</span><span>·</span><span>Supabase</span><span>·</span><span>Antigravity</span><span>·</span><span>Google Maps API</span><span>·</span><span>Stata</span><span>·</span><span>R</span><span>·</span><span>Econometrics</span><span>·</span><span>Canva</span><span>·</span><span>GitHub</span><span>·</span><span>Blender</span><span>·</span><span>Claude</span><span>·</span><span>Google Stitch</span><span>·</span>
-      <span>Lovable</span><span>·</span><span>Supabase</span><span>·</span><span>Antigravity</span><span>·</span><span>Google Maps API</span><span>·</span><span>Stata</span><span>·</span><span>R</span><span>·</span><span>Econometrics</span><span>·</span><span>Canva</span><span>·</span><span>GitHub</span><span>·</span><span>Blender</span><span>·</span><span>Claude</span><span>·</span><span>Google Stitch</span><span>·</span>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       7. ACADEMIC JOURNEY — pinned scroll storytelling.
+       5. EDUCATION — ACADEMIC JOURNEY — pinned scroll storytelling.
        Two SVGs: horizontal route (desktop) and vertical route (mobile).
        JS drives stroke-dashoffset + node/city reveals from progress.
        ============================================================ -->
   <section id="journey" class="journey" aria-label="Academic journey: Utrecht, Rio de Janeiro, Rotterdam">
     <div class="journey-sticky" id="journeySticky">
-      <span class="eyebrow journey-eyebrow" data-i18n="journey.eyebrow">Academic Journey</span>
+      <span class="eyebrow journey-eyebrow" data-i18n="journey.eyebrow">Education</span>
 
       <!-- Desktop map: Utrecht (top-left) → Rio (bottom-centre) → Rotterdam (top-right) -->
       <svg class="jmap jmap-d" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -1040,17 +967,18 @@
 
       <div class="jcity jcity-utrecht">
         <h3>Utrecht</h3>
-        <p data-i18n="journey.utrecht.cap">BSc Economics &amp; Business Economics · Honours Programme · GPA 7.85</p>
+        <p data-i18n="journey.utrecht.cap">Economics &amp; Business Economics · Honours Programme</p>
         <div class="plx-wrap"><img class="plx" src="images/utrecht.jpg" alt="Utrecht"></div>
       </div>
       <div class="jcity jcity-rio">
         <h3>Rio de Janeiro</h3>
-        <p data-i18n="journey.rio.cap">Exchange semester at PUC-Rio — the first time I left Europe.</p>
+        <p data-i18n="journey.rio.cap">Exchange semester · first time leaving Europe</p>
         <div class="plx-wrap"><img class="plx" src="images/rio.jpg" alt="Rio de Janeiro"></div>
       </div>
       <div class="jcity jcity-rdam">
         <h3>Rotterdam</h3>
-        <p data-i18n="journey.rdam.cap">Where I'm headed — and where this role is.</p>
+        <p data-i18n="journey.rdam.cap">MSc Finance &amp; Investments · September 2026</p>
+        <p class="cap2" data-i18n="journey.rdam.cap2">Where I'm headed next.</p>
         <div class="plx-wrap"><img class="plx" src="images/rotterdam.jpg" alt="Rotterdam"></div>
       </div>
 
@@ -1066,7 +994,7 @@
       <span class="eyebrow stg" data-i18n="thesis.eyebrow">Research</span>
       <h2 class="thesis-title stg" data-i18n="thesis.title">Do Chinese Capital Controls Raise the Cost of Debt for European Firms?</h2>
       <p class="thesis-sub stg" data-i18n="thesis.sub">Bachelor Thesis · Utrecht University · Graded 9.2 / 10</p>
-      <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. When capital cannot move freely out of China, it shifts global liquidity in ways that ripple into European credit markets. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years, pairing econometric methods with a question that was genuinely my own. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
+      <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
 
       <!-- Stylised chart (not real data) draws itself behind the stats;
            the numbers count up in sync with the line. -->
@@ -1086,77 +1014,28 @@
   <!-- ============================================================
        9. EXPERIENCE — dark chapter, cinematic photo break on top
        ============================================================ -->
-  <section id="experience" class="dark" style="padding-top:0">
-    <div class="xp-break">
-      <div class="plx-wrap"><img class="plx" src="images/graduation.jpg" alt="Graduation day at Utrecht University"></div>
-    </div>
+  <section id="experience">
     <div class="wrap unfold">
       <span class="eyebrow stg" data-i18n="exp.eyebrow">Experience</span>
       <h2 class="section-title stg" data-i18n="exp.title">Work, study, and everything in between.</h2>
 
       <div class="stg">
-        <div class="xp">
-          <div class="xp-period">Sep 2026 →</div>
-          <div>
-            <h3 class="xp-role" data-i18n="exp1.role">MSc Finance and Investments</h3>
-            <div class="xp-org" data-i18n="exp1.org">RSM · Rotterdam School of Management</div>
-            <p class="xp-desc" data-i18n="exp1.desc">Incoming graduate student — the destination of the journey drawn above.</p>
-          </div>
-        </div>
-
-        <div class="xp">
+        <!-- Ex Primo first and visually lead -->
+        <div class="xp xp-lead">
           <div class="xp-period">Jun 2026 – present</div>
           <div>
-            <h3 class="xp-role" data-i18n="exp2.role">Accounting Assistant</h3>
-            <div class="xp-org" data-i18n="exp2.org">Ex Primo · Communication &amp; Marketing Agency</div>
-            <p class="xp-desc" data-i18n="exp2.desc">Supporting pension-fund accounting alongside a team whose daily work is campaigns and digital communication — one reason I chose it.</p>
-          </div>
-        </div>
-
-        <div class="xp">
-          <div class="xp-period">Feb – May 2026</div>
-          <div>
-            <h3 class="xp-role" data-i18n="exp3.role">AI Scout</h3>
-            <div class="xp-org" data-i18n="exp3.org">AI Scouts</div>
-            <p class="xp-desc" data-i18n="exp3.desc">Explored how students actually use AI tools, running hands-on sessions and sharing honestly what worked and what didn't.</p>
-          </div>
-        </div>
-
-        <div class="xp">
-          <div class="xp-period">Jan 2026 – present</div>
-          <div>
-            <h3 class="xp-role" data-i18n="exp4.role">Volunteers Co-Organizer</h3>
-            <div class="xp-org" data-i18n="exp4.org">Local Food Drive · Utrecht</div>
-            <p class="xp-desc" data-i18n="exp4.desc">Co-organising a local food drive: planning collections, recruiting volunteers and producing bilingual EN/NL materials.</p>
-            <div class="xp-photo plx-wrap"><img class="plx" src="images/volunteers.jpg" alt="Volunteers at the food drive"></div>
-          </div>
-        </div>
-
-        <div class="xp">
-          <div class="xp-period">Aug 2025 – Jan 2026</div>
-          <div>
-            <h3 class="xp-role" data-i18n="exp5.role">Exchange Semester</h3>
-            <div class="xp-org" data-i18n="exp5.org">PUC-Rio · Rio de Janeiro</div>
-            <p class="xp-desc" data-i18n="exp5.desc">A semester of economics in Portuguese — and a crash course in everything else.</p>
-            <div class="xp-photo plx-wrap"><img class="plx" src="images/exchange.jpg" alt="Exchange semester in Rio de Janeiro"></div>
-          </div>
-        </div>
-
-        <div class="xp">
-          <div class="xp-period">Feb 2024 – Jul 2025</div>
-          <div>
-            <h3 class="xp-role" data-i18n="exp6.role">PR Officer</h3>
-            <div class="xp-org" data-i18n="exp6.org">Honours Programme · Utrecht University</div>
-            <p class="xp-desc" data-i18n="exp6.desc">Ran communications for the Honours community — the newsletter, events, and the programme's public face.</p>
+            <h3 class="xp-role" data-i18n="exp1.role">Accounting Assistant</h3>
+            <div class="xp-org" data-i18n="exp1.org">Ex Primo · Communication &amp; Marketing Agency — Italy</div>
+            <p class="xp-desc" data-i18n="exp1.desc">Supporting pension-fund accounting alongside a team whose daily work is campaigns, content and digital communication — one reason I chose it.</p>
           </div>
         </div>
 
         <div class="xp">
           <div class="xp-period">Oct 2024 – Jun 2025</div>
           <div>
-            <h3 class="xp-role" data-i18n="exp7.role">Tutor</h3>
-            <div class="xp-org" data-i18n="exp7.org">AthenaSummary</div>
-            <p class="xp-desc" data-i18n="exp7.desc">Built all online course material from scratch — slides, worked examples, statistics exercises.</p>
+            <h3 class="xp-role" data-i18n="exp2.role">Mathematics &amp; Statistics Tutor</h3>
+            <div class="xp-org" data-i18n="exp2.org">AthenaSummary</div>
+            <p class="xp-desc" data-i18n="exp2.desc">Built all online course material from scratch — slides, worked examples and statistics exercises — tailored to student level.</p>
             <div class="xp-photo plx-wrap"><img class="plx" src="images/athena-1.png" alt="AthenaSummary course material"></div>
           </div>
         </div>
@@ -1164,9 +1043,9 @@
         <div class="xp">
           <div class="xp-period">Feb 2024 – present</div>
           <div>
-            <h3 class="xp-role" data-i18n="exp8.role">Part-time Work</h3>
-            <div class="xp-org" data-i18n="exp8.org">Picnic &amp; Jumbo</div>
-            <p class="xp-desc" data-i18n="exp8.desc">Deliveries and supermarket shifts alongside my studies — the kind of work that keeps you organised and humble.</p>
+            <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
+            <div class="xp-org" data-i18n="exp3.org">Picnic &amp; Jumbo</div>
+            <p class="xp-desc" data-i18n="exp3.desc">Steady, practical work alongside my studies.</p>
             <div class="xp-photo plx-wrap"><img class="plx" src="images/jumbo.jpg" alt="Working at Jumbo"></div>
           </div>
         </div>
@@ -1175,41 +1054,9 @@
   </section>
 
   <!-- ============================================================
-       10. SKILLS — three quiet columns
-       ============================================================ -->
-  <section id="skills">
-    <div class="wrap unfold">
-      <span class="eyebrow stg" data-i18n="skills.eyebrow">Skills</span>
-      <div class="skills-grid stg">
-        <div>
-          <h3 data-i18n="skills.c1">Tools &amp; Tech</h3>
-          <ul>
-            <li>Lovable</li><li>Supabase</li><li>Antigravity</li><li>GitHub</li><li>Claude</li><li>WordPress</li><li>Blender</li><li>Canva</li><li>Google Stitch</li>
-          </ul>
-        </div>
-        <div>
-          <h3 data-i18n="skills.c2">Research &amp; Data</h3>
-          <ul>
-            <li>Stata</li><li>R</li><li>MS Excel</li><li>Econometrics</li><li>Panel data</li>
-          </ul>
-        </div>
-        <div>
-          <h3 data-i18n="skills.c3">Languages</h3>
-          <ul>
-            <li data-i18n="skills.l1"><strong>Italian</strong> — Native</li>
-            <li data-i18n="skills.l2"><strong>English</strong> — Fluent</li>
-            <li data-i18n="skills.l3"><strong>Portuguese</strong> — Conversational</li>
-            <li data-i18n="skills.l4"><strong>Spanish</strong> — Basic</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
        11. CONTACT
        ============================================================ -->
-  <section id="contact" class="dark">
+  <section id="contact" class="teal">
     <div class="wrap unfold">
       <span class="eyebrow stg" data-i18n="contact.eyebrow">Contact</span>
       <h2 class="contact-title stg" data-i18n="contact.title">Always open to interesting projects and conversations.</h2>
@@ -1246,7 +1093,7 @@
        Values are injected with innerHTML (all values are authored
        in this file, never user input), so simple inline markup like
        <strong> is allowed.
-       The commit line and the tool/stack names stay English always.
+       Tool names and proper nouns stay English in all languages.
        ========================================================== */
     var translations = {
       en: {
@@ -1254,29 +1101,24 @@
         'nav.thesis': 'Thesis', 'nav.experience': 'Experience', 'nav.contact': 'Contact',
 
         'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
-        'hero.desc': 'Curious about the places where economic thinking, technology and communication meet.',
+        'hero.line': 'A portfolio, built by hand, for the work I want to do next.',
         'hero.cta1': 'See my work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'About',
-        'about.quote': '“I learned that connection with people does not require a shared background — only a shared willingness to be present.”',
-        'about.p1': 'I studied Economics and Business Economics at Utrecht University, where I completed the Honours Programme alongside my degree and graduated with a 7.85 GPA. My bachelor thesis — an econometric study of whether Chinese capital controls raise borrowing costs for European firms — was graded a 9.2, and it taught me that the questions I care about most sit somewhere between data and the real world.',
-        'about.p2': 'In my third year I spent a semester at PUC-Rio in Rio de Janeiro — the first time I had ever left Europe. I learned Portuguese not in a classroom but through everyday life: buying fruit at the market, asking for directions, dancing samba badly and being corrected kindly. Travelling through South America afterwards quietly changed my sense of what is far away and what is possible.',
-        'about.p3': 'These days I build things on the side — most recently Noce, a map of the local knowledge that never makes it onto Google Maps — while working part-time at Ex Primo, an Italian communication and marketing agency. In September 2026 I start the MSc in Finance and Investments at RSM Rotterdam. I learn fastest in the middle of something I don’t yet know how to finish.',
+        'about.quote': '[PULL QUOTE — I will write this]',
+        'about.body': '[ABOUT TEXT — I will write this]',
 
         'projects.eyebrow': 'Selected Projects',
         'projects.title': 'Built on the side.',
-        'p1.tag': 'Editorial &amp; PR', 'p1.title': 'Honours Newsletter',
-        'p1.desc': 'As PR officer of the Honours Programme I designed and wrote the programme’s newsletter — layout, interviews and all — turning a mailing-list obligation into something students actually opened.',
-        'p2.tag': 'AI &amp; Education', 'p2.title': 'AI Scouts',
-        'p2.desc': 'A student initiative exploring how AI tools are actually used in study and work. I helped run hands-on sessions where students tested tools on real tasks — and reported back honestly on what worked and what didn’t.',
-        'p3.tag': 'Side Project', 'p3.title': 'Noce',
-        'p3.desc': 'A map of what maps miss — the local knowledge residents hold but Google Maps never captures. Named after my grandmother’s surname. Explored in full below.',
-        'p3.link': 'Explore the map ↓',
+        'p1.tag': 'Editorial', 'p1.title': 'Honours Newsletter',
+        'p1.desc': 'Led the editorial team and LinkedIn of the Utrecht University Honours Programme for two years — editorial calendar, copy review, contributor coordination, designed in Canva.',
+        'p2.tag': 'Community', 'p2.title': 'Volunteers',
+        'p2.desc': 'Launched the first Utrecht food drive: approached the manager of five local Jumbo stores, produced bilingual EN/NL materials, and recruited and coordinated student volunteers.',
 
         'noce.eyebrow': 'Noce',
         'noce.title': 'Noce — a map of what maps miss.',
         'noce.sub': 'Local knowledge residents hold but Google Maps never captures. Hover a point.',
-        'noce.desc': 'Noce is a side project about the knowledge that lives in people rather than databases: the hidden thermal spring, the unmarked ruin, the street corner with a story. Residents pin what they know; the map keeps it. It’s named after my grandmother’s surname — she is exactly the kind of person this knowledge lives with.',
+        'noce.desc': 'Built during AI Scouts — a selective programme I was admitted to — and named after my grandmother’s surname.',
         'noce.spot1': 'Hidden thermal spring',
         'noce.spot2': 'Unmarked Roman ruin',
         'noce.spot3': 'A statue only locals can name',
@@ -1286,45 +1128,29 @@
         'noce.spot7': 'A roadside shrine',
         'noce.spot8': 'Where the best view actually is',
 
-        'journey.eyebrow': 'Academic Journey',
-        'journey.utrecht.cap': 'BSc Economics &amp; Business Economics · Honours Programme · GPA 7.85',
-        'journey.rio.cap': 'Exchange semester at PUC-Rio — the first time I left Europe.',
-        'journey.rdam.cap': 'Where I’m headed — and where this role is.',
+        'journey.eyebrow': 'Education',
+        'journey.utrecht.cap': 'Economics &amp; Business Economics · Honours Programme',
+        'journey.rio.cap': 'Exchange semester · first time leaving Europe',
+        'journey.rdam.cap': 'MSc Finance &amp; Investments · September 2026',
+        'journey.rdam.cap2': 'Where I’m headed next.',
         'journey.closing': 'Three universities, three countries, one direction.',
 
         'thesis.eyebrow': 'Research',
         'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
         'thesis.sub': 'Bachelor Thesis · Utrecht University · Graded 9.2 / 10',
-        'thesis.p': 'My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. When capital cannot move freely out of China, it shifts global liquidity in ways that ripple into European credit markets. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years, pairing econometric methods with a question that was genuinely my own. The result was a 9.2 — the grade I’m proudest of, not for the number but because the question was mine.',
+        'thesis.p': 'My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I’m proudest of, not for the number but because the question was mine.',
         'thesis.s1': 'STOXX Europe 600 firms',
         'thesis.s2': 'years of panel data',
         'thesis.s3': 'final grade',
 
         'exp.eyebrow': 'Experience',
         'exp.title': 'Work, study, and everything in between.',
-        'exp1.role': 'MSc Finance and Investments', 'exp1.org': 'RSM · Rotterdam School of Management',
-        'exp1.desc': 'Incoming graduate student — the destination of the journey drawn above.',
-        'exp2.role': 'Accounting Assistant', 'exp2.org': 'Ex Primo · Communication &amp; Marketing Agency',
-        'exp2.desc': 'Supporting pension-fund accounting alongside a team whose daily work is campaigns and digital communication — one reason I chose it.',
-        'exp3.role': 'AI Scout', 'exp3.org': 'AI Scouts',
-        'exp3.desc': 'Explored how students actually use AI tools, running hands-on sessions and sharing honestly what worked and what didn’t.',
-        'exp4.role': 'Volunteers Co-Organizer', 'exp4.org': 'Local Food Drive · Utrecht',
-        'exp4.desc': 'Co-organising a local food drive: planning collections, recruiting volunteers and producing bilingual EN/NL materials.',
-        'exp5.role': 'Exchange Semester', 'exp5.org': 'PUC-Rio · Rio de Janeiro',
-        'exp5.desc': 'A semester of economics in Portuguese — and a crash course in everything else.',
-        'exp6.role': 'PR Officer', 'exp6.org': 'Honours Programme · Utrecht University',
-        'exp6.desc': 'Ran communications for the Honours community — the newsletter, events, and the programme’s public face.',
-        'exp7.role': 'Tutor', 'exp7.org': 'AthenaSummary',
-        'exp7.desc': 'Built all online course material from scratch — slides, worked examples, statistics exercises.',
-        'exp8.role': 'Part-time Work', 'exp8.org': 'Picnic &amp; Jumbo',
-        'exp8.desc': 'Deliveries and supermarket shifts alongside my studies — the kind of work that keeps you organised and humble.',
-
-        'skills.eyebrow': 'Skills',
-        'skills.c1': 'Tools &amp; Tech', 'skills.c2': 'Research &amp; Data', 'skills.c3': 'Languages',
-        'skills.l1': '<strong>Italian</strong> — Native',
-        'skills.l2': '<strong>English</strong> — Fluent',
-        'skills.l3': '<strong>Portuguese</strong> — Conversational',
-        'skills.l4': '<strong>Spanish</strong> — Basic',
+        'exp1.role': 'Accounting Assistant', 'exp1.org': 'Ex Primo · Communication &amp; Marketing Agency — Italy',
+        'exp1.desc': 'Supporting pension-fund accounting alongside a team whose daily work is campaigns, content and digital communication — one reason I chose it.',
+        'exp2.role': 'Mathematics &amp; Statistics Tutor', 'exp2.org': 'AthenaSummary',
+        'exp2.desc': 'Built all online course material from scratch — slides, worked examples and statistics exercises — tailored to student level.',
+        'exp3.role': 'Warehouse Operations', 'exp3.org': 'Picnic &amp; Jumbo',
+        'exp3.desc': 'Steady, practical work alongside my studies.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Always open to interesting projects and conversations.',
@@ -1336,32 +1162,23 @@
       it: {
         'nav.about': '[IT: translate]', 'nav.projects': '[IT: translate]', 'nav.journey': '[IT: translate]',
         'nav.thesis': '[IT: translate]', 'nav.experience': '[IT: translate]', 'nav.contact': '[IT: translate]',
-        'hero.eyebrow': '[IT: translate]', 'hero.desc': '[IT: translate]',
+        'hero.eyebrow': '[IT: translate]', 'hero.line': '[IT: translate]',
         'hero.cta1': '[IT: translate]', 'hero.cta2': '[IT: translate]', 'hero.scroll': '[IT: translate]',
-        'about.eyebrow': '[IT: translate]', 'about.quote': '[IT: translate]',
-        'about.p1': '[IT: translate]', 'about.p2': '[IT: translate]', 'about.p3': '[IT: translate]',
+        'about.eyebrow': '[IT: translate]', 'about.quote': '[IT: translate]', 'about.body': '[IT: translate]',
         'projects.eyebrow': '[IT: translate]', 'projects.title': '[IT: translate]',
         'p1.tag': '[IT: translate]', 'p1.title': '[IT: translate]', 'p1.desc': '[IT: translate]',
         'p2.tag': '[IT: translate]', 'p2.title': '[IT: translate]', 'p2.desc': '[IT: translate]',
-        'p3.tag': '[IT: translate]', 'p3.title': '[IT: translate]', 'p3.desc': '[IT: translate]', 'p3.link': '[IT: translate]',
         'noce.eyebrow': '[IT: translate]', 'noce.title': '[IT: translate]', 'noce.sub': '[IT: translate]', 'noce.desc': '[IT: translate]',
         'noce.spot1': '[IT: translate]', 'noce.spot2': '[IT: translate]', 'noce.spot3': '[IT: translate]', 'noce.spot4': '[IT: translate]',
         'noce.spot5': '[IT: translate]', 'noce.spot6': '[IT: translate]', 'noce.spot7': '[IT: translate]', 'noce.spot8': '[IT: translate]',
         'journey.eyebrow': '[IT: translate]', 'journey.utrecht.cap': '[IT: translate]',
-        'journey.rio.cap': '[IT: translate]', 'journey.rdam.cap': '[IT: translate]', 'journey.closing': '[IT: translate]',
+        'journey.rio.cap': '[IT: translate]', 'journey.rdam.cap': '[IT: translate]', 'journey.rdam.cap2': '[IT: translate]', 'journey.closing': '[IT: translate]',
         'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
         'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]',
         'exp.eyebrow': '[IT: translate]', 'exp.title': '[IT: translate]',
         'exp1.role': '[IT: translate]', 'exp1.org': '[IT: translate]', 'exp1.desc': '[IT: translate]',
         'exp2.role': '[IT: translate]', 'exp2.org': '[IT: translate]', 'exp2.desc': '[IT: translate]',
         'exp3.role': '[IT: translate]', 'exp3.org': '[IT: translate]', 'exp3.desc': '[IT: translate]',
-        'exp4.role': '[IT: translate]', 'exp4.org': '[IT: translate]', 'exp4.desc': '[IT: translate]',
-        'exp5.role': '[IT: translate]', 'exp5.org': '[IT: translate]', 'exp5.desc': '[IT: translate]',
-        'exp6.role': '[IT: translate]', 'exp6.org': '[IT: translate]', 'exp6.desc': '[IT: translate]',
-        'exp7.role': '[IT: translate]', 'exp7.org': '[IT: translate]', 'exp7.desc': '[IT: translate]',
-        'exp8.role': '[IT: translate]', 'exp8.org': '[IT: translate]', 'exp8.desc': '[IT: translate]',
-        'skills.eyebrow': '[IT: translate]', 'skills.c1': '[IT: translate]', 'skills.c2': '[IT: translate]', 'skills.c3': '[IT: translate]',
-        'skills.l1': '[IT: translate]', 'skills.l2': '[IT: translate]', 'skills.l3': '[IT: translate]', 'skills.l4': '[IT: translate]',
         'contact.eyebrow': '[IT: translate]', 'contact.title': '[IT: translate]', 'contact.email': '[IT: translate]',
         'footer.text': '[IT: translate]'
       },
@@ -1370,32 +1187,23 @@
       nl: {
         'nav.about': '[NL: translate]', 'nav.projects': '[NL: translate]', 'nav.journey': '[NL: translate]',
         'nav.thesis': '[NL: translate]', 'nav.experience': '[NL: translate]', 'nav.contact': '[NL: translate]',
-        'hero.eyebrow': '[NL: translate]', 'hero.desc': '[NL: translate]',
+        'hero.eyebrow': '[NL: translate]', 'hero.line': '[NL: translate]',
         'hero.cta1': '[NL: translate]', 'hero.cta2': '[NL: translate]', 'hero.scroll': '[NL: translate]',
-        'about.eyebrow': '[NL: translate]', 'about.quote': '[NL: translate]',
-        'about.p1': '[NL: translate]', 'about.p2': '[NL: translate]', 'about.p3': '[NL: translate]',
+        'about.eyebrow': '[NL: translate]', 'about.quote': '[NL: translate]', 'about.body': '[NL: translate]',
         'projects.eyebrow': '[NL: translate]', 'projects.title': '[NL: translate]',
         'p1.tag': '[NL: translate]', 'p1.title': '[NL: translate]', 'p1.desc': '[NL: translate]',
         'p2.tag': '[NL: translate]', 'p2.title': '[NL: translate]', 'p2.desc': '[NL: translate]',
-        'p3.tag': '[NL: translate]', 'p3.title': '[NL: translate]', 'p3.desc': '[NL: translate]', 'p3.link': '[NL: translate]',
         'noce.eyebrow': '[NL: translate]', 'noce.title': '[NL: translate]', 'noce.sub': '[NL: translate]', 'noce.desc': '[NL: translate]',
         'noce.spot1': '[NL: translate]', 'noce.spot2': '[NL: translate]', 'noce.spot3': '[NL: translate]', 'noce.spot4': '[NL: translate]',
         'noce.spot5': '[NL: translate]', 'noce.spot6': '[NL: translate]', 'noce.spot7': '[NL: translate]', 'noce.spot8': '[NL: translate]',
         'journey.eyebrow': '[NL: translate]', 'journey.utrecht.cap': '[NL: translate]',
-        'journey.rio.cap': '[NL: translate]', 'journey.rdam.cap': '[NL: translate]', 'journey.closing': '[NL: translate]',
+        'journey.rio.cap': '[NL: translate]', 'journey.rdam.cap': '[NL: translate]', 'journey.rdam.cap2': '[NL: translate]', 'journey.closing': '[NL: translate]',
         'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
         'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]',
         'exp.eyebrow': '[NL: translate]', 'exp.title': '[NL: translate]',
         'exp1.role': '[NL: translate]', 'exp1.org': '[NL: translate]', 'exp1.desc': '[NL: translate]',
         'exp2.role': '[NL: translate]', 'exp2.org': '[NL: translate]', 'exp2.desc': '[NL: translate]',
         'exp3.role': '[NL: translate]', 'exp3.org': '[NL: translate]', 'exp3.desc': '[NL: translate]',
-        'exp4.role': '[NL: translate]', 'exp4.org': '[NL: translate]', 'exp4.desc': '[NL: translate]',
-        'exp5.role': '[NL: translate]', 'exp5.org': '[NL: translate]', 'exp5.desc': '[NL: translate]',
-        'exp6.role': '[NL: translate]', 'exp6.org': '[NL: translate]', 'exp6.desc': '[NL: translate]',
-        'exp7.role': '[NL: translate]', 'exp7.org': '[NL: translate]', 'exp7.desc': '[NL: translate]',
-        'exp8.role': '[NL: translate]', 'exp8.org': '[NL: translate]', 'exp8.desc': '[NL: translate]',
-        'skills.eyebrow': '[NL: translate]', 'skills.c1': '[NL: translate]', 'skills.c2': '[NL: translate]', 'skills.c3': '[NL: translate]',
-        'skills.l1': '[NL: translate]', 'skills.l2': '[NL: translate]', 'skills.l3': '[NL: translate]', 'skills.l4': '[NL: translate]',
         'contact.eyebrow': '[NL: translate]', 'contact.title': '[NL: translate]', 'contact.email': '[NL: translate]',
         'footer.text': '[NL: translate]'
       }
@@ -1451,7 +1259,7 @@
        ========================================================== */
     var heroName = document.getElementById('heroName');
     var heroDone = REDUCED;      /* reduced motion: treat as finished */
-    var onHeroDone = null;       /* commit-line hook */
+    var onHeroDone = null;       /* hero-line writer hook */
 
     if (!REDUCED && heroName) {
       var words = heroName.textContent.trim().split(/\s+/);
@@ -1483,59 +1291,34 @@
     }
 
     /* ==========================================================
-       3. COMMIT-LINE TYPEWRITER — 35ms/char.
-       The finished text already lives in the HTML; we capture its
-       segments (span colour classes + line breaks), empty it, and
-       retype. Starts only after BOTH the hero name has finished AND
-       the strip has scrolled into view. Runs once, stays forever.
+       3. HERO LINE — a single human sentence that writes itself out
+       after the name finishes: ~28ms per character, each with a soft
+       fade. Plain Inter, no cursor, no terminal styling; once written
+       it simply rests. Under reduced motion the finished line shows
+       instantly (the characters are never wrapped).
        ========================================================== */
-    var commitBox  = document.getElementById('commit');
-    var commitText = document.getElementById('commitText');
-
-    if (!REDUCED && commitBox && commitText) {
-      /* capture segments: [{cls, text}] — '\n' text nodes become breaks */
-      var segs = [];
-      commitText.childNodes.forEach(function (n) {
-        if (n.nodeType === 1) segs.push({ cls: n.className, text: n.textContent });
-        else if (/\n/.test(n.textContent)) segs.push({ cls: null, text: '\n' });
-      });
-
-      var commitVisible = false, commitStarted = false;
-
-      function typeCommit() {
-        if (commitStarted || !heroDone || !commitVisible) return;
-        commitStarted = true;
-        commitText.innerHTML = '';
-        commitBox.classList.add('typing');   /* reveals the (now empty) target */
-
-        var s = 0, c = 0, span = null;
-        (function step() {
-          if (s >= segs.length) { commitBox.classList.add('done'); return; }
-          var seg = segs[s];
-          if (seg.cls === null) {            /* line break — one tick */
-            commitText.appendChild(document.createTextNode('\n'));
-            s++; c = 0; span = null;
-            setTimeout(step, 35);
-            return;
-          }
-          if (!span) { span = document.createElement('span'); span.className = seg.cls; commitText.appendChild(span); }
-          span.textContent += seg.text[c++];
-          if (c >= seg.text.length) { s++; c = 0; span = null; }
-          setTimeout(step, 35);
-        })();
+    var heroLine = document.getElementById('heroLine');
+    if (!REDUCED && heroLine) {
+      /* wrap after the initial language render so the line starts
+         invisible and reveals character by character */
+      var lineText = heroLine.textContent;
+      heroLine.textContent = '';
+      var lineChars = [];
+      for (var li = 0; li < lineText.length; li++) {
+        var hl = document.createElement('span');
+        hl.className = 'hl';
+        hl.textContent = lineText[li];
+        heroLine.appendChild(hl);
+        lineChars.push(hl);
       }
-
-      new IntersectionObserver(function (entries, obs) {
-        if (entries[0].isIntersecting) {
-          commitVisible = true;
-          obs.disconnect();
-          typeCommit();
-        }
-      }, { threshold: 0.4 }).observe(commitBox);
-
-      onHeroDone = typeCommit;
-    } else if (commitBox) {
-      commitBox.classList.add('done');       /* reduced motion: show complete */
+      var lineIdx = 0;
+      var writeHeroLine = function () {
+        if (lineIdx >= lineChars.length) return;
+        lineChars[lineIdx++].classList.add('on');
+        setTimeout(writeHeroLine, 28);
+      };
+      onHeroDone = writeHeroLine;
+      if (heroDone) writeHeroLine();
     }
 
     /* ==========================================================
@@ -1747,6 +1530,19 @@
       document.documentElement.classList.toggle('cur', desktopFx());
     }
 
+    /* Hero background: drifts at ~28% of scroll speed (clamped so the
+       oversized image never runs out of bleed) and scales 1.00 → 1.08
+       across the first viewport of scrolling. */
+    var heroBgImg = document.getElementById('heroBg');
+    function heroBgUpdate(scY) {
+      if (!heroBgImg) return;
+      var h = hero.offsetHeight || 1;
+      if (scY > h + 80) return;                    /* hero fully off-screen */
+      var shift = Math.min(scY * 0.28, h * 0.14);
+      var sc = 1 + 0.08 * Math.min(1, scY / h);
+      heroBgImg.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
+    }
+
     /* ==========================================================
        10. MAIN LOOP — one rAF for everything scroll- and
        pointer-driven. Scroll work only runs on frames where the
@@ -1765,6 +1561,7 @@
         progressEl.style.transform = 'scaleX(' + (max > 0 ? scY / max : 0) + ')';
         updateNav(scY);
         if (!REDUCED) {
+          heroBgUpdate(scY);
           parallaxUpdate();
           journeyUpdate(scY);
         }
