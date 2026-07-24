@@ -727,12 +727,8 @@
        the front fade and blur slightly for depth. With .stacked
        (mobile / reduced motion) it degrades to plain vertical cards.
        ============================================================ */
-    .showcase { height: 330vh; padding: 0; }
+    .showcase { padding: 5rem 0 6rem; }
     .show-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -780,40 +776,23 @@
     }
     .panel-vol .panel-img.pop { animation: volPop 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* ---- Newsletter: clean editorial digest mock-up ---- */
-    .nl-cover { position: absolute; inset: 0; background: #fff; display: flex; flex-direction: column; }
-    .nl-top { padding: 1.4rem 1.5rem 1.1rem; border-bottom: 2px solid var(--teal); }
-    .nl-mast { font-family: var(--serif); font-size: 1.75rem; color: var(--teal); line-height: 1; letter-spacing: -0.02em; }
-    .nl-sub  { font-size: 0.58rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--mut); margin-top: 0.5rem; }
-    .nl-shot { flex: 1; overflow: hidden; }
-    .nl-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-    .nl-foot {
-      padding: 0.9rem 1.5rem 1.1rem;
-      border-top: 1px solid var(--line);
-      display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
-    }
-    .nl-foot b { font-family: var(--serif); font-weight: 500; font-size: 0.95rem; color: var(--ink); }
-    .nl-foot span { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); white-space: nowrap; }
+    /* ---- Newsletter: magazine cover ---- */
+    .nl-cover   { position: absolute; inset: 0; background: #fff; display: flex; flex-direction: column; }
+    .nl-head    { background: var(--teal); padding: 1.1rem 1.3rem 1rem; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem; }
+    .nl-mast    { font-family: var(--serif); font-size: 1.6rem; color: var(--bg); line-height: 1; letter-spacing: -0.02em; }
+    .nl-sub     { font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
+    .nl-issuetag { font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.55); white-space: nowrap; align-self: flex-start; margin-top: 0.2rem; }
+    .nl-photo   { flex: 1; overflow: hidden; min-height: 0; }
+    .nl-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+    .nl-body    { padding: 1rem 1.3rem 0.85rem; border-top: 3px solid var(--terra); flex-shrink: 0; }
+    .nl-kicker  { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.4rem; }
+    .nl-headline { font-family: var(--serif); font-size: 1.35rem; line-height: 1.1; color: var(--ink); margin-bottom: 0.4rem; }
+    .nl-deck    { font-size: 0.72rem; color: var(--mut); line-height: 1.4; font-style: italic; margin-bottom: 0.7rem; }
+    .nl-byline  { font-size: 0.58rem; letter-spacing: 0.08em; color: var(--mut); text-transform: uppercase; }
 
-    /* ---- Noce: clean minimal SVG map (no WebGL) ---- */
-    .map-card { position: absolute; inset: 0; background: linear-gradient(170deg, #F2F5F3 0%, #E6EDEA 100%); }
-    .map-card svg { width: 100%; height: 100%; display: block; }
-    .map-land { fill: #CFDEDA; stroke: var(--teal); stroke-width: 0.8; stroke-linejoin: round; opacity: 0.95; }
-    .map-grid { stroke: rgba(27,77,75,0.10); stroke-width: 0.5; }
-    .map-pin  { fill: var(--terra); transform-origin: center; animation: pinPulse 3.2s var(--ease) infinite; }
-    .map-halo { fill: rgba(199,98,63,0.22); animation: haloPulse 3.2s var(--ease) infinite; transform-origin: center; }
-    @keyframes pinPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
-    @keyframes haloPulse { 0%,100% { opacity: 0.55; transform: scale(1); } 50% { opacity: 0.15; transform: scale(1.65); } }
-    .map-tag {
-      position: absolute; left: 1.2rem; bottom: 1.2rem;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.4rem 0.9rem;
-      font-size: 0.72rem; font-weight: 500; color: var(--teal);
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .map-tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--terra); }
+    /* ---- Noce: mobile app mockup ---- */
+    .noce-app { position: absolute; inset: 0; background: #F6F0E8; }
+    .noce-app svg { width: 100%; height: 100%; display: block; }
 
     /* ---- caption under the carousel ---- */
     .show-meta { position: relative; width: min(560px, 86vw); min-height: 168px; text-align: center; }
@@ -845,7 +824,7 @@
     .show-arrow[disabled] { opacity: 0.3; pointer-events: none; }
     .show-arrow svg { width: 17px; height: 17px; }
     .show-dots { display: flex; gap: 0.5rem; }
-    .show-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: background 0.35s, transform 0.35s; }
+    .show-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: background 0.35s, transform 0.35s; cursor: pointer; }
     .show-dots i.on { background: var(--terra); transform: scale(1.35); }
 
     /* Stacked fallback (mobile / reduced motion): plain vertical cards,
@@ -1093,7 +1072,7 @@
       <div class="about-grid">
         <div class="about-left stg">
           <span class="eyebrow" data-i18n="about.eyebrow">About</span>
-          <p class="about-headline">Italian student,<br>builder &amp; economist<br>based in the Netherlands.</p>
+          <p class="about-headline">Italian student,<br>builder &amp; economist<br>incoming at RSM Rotterdam.</p>
         </div>
         <div class="about-right">
           <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
@@ -1273,44 +1252,112 @@
 
       <div class="show-viewport">
         <div class="show-track" id="showTrack">
-          <!-- 1 · Noce — minimal stylised map, pure SVG -->
+          <!-- 1 · Noce — mobile app mockup -->
           <div class="panel panel-noce">
-            <div class="map-card">
-              <svg viewBox="0 0 200 250" aria-hidden="true">
-                <g class="map-grid">
-                  <path d="M0,50 H200 M0,100 H200 M0,150 H200 M0,200 H200"/>
-                  <path d="M50,0 V250 M100,0 V250 M150,0 V250"/>
+            <div class="noce-app" aria-hidden="true">
+              <svg viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="fs" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.14)"/></filter>
+                  <filter id="fc" x="-10%" y="-50%" width="120%" height="200%"><feDropShadow dx="0" dy="-3" stdDeviation="6" flood-color="rgba(0,0,0,0.08)"/></filter>
+                </defs>
+                <!-- Map base -->
+                <rect width="320" height="400" fill="#F6F0E8"/>
+                <!-- Streets -->
+                <g stroke="#E8DDD0" stroke-width="9" fill="none">
+                  <line x1="0" y1="112" x2="320" y2="112"/>
+                  <line x1="0" y1="202" x2="320" y2="202"/>
+                  <line x1="0" y1="292" x2="320" y2="292"/>
+                  <line x1="100" y1="62" x2="100" y2="350"/>
+                  <line x1="200" y1="62" x2="200" y2="350"/>
                 </g>
-                <!-- simplified continental shapes -->
-                <path class="map-land" d="M42,58 C58,44 84,42 100,52 C118,63 132,58 146,66 C160,74 158,92 148,104 C138,116 142,132 132,144 C120,158 96,160 82,150 C66,138 66,120 56,110 C44,98 30,76 42,58 Z"/>
-                <path class="map-land" d="M116,158 C130,152 148,158 154,172 C160,188 150,206 134,210 C118,214 104,204 102,188 C100,172 104,163 116,158 Z"/>
-                <path class="map-land" d="M28,120 C36,114 46,120 46,130 C46,140 36,146 28,140 C21,135 21,125 28,120 Z"/>
-                <!-- pins -->
-                <g><circle class="map-halo" cx="66"  cy="74"  r="7"/><circle class="map-pin" cx="66"  cy="74"  r="3.4"/></g>
-                <g><circle class="map-halo" cx="104" cy="66"  r="7"/><circle class="map-pin" cx="104" cy="66"  r="3.4"/></g>
-                <g><circle class="map-halo" cx="132" cy="88"  r="7"/><circle class="map-pin" cx="132" cy="88"  r="3.4"/></g>
-                <g><circle class="map-halo" cx="88"  cy="104" r="7"/><circle class="map-pin" cx="88"  cy="104" r="3.4"/></g>
-                <g><circle class="map-halo" cx="118" cy="126" r="7"/><circle class="map-pin" cx="118" cy="126" r="3.4"/></g>
-                <g><circle class="map-halo" cx="74"  cy="138" r="7"/><circle class="map-pin" cx="74"  cy="138" r="3.4"/></g>
-                <g><circle class="map-halo" cx="130" cy="180" r="7"/><circle class="map-pin" cx="130" cy="180" r="3.4"/></g>
-                <g><circle class="map-halo" cx="36"  cy="130" r="7"/><circle class="map-pin" cx="36"  cy="130" r="3.4"/></g>
+                <!-- Blocks -->
+                <rect x="5"   y="62"  width="86" height="41" rx="4" fill="#ECE4D8"/>
+                <rect x="5"   y="121" width="86" height="72" rx="4" fill="#ECE4D8"/>
+                <rect x="109" y="62"  width="82" height="41" rx="4" fill="#ECE4D8"/>
+                <rect x="109" y="121" width="82" height="72" rx="4" fill="#ECE4D8"/>
+                <rect x="209" y="62"  width="106" height="41" rx="4" fill="#ECE4D8"/>
+                <rect x="209" y="121" width="106" height="72" rx="4" fill="#ECE4D8"/>
+                <!-- Park -->
+                <rect x="5"   y="211" width="86" height="72" rx="4" fill="#C8D9B8"/>
+                <!-- Tree marks in park -->
+                <circle cx="30"  cy="235" r="10" fill="#B4CC9C" opacity="0.7"/>
+                <circle cx="56"  cy="248" r="12" fill="#B4CC9C" opacity="0.7"/>
+                <circle cx="76"  cy="228" r="8"  fill="#B4CC9C" opacity="0.7"/>
+                <rect x="109" y="211" width="82" height="38" rx="4" fill="#ECE4D8"/>
+                <rect x="109" y="257" width="82" height="26" rx="4" fill="#ECE4D8"/>
+                <rect x="209" y="211" width="106" height="72" rx="4" fill="#ECE4D8"/>
+                <!-- Canal -->
+                <path d="M5,258 C25,252 55,262 80,256 C90,253 96,249 100,252" fill="none" stroke="#B0CCE0" stroke-width="8" stroke-linecap="round"/>
+                <!-- Pins -->
+                <circle cx="150" cy="168" r="18" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="150" cy="168" r="11" fill="#C7623F" filter="url(#fs)"/>
+                <circle cx="150" cy="168" r="4.5" fill="white"/>
+                <circle cx="52"  cy="150" r="9"  fill="rgba(199,98,63,0.16)"/>
+                <circle cx="52"  cy="150" r="6"  fill="#C7623F"/>
+                <circle cx="52"  cy="150" r="2.5" fill="white"/>
+                <circle cx="254" cy="155" r="9"  fill="rgba(199,98,63,0.16)"/>
+                <circle cx="254" cy="155" r="6"  fill="#C7623F"/>
+                <circle cx="254" cy="155" r="2.5" fill="white"/>
+                <circle cx="52"  cy="238" r="9"  fill="rgba(199,98,63,0.16)"/>
+                <circle cx="52"  cy="238" r="6"  fill="#C7623F"/>
+                <circle cx="52"  cy="238" r="2.5" fill="white"/>
+                <circle cx="256" cy="248" r="9"  fill="rgba(199,98,63,0.16)"/>
+                <circle cx="256" cy="248" r="6"  fill="#C7623F"/>
+                <circle cx="256" cy="248" r="2.5" fill="white"/>
+                <!-- Tooltip on active pin -->
+                <rect x="166" y="151" width="106" height="34" rx="7" fill="white" filter="url(#fs)"/>
+                <polygon points="166,162 162,168 166,174" fill="white"/>
+                <text x="219" y="164" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414">Bar Mirco</text>
+                <text x="219" y="177" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F">Local pick · 180 m</text>
+                <!-- Top overlay (status + search) -->
+                <rect width="320" height="104" fill="#F6F0E8"/>
+                <text x="18" y="28" font-size="11.5" font-weight="600" font-family="system-ui,sans-serif" fill="#1A1A1A">9:41</text>
+                <rect x="270" y="17" width="26" height="13" rx="3" fill="none" stroke="#1A1A1A" stroke-width="1.3"/>
+                <rect x="296" y="21" width="3" height="5" rx="1.5" fill="#1A1A1A"/>
+                <rect x="271.5" y="18.5" width="20" height="10" rx="2" fill="#1A1A1A"/>
+                <!-- Search bar -->
+                <rect x="12" y="38" width="296" height="46" rx="23" fill="white" stroke="#E4E2DB" stroke-width="1" filter="url(#fs)"/>
+                <circle cx="37" cy="61" r="9" fill="none" stroke="#6E6C66" stroke-width="1.6"/>
+                <line x1="44" y1="68" x2="50" y2="74" stroke="#6E6C66" stroke-width="1.6" stroke-linecap="round"/>
+                <text x="63" y="66" font-size="15" font-family="Georgia,serif" font-weight="700" fill="#1B4D4B">Noce</text>
+                <rect x="275" y="49" width="25" height="2.5" rx="1.25" fill="#1B4D4B"/>
+                <rect x="275" y="56.5" width="19" height="2.5" rx="1.25" fill="#1B4D4B"/>
+                <rect x="275" y="64" width="25" height="2.5" rx="1.25" fill="#1B4D4B"/>
+                <!-- Bottom place card -->
+                <rect x="0" y="306" width="320" height="94" fill="white" filter="url(#fc)"/>
+                <line x1="0" y1="306" x2="320" y2="306" stroke="#E4E2DB" stroke-width="0.8"/>
+                <rect x="138" y="314" width="44" height="4" rx="2" fill="#E4E2DB"/>
+                <rect x="16" y="325" width="56" height="56" rx="9" fill="#F6F0E8"/>
+                <!-- Place icon (abstract shapes for a café) -->
+                <rect x="27" y="337" width="34" height="26" rx="4" fill="none" stroke="#C7623F" stroke-width="1.6"/>
+                <path d="M61,342 C67,342 67,352 61,352" fill="none" stroke="#C7623F" stroke-width="1.6"/>
+                <line x1="30" y1="363" x2="60" y2="363" stroke="#C7623F" stroke-width="1.6" stroke-linecap="round"/>
+                <text x="84" y="339" font-size="12.5" font-weight="600" font-family="system-ui,sans-serif" fill="#141414">Bar Mirco</text>
+                <text x="84" y="355" font-size="10.5" font-family="system-ui,sans-serif" fill="#6E6C66">The espresso locals drink</text>
+                <rect x="84" y="362" width="66" height="19" rx="9.5" fill="#F6F0E8"/>
+                <text x="117" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">Café · Local pick</text>
+                <rect x="156" y="362" width="44" height="19" rx="9.5" fill="#F6F0E8"/>
+                <text x="178" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">180 m</text>
               </svg>
-              <span class="map-tag" data-i18n="noce.tag">Places only locals know</span>
             </div>
           </div>
 
-          <!-- 2 · Honours Newsletter — editorial digest mock-up -->
+          <!-- 2 · Honours Newsletter — magazine cover -->
           <div class="panel panel-news">
             <div class="nl-cover">
-              <div class="nl-top">
-                <div class="nl-mast">Honours</div>
-                <div class="nl-sub">Utrecht University · Newsletter</div>
+              <div class="nl-head">
+                <div>
+                  <div class="nl-mast">Honours</div>
+                  <div class="nl-sub">UU Honours Community</div>
+                </div>
+                <div class="nl-issuetag">Issue 07<br>Spring 2024</div>
               </div>
-              <div class="nl-shot">
-                <img src="images/newsletter-cover.jpg" alt="Honours Programme newsletter">
-              </div>
-              <div class="nl-foot">
-                <b>The Interview Issue</b><span>Editorial lead</span>
+              <div class="nl-photo"><img src="images/newsletter-cover.jpg" alt="Honours Programme newsletter cover"></div>
+              <div class="nl-body">
+                <div class="nl-kicker">Cover Story</div>
+                <div class="nl-headline">The Interview<br>Issue</div>
+                <div class="nl-deck">"The question we kept asking all year."</div>
+                <div class="nl-byline">Editorial Lead · Antonio Di Domenico</div>
               </div>
             </div>
           </div>
@@ -1364,7 +1411,6 @@
       <h2 class="contact-title stg" data-i18n="contact.title">Always open to interesting projects and conversations.</h2>
       <div class="contact-links stg">
         <a class="magnetic" href="mailto:antoniodidomenico.work@gmail.com"><span data-i18n="contact.email">Email</span> <span class="arrow">↗</span></a>
-        <!-- TODO: replace with the real LinkedIn profile URL before going live -->
         <a class="magnetic" href="https://www.linkedin.com/in/adidomenico0/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
       </div>
     </div>
@@ -1901,6 +1947,26 @@
     var show = { s: 0, target: 0, active: -1, stacked: false, modeSet: false, volFront: false };
     var SHOW_DWELL = 0.18;                      /* scroll fraction resting on a slide */
     var SHOW_TRANS = (1 - 3 * SHOW_DWELL) / 2;  /* scroll fraction per transition */
+    var showClones = [];                         /* [clone-of-last, clone-of-first] */
+
+    function showBuildClones() {
+      if (showClones.length || !showTrack || show.stacked) return;
+      var cPre = panels[2].cloneNode(true);    /* peek left of slide 0 */
+      var cPost = panels[0].cloneNode(true);   /* peek right of slide 2 */
+      [cPre, cPost].forEach(function (c) {
+        c.setAttribute('aria-hidden', 'true');
+        c.style.pointerEvents = 'none';
+        c.classList.add('panel-clone');
+      });
+      showTrack.insertBefore(cPre, showTrack.firstChild);
+      showTrack.appendChild(cPost);
+      showClones = [cPre, cPost];
+    }
+
+    function showRemoveClones() {
+      showClones.forEach(function (c) { if (c.parentNode) c.parentNode.removeChild(c); });
+      showClones = [];
+    }
 
     function expoOut(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
 
@@ -1929,6 +1995,7 @@
       showEl.classList.toggle('stacked', st);
       var i;
       if (st) {
+        showRemoveClones();
         for (i = 0; i < 3; i++) panels[i].insertAdjacentElement('afterend', metaItems[i]);
         for (i = 0; i < 3; i++) {
           metaItems[i].classList.add('on');
@@ -1939,29 +2006,27 @@
       } else {
         for (i = 0; i < 3; i++) metaBox.appendChild(metaItems[i]);
         for (i = 0; i < 3; i++) metaItems[i].classList.toggle('on', i === Math.max(0, show.active));
+        showBuildClones();
       }
     }
 
     function showMeasure() { showApplyMode(); }
 
-    /* on scroll: recompute the target. Progress comes straight from a
-       live getBoundingClientRect(), so it can never go stale when the
-       layout above the section shifts (fonts, images, resizes). */
-    function showUpdate() {
-      if (!showEl || show.stacked) return;
-      var r = showEl.getBoundingClientRect();
-      var run = r.height - window.innerHeight;
-      if (run <= 0) { show.target = 0; return; }
-      var p = Math.min(1, Math.max(0, -r.top / run));
-      show.target = showTarget(p);
-    }
+    /* scroll no longer drives the carousel (auto-advance replaced it) */
+    function showUpdate() {}
 
     /* every frame: ease the rail sideways so the active slide is centred */
     function showFrame() {
       if (!showEl || show.stacked || !showTrack) return;
       var diff = show.target - show.s;
-      if (Math.abs(diff) < 0.0006) show.s = show.target;   /* snap → dead centre */
-      else show.s += diff * 0.14;
+      if (Math.abs(diff) < 0.0006) {
+        show.s = show.target;
+        /* teleport seamlessly after animating through a clone */
+        if (show.s >= 3)  { show.s = 0; show.target = 0; }
+        if (show.s <= -1) { show.s = 2; show.target = 2; }
+      } else {
+        show.s += diff * 0.14;
+      }
 
       var w = panels[0].offsetWidth;
       if (!w) return;
@@ -1969,45 +2034,50 @@
       var gap = parseFloat(cs.columnGap || cs.gap) || 0;
       var step = w + gap;
       var viewportW = showTrack.parentNode.clientWidth;
-      var x = viewportW / 2 - (show.s * step + w / 2);
+      var offset = showClones.length ? 1 : 0;
+      var x = viewportW / 2 - ((show.s + offset) * step + w / 2);
       showTrack.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
 
-      for (var i = 0; i < 3; i++) {
-        var d = Math.min(Math.abs(i - show.s), 1);
-        panels[i].style.transform = 'scale(' + (1 - d * 0.13).toFixed(4) + ')';
-        panels[i].style.opacity = (1 - d * 0.55).toFixed(3);
-        var front = Math.abs(i - show.s) < 0.12;
-        panels[i].classList.toggle('front', front);
-        if (i === 2) {                          /* volunteers settles centre → pop */
-          if (front && !show.volFront) volPop();
-          show.volFront = front;
-        }
+      var items = showTrack.children;
+      for (var i = 0; i < items.length; i++) {
+        var d = Math.min(Math.abs(i - (show.s + offset)), 1);
+        items[i].style.transform = 'scale(' + (1 - d * 0.13).toFixed(4) + ')';
+        items[i].style.opacity   = (1 - d * 0.55).toFixed(3);
       }
 
-      var a = Math.round(show.s);               /* cross-fade caption + dots */
-      if (a !== show.active && Math.abs(show.s - a) < 0.35) {
+      for (var j = 0; j < 3; j++) {
+        var front = Math.abs(j - show.s) < 0.12;
+        panels[j].classList.toggle('front', front);
+        if (j === 2) { if (front && !show.volFront) volPop(); show.volFront = front; }
+      }
+
+      /* normalize to 0-2 (handles -1 and 3 during wrap animation) */
+      var a = ((Math.round(show.s) % 3) + 3) % 3;
+      if (a !== show.active) {
         show.active = a;
         for (var m = 0; m < 3; m++) {
           metaItems[m].classList.toggle('on', m === a);
           if (showDots[m]) showDots[m].classList.toggle('on', m === a);
         }
-        if (showPrev) showPrev.disabled = (a === 0);
-        if (showNext) showNext.disabled = (a === 2);
       }
     }
 
-    /* arrows scroll to the middle of a slide's dwell */
+    /* set target; k may be -1 or 3 to animate through the wrap clone */
     function showGoTo(k) {
       if (!showEl || show.stacked) return;
-      k = Math.max(0, Math.min(2, k));
-      var d = SHOW_DWELL, t = SHOW_TRANS;
-      var frac = [d * 0.5, 1.5 * d + t, 2.5 * d + 2 * t][k];
-      var r = showEl.getBoundingClientRect();
-      var run = r.height - window.innerHeight;
-      window.scrollTo({ top: r.top + window.scrollY + run * frac, behavior: 'smooth' });
+      show.target = k;
     }
-    if (showPrev) showPrev.addEventListener('click', function () { showGoTo(Math.round(show.s) - 1); });
-    if (showNext) showNext.addEventListener('click', function () { showGoTo(Math.round(show.s) + 1); });
+
+    /* navigation is purely manual — no autoplay, no setInterval */
+    if (showPrev) showPrev.addEventListener('click', function () {
+      showGoTo(Math.round(show.s) <= 0 ? -1 : Math.round(show.s) - 1);
+    });
+    if (showNext) showNext.addEventListener('click', function () {
+      showGoTo(Math.round(show.s) >= 2 ? 3 : Math.round(show.s) + 1);
+    });
+    showDots.forEach(function (dot, idx) {
+      dot.addEventListener('click', function () { showGoTo(idx); });
+    });
 
     /* stacked mode: volunteers pop once on scroll-into-view instead */
     if (!REDUCED && panels.length === 3) {
