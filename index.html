@@ -159,13 +159,29 @@
     /* on the dark sections the cream-side accent is already legible */
     .teal .eyebrow { color: var(--terra); }
 
+    /* ONE headline treatment for every section: the eyebrow names the
+       section, the serif title carries it. Same size, same colour, same
+       measure everywhere, so the page has a single masthead rhythm. */
     .section-title {
       font-size: var(--fs-h2);
       color: var(--teal);
       margin-bottom: 2.8rem;
-      max-width: 20ch;
+      max-width: 20ch;          /* one shared measure for every title */
     }
     .teal .section-title { color: var(--bg); }
+
+    /* A sub-section inside another (Education lives inside About):
+       one step down the ladder, but still a real heading. */
+    .subsection-title {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: var(--teal);
+      max-width: 20ch;
+      margin-bottom: 2.4rem;
+    }
 
     /* ============================================================
        3. SCROLL PROGRESS INDICATOR — ultra-thin terracotta line
@@ -465,20 +481,23 @@
        ============================================================ */
     .about-grid {
       display: grid;
-      grid-template-columns: 35fr 65fr;
-      gap: clamp(2.5rem, 6vw, 6rem);
+      grid-template-columns: 38fr 62fr;
+      gap: clamp(2rem, 4vw, 4rem);
       align-items: start;
       margin-bottom: clamp(4rem, 8vw, 7rem);
     }
     .about-left .eyebrow { display: block; margin-bottom: 1.2rem; }
+    /* Sits in a narrow column, so it runs one step below the full-width
+       section titles — same face, same colour, deliberate step down. */
     .about-headline {
       font-family: var(--serif);
-      font-size: clamp(1.9rem, 2.9vw, 2.7rem);
-      line-height: 1.14;
+      font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+      line-height: 1.18;
       color: var(--teal);
       font-weight: 500;
       letter-spacing: -0.015em;
       margin: 0;
+      text-wrap: balance;
     }
     .about-headline .accent { color: var(--terra); font-style: italic; }
     /* short terracotta rule anchors the left column */
@@ -690,19 +709,23 @@
     .trav-rot {
       position: absolute;
       left: 0; top: 0;
-      width: 84px; height: 84px;
-      margin: -42px 0 0 -42px;
+      width: 118px; height: 118px;
+      margin: -59px 0 0 -59px;
       color: var(--terra);
       transform: rotate(var(--ang, 0deg)) scaleX(var(--flip, 1));
     }
     .trav-veh {
+      position: absolute; inset: 0;
       width: 100%; height: 100%;
       display: block;
       overflow: visible;          /* strokes must not be clipped */
+      filter: drop-shadow(0 3px 6px rgba(20,20,20,0.13));
     }
-    .trav-veh .veh-body { fill: var(--bg); stroke: currentColor; stroke-width: 4.5; stroke-linejoin: round; }
-    .trav-veh .veh-line { fill: none;      stroke: currentColor; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
-    .trav-veh .veh-wheel { fill: var(--bg); stroke: currentColor; stroke-width: 5; }
+    .trav-veh .veh-body  { fill: var(--bg); stroke: currentColor; stroke-width: 3.4; stroke-linejoin: round; stroke-linecap: round; }
+    .trav-veh .veh-solid { fill: currentColor; }
+    .trav-veh .veh-line  { fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+    .trav-veh .veh-thin  { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+    .trav-veh .veh-wheel { fill: var(--bg); stroke: currentColor; stroke-width: 3.6; }
 
     /* the seat sits in VEHICLE coordinates; the photo inside counter-
        rotates by the same angle so my face always reads upright */
@@ -712,14 +735,17 @@
       width: 100%; height: 100%;
       border-radius: 50%;
       object-fit: cover;
-      border: 2.5px solid var(--terra);
+      object-position: 50% 42%;   /* keep the eyes on the optical centre */
+      border: 3px solid var(--terra);
       background: var(--bg);
+      box-shadow: 0 2px 8px rgba(20,20,20,0.18);
       transform: scaleX(var(--flip, 1)) rotate(calc(-1 * var(--ang, 0deg)));
     }
-    /* plane: face in the fuselage window (viewBox 50,50 of 100 → 84px box) */
-    #planeTrav .trav-seat { left: 25px; top: 25px; width: 34px; height: 34px; }
-    /* bike: face is the rider's head at the top of the torso (50,20) */
-    #bikeTrav  .trav-seat { left: 27px; top: 2px;  width: 30px; height: 30px; }
+    /* plane: the face IS the cabin — circle r27 at (52,50) in viewBox
+       units, which is centre (61.4, 59) radius 31.9 at 118px */
+    #planeTrav .trav-seat { left: 33px; top: 31px; width: 56px; height: 56px; }
+    /* bike: face is the rider's head, above the shoulders */
+    #bikeTrav  .trav-seat { left: 33px; top: 6px;  width: 50px; height: 50px; }
 
     /* ============================================================
        14b. EXPERIENCE TIMELINE — the same visual language as the
@@ -763,7 +789,7 @@
        education journey. The stylised chart draws itself while the
        three stats count up in sync (JS, IntersectionObserver).
        ============================================================ */
-    .thesis-title { font-size: var(--fs-h2); color: var(--bg); margin-bottom: 1rem; max-width: 22ch; }
+    .thesis-title { font-size: var(--fs-h2); color: var(--bg); margin-bottom: 1rem; max-width: 20ch; }
     .thesis-sub   { color: var(--mut-d); font-size: var(--fs-meta); letter-spacing: 0.03em; margin-bottom: 2.4rem; }
     .thesis p.body { color: var(--mut-d); max-width: 44rem; margin-bottom: 3.5rem; }
     .thesis-viz { padding: 1rem 0 0; }
@@ -808,7 +834,7 @@
     }
     .show-head { text-align: center; }
     .show-head .eyebrow { margin-bottom: 0.9rem; }
-    .show-head .section-title { margin: 0 auto; max-width: none; }
+    .show-head .section-title { margin: 0 auto 0.4rem; max-width: 20ch; }
 
     :root {
       /* capped by width AND viewport height so the caption always fits */
@@ -1274,7 +1300,7 @@
       <div class="about-grid">
         <div class="about-left stg">
           <span class="eyebrow" data-i18n="about.eyebrow">About</span>
-          <h2 class="about-headline">Italian student,<br>builder &amp; economist<br>incoming at <span class="accent">RSM Rotterdam</span>.</h2>
+          <h2 class="about-headline">Italian student, builder &amp; economist incoming at <span class="accent">RSM Rotterdam</span>.</h2>
         </div>
         <div class="about-right">
           <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
@@ -1290,7 +1316,8 @@
            line: my face in a plane over UU→PUC (flew to Brazil), then
            on a bike over PUC→RSM (moved to Rotterdam). -->
       <div class="vjourney stg" id="vjourney">
-        <h3 class="eyebrow" data-i18n="edu.eyebrow">Education</h3>
+        <span class="eyebrow" data-i18n="edu.eyebrow">Education</span>
+        <h3 class="subsection-title" data-i18n="edu.title">Utrecht, Rio de Janeiro, Rotterdam.</h3>
         <div class="vj-rail" id="vjRail">
           <!-- JS rewrites both paths in pixel coordinates on measure;
                the markup d is only the no-JS static fallback -->
@@ -1303,27 +1330,38 @@
                my face shows through as the window / the rider's head -->
           <div class="traveler" id="planeTrav" aria-hidden="true">
             <span class="trav-rot">
+              <!-- The cabin circle is drawn LAST so the wings and tail
+                   appear to emerge from behind it; the photo then sits
+                   exactly on that circle as the window. -->
               <svg class="trav-veh" viewBox="0 0 100 100">
-                <path class="veh-body" d="M58,42 L30,10 L46,42 Z"/>
-                <path class="veh-body" d="M58,58 L30,90 L46,58 Z"/>
-                <path class="veh-body" d="M22,44 L8,26 L20,44 Z"/>
-                <path class="veh-body" d="M22,56 L8,74 L20,56 Z"/>
-                <ellipse class="veh-body" cx="50" cy="50" rx="38" ry="23"/>
+                <path class="veh-body" d="M42,30 L14,9  L5,20  L30,38 Z"/>
+                <path class="veh-body" d="M42,70 L14,91 L5,80  L30,62 Z"/>
+                <path class="veh-body" d="M32,42 L4,42 L4,58 L32,58 Z"/>
+                <path class="veh-solid" d="M74,34 L99,50 L74,66 Z"/>
+                <circle class="veh-body" cx="52" cy="50" r="27"/>
               </svg>
               <span class="trav-seat"><img class="trav-face" src="images/face.jpg" alt=""></span>
             </span>
           </div>
           <div class="traveler" id="bikeTrav" aria-hidden="true">
             <span class="trav-rot">
+              <!-- Bike drawn bottom-up: wheels, frame, saddle and bars,
+                   then the rider's torso and arm. The head is the photo,
+                   sized deliberately large so it reads at a glance. -->
               <svg class="trav-veh" viewBox="0 0 100 100">
-                <circle class="veh-wheel" cx="22" cy="72" r="18"/>
-                <circle class="veh-wheel" cx="78" cy="72" r="18"/>
-                <path class="veh-line" d="M22,72 L42,42 L66,42"/>
-                <path class="veh-line" d="M42,42 L60,72"/>
-                <path class="veh-line" d="M78,72 L64,42"/>
-                <path class="veh-line" d="M58,40 L70,40"/>
-                <path class="veh-line" d="M36,40 L48,40"/>
-                <path class="veh-line" d="M43,40 L50,22"/>
+                <circle class="veh-wheel" cx="21" cy="79" r="16"/>
+                <circle class="veh-wheel" cx="83" cy="79" r="16"/>
+                <circle class="veh-solid" cx="21" cy="79" r="2.6"/>
+                <circle class="veh-solid" cx="83" cy="79" r="2.6"/>
+                <path class="veh-line" d="M21,79 L45,55 L55,79 Z"/>
+                <path class="veh-line" d="M55,79 L73,55"/>
+                <path class="veh-line" d="M73,55 L83,79"/>
+                <path class="veh-line" d="M45,55 L42,49"/>
+                <path class="veh-thin" d="M35,48 L50,48"/>
+                <path class="veh-thin" d="M67,50 L80,50"/>
+                <path class="veh-line" d="M52,79 L58,72"/>
+                <path class="veh-line" d="M44,48 L52,34"/>
+                <path class="veh-line" d="M52,37 L73,50"/>
               </svg>
               <span class="trav-seat"><img class="trav-face" src="images/face.jpg" alt=""></span>
             </span>
@@ -1706,6 +1744,7 @@
         'about.p2': 'Since then I’ve followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I’ve built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.',
         'about.p3': 'This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I’m in the middle of something I don’t yet know how to finish.',
         'edu.eyebrow': 'Education',
+        'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
         'edu.uu': 'BSc Economics &amp; Business Economics · Minor in Law · Honours Programme',
         'edu.puc': 'Exchange semester · Business, Law &amp; Portuguese coursework',
         'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
@@ -1759,6 +1798,7 @@
         'about.p3': 'A settembre inizio un MSc in Finance alla RSM di Rotterdam. Ciò che lega tutto quello che faccio è lo stesso istinto: imparo più in fretta quando sono nel mezzo di qualcosa che non so ancora come finire.',
 
         'edu.eyebrow': 'Formazione',
+        'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
         'edu.uu': 'BSc Economics &amp; Business Economics · Minor in Diritto · Honours Programme',
         'edu.puc': 'Semestre di scambio · Corsi di Business, Diritto e Portoghese',
         'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
@@ -1813,6 +1853,7 @@
         'about.p3': 'In september begin ik aan een MSc Finance aan RSM Rotterdam. Wat alles wat ik doe verbindt is hetzelfde instinct: ik leer het snelst wanneer ik midden in iets zit dat ik nog niet weet af te maken.',
 
         'edu.eyebrow': 'Opleiding',
+        'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
         'edu.uu': 'BSc Economics &amp; Business Economics · Minor Rechten · Honours Programme',
         'edu.puc': 'Uitwisselingssemester · Vakken Business, Recht &amp; Portugees',
         'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
