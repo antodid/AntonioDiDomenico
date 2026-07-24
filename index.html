@@ -177,9 +177,9 @@
       font-weight: 500;
       line-height: 1.1;
       letter-spacing: -0.015em;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-size: clamp(1.45rem, 2.2vw, 1.9rem);
       color: var(--teal);
-      max-width: 20ch;
+      max-width: 24ch;
       margin-bottom: 2.4rem;
     }
 
@@ -481,7 +481,7 @@
        ============================================================ */
     .about-grid {
       display: grid;
-      grid-template-columns: 38fr 62fr;
+      grid-template-columns: 45fr 55fr;
       gap: clamp(2rem, 4vw, 4rem);
       align-items: start;
       margin-bottom: clamp(4rem, 8vw, 7rem);
@@ -491,8 +491,8 @@
        section titles — same face, same colour, deliberate step down. */
     .about-headline {
       font-family: var(--serif);
-      font-size: clamp(1.55rem, 2.5vw, 2.15rem);
-      line-height: 1.18;
+      font-size: clamp(1.9rem, 3vw, 2.4rem);
+      line-height: 1.16;
       color: var(--teal);
       font-weight: 500;
       letter-spacing: -0.015em;
@@ -1094,7 +1094,7 @@
     }
     .xp-role   { font-family: var(--serif); font-size: var(--fs-h3); color: var(--teal); margin-bottom: 0.3rem; }
     .xp-org    { font-size: var(--fs-meta); font-weight: 600; color: var(--terra-ink); letter-spacing: 0.04em; margin-bottom: 0.9rem; }
-    .xp-desc   { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--mut); max-width: var(--measure); }
+    .xp-desc   { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--mut); max-width: 62ch; }
     .xp-photo  { margin-top: 1.4rem; width: 240px; aspect-ratio: 3 / 2; }
 
     /* company lockup — used where one entry covers two employers
@@ -1193,10 +1193,12 @@
       .vj-badge { width: 52px; height: 52px; font-size: 0.85rem; }
       .vj-name { font-size: 1.1rem; }
       .vj-course { font-size: 0.82rem; }
-      /* vehicles scale down; seats keep their vehicle-space ratios */
+      /* Vehicles scale down. Seats are recomputed from the SAME vehicle
+         geometry at 0.64: cabin (52,50) r27 -> centre (33.3,32.0) r17.3;
+         rider head (49,26) r21 -> centre (31.4,16.6) r13.4. */
       .trav-rot { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
-      #planeTrav .trav-seat { left: 19px; top: 19px; width: 26px; height: 26px; }
-      #bikeTrav  .trav-seat { left: 21px; top: 2px;  width: 22px; height: 22px; }
+      #planeTrav .trav-seat { left: 18px; top: 17px; width: 30px; height: 30px; }
+      #bikeTrav  .trav-seat { left: 18px; top: 4px;  width: 26px; height: 26px; }
 
       /* experience timeline tightens */
       .xtl-item { grid-template-columns: 52px 1fr; gap: 1.1rem; padding: 1.8rem 0; }
@@ -1411,9 +1413,12 @@
            block, which struck through the digits. -->
       <div class="thesis-viz stg" id="thesisViz">
         <div class="tstats">
-          <div><span class="tnum" data-target="600" data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
-          <div><span class="tnum" data-target="22"  data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
-          <div><span class="tnum" data-target="9.2" data-decimals="1">0.0</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
+          <!-- Real figures are in the markup, so they are correct with
+               JS off, blocked or still loading. The counter zeroes them
+               itself the moment it is actually able to animate. -->
+          <div><span class="tnum" data-target="600" data-decimals="0">600</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
+          <div><span class="tnum" data-target="22"  data-decimals="0">22</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
+          <div><span class="tnum" data-target="9.2" data-decimals="1">9.2</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
         </div>
       </div>
     </div>
@@ -1453,7 +1458,7 @@
             <div class="xp-period">Oct 2024 – Jun 2025</div>
             <h3 class="xp-role" data-i18n="exp2.role">Mathematics & Statistics Tutor</h3>
             <div class="xp-org" data-i18n="exp2.org">AthenaSummary</div>
-            <p class="xp-desc" data-i18n="exp2.desc">Delivered small-group tutorials (5–20 students) to first-year Economics students, focusing on exam preparation in quantitative subjects.</p>
+            <p class="xp-desc" data-i18n="exp2.desc">Taught small-group tutorials to first-year Economics students and built the course material from scratch — slides, worked examples and exam practice.</p>
           </div>
         </div>
 
@@ -1475,7 +1480,7 @@
             <div class="xp-period">Feb 2024 – Present</div>
             <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
             <div class="xp-org" data-i18n="exp3.org">Picnic & Jumbo</div>
-            <p class="xp-desc" data-i18n="exp3.desc">Order preparation and fulfilment for two leading Dutch grocery operators; sustained part-time employment alongside a full-time degree.</p>
+            <p class="xp-desc" data-i18n="exp3.desc">Order preparation and fulfilment for two of the largest grocery operators in the Netherlands, held alongside a full-time degree.</p>
             <!-- both employers shown, since this entry covers two -->
             <div class="xp-logos" aria-hidden="true">
               <img src="images/logo-picnic.png" alt="Picnic" loading="lazy" decoding="async" width="447" height="447">
@@ -1756,7 +1761,7 @@
         'thesis.s1': 'STOXX Europe 600 firms',
         'thesis.s2': 'years of panel data',
         'thesis.s3': 'final grade',
-        'thesis.chartcap': 'Illustrative cost-of-debt trend · 2002–2024',
+       
 
         'show.eyebrow': 'Selected Projects',
         'show.title': 'Three projects, built out of curiosity.',
@@ -1767,16 +1772,15 @@
         'sp3.title': 'Volunteers',
         'sp3.cap': 'Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.',
 
-        'noce.tag': 'Places only locals know',
 
         'exp.eyebrow': 'Experience',
         'exp.title': 'Work, study, and everything in between.',
         'exp1.role': 'Accounting Assistant', 'exp1.org': 'Ex Primo · Communication &amp; Marketing Agency — Italy',
         'exp1.desc': 'Support client accounting for a pension fund at a communication and marketing agency, reporting to the Head of Administration.',
         'exp2.role': 'Mathematics &amp; Statistics Tutor', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Built the full online course material from scratch — slides, worked examples and statistics exercises.',
+        'exp2.desc': 'Taught small-group tutorials to first-year Economics students and built the course material from scratch — slides, worked examples and exam practice.',
         'exp3.role': 'Warehouse Operations', 'exp3.org': 'Picnic &amp; Jumbo',
-        'exp3.desc': 'Steady, practical work alongside my studies.',
+        'exp3.desc': 'Order preparation and fulfilment for two of the largest grocery operators in the Netherlands, held alongside a full-time degree.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Always open to interesting projects and conversations.',
@@ -1811,7 +1815,6 @@
         'thesis.s1': 'imprese dello STOXX Europe 600',
         'thesis.s2': 'anni di dati panel',
         'thesis.s3': 'voto finale',
-        'thesis.chartcap': 'Andamento illustrativo del costo del debito · 2002–2024',
 
         'show.eyebrow': 'Progetti selezionati',
         'show.title': 'Tre progetti, nati dalla curiosità.',
@@ -1822,16 +1825,15 @@
         'sp3.title': 'Volontariato',
         'sp3.cap': 'Ho lanciato la prima raccolta alimentare di Utrecht — cinque punti vendita Jumbo, materiali bilingue EN/NL, volontari reclutati e coordinati.',
 
-        'noce.tag': 'Posti che conoscono solo i local',
 
         'exp.eyebrow': 'Esperienza',
         'exp.title': 'Lavoro, studio e tutto quello che sta in mezzo.',
         'exp1.role': 'Assistente contabile', 'exp1.org': 'Ex Primo · Agenzia di comunicazione e marketing — Italia',
         'exp1.desc': 'Supporto alla contabilità clienti per un fondo pensione presso un’agenzia di comunicazione e marketing, rispondendo al Responsabile Amministrativo.',
         'exp2.role': 'Tutor di Matematica e Statistica', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Ho costruito da zero l’intero materiale del corso online — slide, esempi svolti ed esercizi di statistica.',
+        'exp2.desc': 'Tutorati in piccoli gruppi per studenti di Economia del primo anno, con l’intero materiale del corso costruito da zero — slide, esempi svolti ed esercitazioni d’esame.',
         'exp3.role': 'Operazioni di magazzino', 'exp3.org': 'Picnic &amp; Jumbo',
-        'exp3.desc': 'Lavoro pratico e costante accanto agli studi.',
+        'exp3.desc': 'Preparazione ed evasione degli ordini per due dei maggiori operatori della grande distribuzione olandese, portata avanti insieme a un corso di laurea a tempo pieno.',
 
         'contact.eyebrow': 'Contatti',
         'contact.title': 'Sempre aperto a progetti e conversazioni interessanti.',
@@ -1866,7 +1868,6 @@
         'thesis.s1': 'STOXX Europe 600-bedrijven',
         'thesis.s2': 'jaar aan paneldata',
         'thesis.s3': 'eindcijfer',
-        'thesis.chartcap': 'Illustratieve trend kosten van schuld · 2002–2024',
 
         'show.eyebrow': 'Geselecteerde projecten',
         'show.title': 'Drie projecten, ontstaan uit nieuwsgierigheid.',
@@ -1877,16 +1878,15 @@
         'sp3.title': 'Vrijwilligers',
         'sp3.cap': 'De eerste Utrechtse voedselinzameling opgezet — vijf Jumbo-filialen, tweetalig EN/NL materiaal, vrijwilligers geworven en gecoördineerd.',
 
-        'noce.tag': 'Plekken die alleen locals kennen',
 
         'exp.eyebrow': 'Ervaring',
         'exp.title': 'Werk, studie en alles daartussenin.',
         'exp1.role': 'Assistent boekhouding', 'exp1.org': 'Ex Primo · Communicatie- en marketingbureau — Italië',
         'exp1.desc': 'Ondersteuning van de klantenboekhouding voor een pensioenfonds bij een communicatie- en marketingbureau, rapporterend aan het Hoofd Administratie.',
         'exp2.role': 'Tutor Wiskunde &amp; Statistiek', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Het volledige online cursusmateriaal vanaf nul opgebouwd — slides, uitgewerkte voorbeelden en statistiekopgaven.',
+        'exp2.desc': 'Werkgroepen in kleine groepen voor eerstejaars economiestudenten, met het volledige cursusmateriaal vanaf nul opgebouwd — slides, uitgewerkte voorbeelden en tentamenoefeningen.',
         'exp3.role': 'Magazijnwerkzaamheden', 'exp3.org': 'Picnic &amp; Jumbo',
-        'exp3.desc': 'Vast, praktisch werk naast mijn studie.',
+        'exp3.desc': 'Orderverzameling en -afhandeling voor twee van de grootste supermarktketens van Nederland, gecombineerd met een voltijdstudie.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Altijd open voor interessante projecten en gesprekken.',
@@ -2257,11 +2257,14 @@
     }
 
     if (REDUCED) {
-      setStatsFinal();
+      setStatsFinal();                 /* markup already holds the figures */
     } else if (tViz) {
       new IntersectionObserver(function (entries, obs) {
         if (!entries[0].isIntersecting) return;
         obs.disconnect();
+        /* Only now do we zero the figures — up to this point the real
+           values from the markup have been on screen, so a blocked or
+           slow script can never leave the reader looking at 0. */
         var t0 = performance.now();
         (function tick(now) {
           var tt = Math.min(1, (now - t0) / 1800);
