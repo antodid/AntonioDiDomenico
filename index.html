@@ -422,7 +422,27 @@
     /* ============================================================
        9. ABOUT
        ============================================================ */
-    .about p { color: var(--mut); margin-bottom: 1.6rem; max-width: 40rem; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 35fr 65fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+    }
+    .about-left .eyebrow { display: block; margin-bottom: 1.4rem; }
+    .about-headline {
+      font-family: var(--serif);
+      font-size: clamp(1.55rem, 2.4vw, 2.2rem);
+      line-height: 1.2;
+      color: var(--ink);
+      font-weight: 400;
+      margin: 0;
+    }
+    .about-right p { color: var(--mut); margin-bottom: 1.6rem; line-height: var(--lh-body); }
+    .about-right p:last-child { margin-bottom: 0; }
+    @media (max-width: 680px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
 
     /* ============================================================
        10. IMAGES — parallax + clip-wipe reveal.
@@ -678,30 +698,7 @@
     .thesis-title { font-size: var(--fs-h2); color: var(--bg); margin-bottom: 1rem; max-width: 22ch; }
     .thesis-sub   { color: var(--mut-d); font-size: var(--fs-meta); letter-spacing: 0.03em; margin-bottom: 2.4rem; }
     .thesis p.body { color: var(--mut-d); max-width: 44rem; margin-bottom: 3.5rem; }
-    .thesis-viz { position: relative; padding: 1rem 0 0; }
-    /* the chart lives in its own band UNDER the figures, so nothing
-       is ever struck through */
-    .tchart-wrap {
-      position: relative;
-      height: 150px;
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--line-d);
-    }
-    .tchart {
-      display: block;
-      width: 100%; height: 100%;
-      opacity: 0.55;
-      pointer-events: none;
-    }
-    .tline { fill: none; stroke: var(--bg); stroke-width: 2; }
-    .tchart-cap {
-      position: absolute;
-      top: 1.5rem; right: 0;
-      font-size: 0.78rem;
-      letter-spacing: 0.06em;
-      color: var(--mut-d);
-    }
+    .thesis-viz { padding: 1rem 0 0; }
     .tstats {
       position: relative;
       display: grid;
@@ -1093,10 +1090,17 @@
        ============================================================ -->
   <section id="about" class="about">
     <div class="wrap unfold">
-      <span class="eyebrow stg" data-i18n="about.eyebrow">About</span>
-      <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
-      <p class="stg" data-i18n="about.p2">Since then I've followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I've built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.</p>
-      <p class="stg" data-i18n="about.p3">This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I'm in the middle of something I don't yet know how to finish.</p>
+      <div class="about-grid">
+        <div class="about-left stg">
+          <span class="eyebrow" data-i18n="about.eyebrow">About</span>
+          <p class="about-headline">Italian student,<br>builder &amp; economist<br>based in the Netherlands.</p>
+        </div>
+        <div class="about-right">
+          <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
+          <p class="stg" data-i18n="about.p2">Since then I've followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I've built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.</p>
+          <p class="stg" data-i18n="about.p3">This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I'm in the middle of something I don't yet know how to finish.</p>
+        </div>
+      </div>
 
       <!-- Education: badges in a left column, wide text to the right.
            A serpentine line draws itself down through the three badge
@@ -1191,12 +1195,6 @@
           <div><span class="tnum" data-target="600" data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
           <div><span class="tnum" data-target="22"  data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
           <div><span class="tnum" data-target="9.2" data-decimals="1">0.0</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
-        </div>
-        <div class="tchart-wrap">
-          <svg class="tchart" viewBox="0 0 900 200" preserveAspectRatio="none" aria-hidden="true">
-            <path class="tline" id="tLine" d="M0,168 C60,160 90,175 150,152 C210,130 250,140 310,126 C370,112 420,86 480,95 C540,104 590,64 650,52 C710,40 770,44 830,22 C860,12 880,8 900,4"/>
-          </svg>
-          <span class="tchart-cap" data-i18n="thesis.chartcap">Illustrative cost-of-debt trend · 2002–2024</span>
         </div>
       </div>
     </div>
@@ -1846,10 +1844,8 @@
     }
 
     /* ==========================================================
-       6c. THESIS DATA-REVEAL — the background chart draws over
-       1.8s while the three stats count up in sync with it.
+       6c. THESIS STATS COUNT-UP
        ========================================================== */
-    var tLine = document.getElementById('tLine');
     var tViz  = document.getElementById('thesisViz');
     var tNums = Array.prototype.slice.call(document.querySelectorAll('.tnum'));
 
@@ -1861,20 +1857,15 @@
     }
 
     if (REDUCED) {
-      setStatsFinal();               /* chart stays fully drawn (no dasharray) */
-    } else if (tLine && tViz) {
-      var tLen = tLine.getTotalLength();
-      tLine.style.strokeDasharray  = tLen;
-      tLine.style.strokeDashoffset = tLen;   /* hidden until triggered */
-
+      setStatsFinal();
+    } else if (tViz) {
       new IntersectionObserver(function (entries, obs) {
         if (!entries[0].isIntersecting) return;
         obs.disconnect();
         var t0 = performance.now();
         (function tick(now) {
           var tt = Math.min(1, (now - t0) / 1800);
-          var e  = 1 - Math.pow(1 - tt, 3);          /* ease-out cubic */
-          tLine.style.strokeDashoffset = tLen * (1 - e);
+          var e  = 1 - Math.pow(1 - tt, 3);
           tNums.forEach(function (n) {
             n.textContent = (parseFloat(n.getAttribute('data-target')) * e)
               .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
