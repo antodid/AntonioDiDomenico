@@ -706,14 +706,18 @@
        so the face is always anchored to the right spot (cockpit window /
        saddle) and no connecting line is ever left dangling. --flip
        mirrors it on the right-to-left leg so it never travels upside-down. */
+    /* The two vehicles no longer share proportions — the aeroplane is
+       drawn in a wide 160x100 box so the fuselage can be long enough to
+       read as an aircraft, the bike stays square. Each is offset by half
+       its own size so it still centres on its point of the path. */
     .trav-rot {
       position: absolute;
       left: 0; top: 0;
-      width: 118px; height: 118px;
-      margin: -59px 0 0 -59px;
       color: var(--terra);
       transform: rotate(var(--ang, 0deg)) scaleX(var(--flip, 1));
     }
+    #planeTrav .trav-rot { width: 170px; height: 106px; margin: -53px 0 0 -85px; }
+    #bikeTrav  .trav-rot { width: 118px; height: 118px; margin: -59px 0 0 -59px; }
     .trav-veh {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
@@ -741,9 +745,9 @@
       box-shadow: 0 2px 8px rgba(20,20,20,0.18);
       transform: scaleX(var(--flip, 1)) rotate(calc(-1 * var(--ang, 0deg)));
     }
-    /* plane: the face IS the cabin — circle r27 at (52,50) in viewBox
-       units, which is centre (61.4, 59) radius 31.9 at 118px */
-    #planeTrav .trav-seat { left: 33px; top: 31px; width: 56px; height: 56px; }
+    /* plane: cabin window is circle r20 at (72,50) of a 160-wide box,
+       so at 170px (k=1.0625) that is centre (76.5, 53.1) radius 21.25 */
+    #planeTrav .trav-seat { left: 56.5px; top: 33.1px; width: 40px; height: 40px; }
     /* bike: face is the rider's head, above the shoulders */
     #bikeTrav  .trav-seat { left: 33px; top: 6px;  width: 50px; height: 50px; }
 
@@ -1193,12 +1197,13 @@
       .vj-badge { width: 52px; height: 52px; font-size: 0.85rem; }
       .vj-name { font-size: 1.1rem; }
       .vj-course { font-size: 0.82rem; }
-      /* Vehicles scale down. Seats are recomputed from the SAME vehicle
-         geometry at 0.64: cabin (52,50) r27 -> centre (33.3,32.0) r17.3;
-         rider head (49,26) r21 -> centre (31.4,16.6) r13.4. */
-      .trav-rot { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
-      #planeTrav .trav-seat { left: 18px; top: 17px; width: 30px; height: 30px; }
-      #bikeTrav  .trav-seat { left: 18px; top: 4px;  width: 26px; height: 26px; }
+      /* Vehicles scale down; seats recomputed from the same geometry.
+         Plane at 96px wide (k=0.6): window centre (43.2, 30) r12.
+         Bike at 64px (k=0.64): head centre (31.4, 16.6) r13.4. */
+      #planeTrav .trav-rot { width: 96px; height: 60px; margin: -30px 0 0 -48px; }
+      #bikeTrav  .trav-rot { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
+      #planeTrav .trav-seat { left: 32.2px; top: 19px; width: 22px; height: 22px; }
+      #bikeTrav  .trav-seat { left: 18px;   top: 4px;  width: 26px; height: 26px; }
 
       /* experience timeline tightens */
       .xtl-item { grid-template-columns: 52px 1fr; gap: 1.1rem; padding: 1.8rem 0; }
@@ -1332,15 +1337,18 @@
                my face shows through as the window / the rider's head -->
           <div class="traveler" id="planeTrav" aria-hidden="true">
             <span class="trav-rot">
-              <!-- The cabin circle is drawn LAST so the wings and tail
-                   appear to emerge from behind it; the photo then sits
-                   exactly on that circle as the window. -->
-              <svg class="trav-veh" viewBox="0 0 100 100">
-                <path class="veh-body" d="M42,30 L14,9  L5,20  L30,38 Z"/>
-                <path class="veh-body" d="M42,70 L14,91 L5,80  L30,62 Z"/>
-                <path class="veh-body" d="M32,42 L4,42 L4,58 L32,58 Z"/>
-                <path class="veh-solid" d="M74,34 L99,50 L74,66 Z"/>
-                <circle class="veh-body" cx="52" cy="50" r="27"/>
+              <!-- Aeroplane in plan view, nose right — the view you get
+                   on a flight map, which is what the path underneath it
+                   is. Swept wings and tailplanes are drawn first so the
+                   fuselage covers their roots; the cabin window is last
+                   and the photo lands exactly on it. -->
+              <svg class="trav-veh" viewBox="0 0 160 100">
+                <path class="veh-body" d="M112,29 L64,3 L44,8 L92,32 Z"/>
+                <path class="veh-body" d="M112,71 L64,97 L44,92 L92,68 Z"/>
+                <path class="veh-body" d="M36,32 L14,16 L4,20 L26,34 Z"/>
+                <path class="veh-body" d="M36,68 L14,84 L4,80 L26,66 Z"/>
+                <path class="veh-body" d="M40,25 L96,27 C122,30 144,38 156,50 C144,62 122,70 96,73 L40,75 C21,75 10,65 10,50 C10,35 21,25 40,25 Z"/>
+                <circle class="veh-body" cx="72" cy="50" r="20"/>
               </svg>
               <span class="trav-seat"><img class="trav-face" src="images/face.jpg" alt=""></span>
             </span>
