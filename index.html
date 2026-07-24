@@ -7,14 +7,12 @@
   <meta name="description" content="Antonio Di Domenico — MSc Finance & Investments candidate at RSM Rotterdam. Curious about the places where economic thinking, technology and communication meet.">
 
   <!-- ============================================================
-       EXTERNAL DEPENDENCIES — the only two allowed:
-       1. Google Fonts  (Fraunces / Inter)
-       2. Three.js r128 (cdnjs) — used only for the Noce 3D map
+       EXTERNAL DEPENDENCY — Google Fonts only (Fraunces / Inter).
+       The Noce map is now hand-drawn SVG, so no WebGL library.
        ============================================================ -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <!-- Mark the document as JS-capable ASAP. All "hidden until animated"
        styles are scoped to html.js, so with JS disabled the page renders
@@ -37,6 +35,18 @@
       --ease:   cubic-bezier(0.16, 1, 0.3, 1); /* "expo-out" feel    */
       --serif:  'Fraunces', Georgia, serif;
       --sans:   'Inter', -apple-system, sans-serif;
+
+      /* ---- Type scale (desktop-first, fluid via clamp) ----------
+         One ladder used everywhere from the hero down, so every
+         section shares the same rhythm and hierarchy.            */
+      --fs-display: clamp(3.4rem, 7.5vw, 6.5rem);  /* hero name    */
+      --fs-h2:      clamp(2.4rem, 4.4vw, 3.9rem);  /* section head */
+      --fs-h3:      clamp(1.45rem, 2vw, 2rem);     /* card / entry */
+      --fs-lead:    clamp(1.18rem, 1.5vw, 1.4rem); /* intro copy   */
+      --fs-body:    clamp(1.05rem, 1.1vw, 1.18rem);/* paragraphs   */
+      --fs-meta:    clamp(0.9rem, 0.95vw, 1rem);   /* dates, chips */
+      --lh-body:    1.65;
+      --measure:    68ch;                          /* reading width */
     }
 
     /* ============================================================
@@ -48,22 +58,32 @@
 
     body {
       font-family: var(--sans);
-      font-size: 16px;
-      line-height: 1.75;
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
       background: var(--bg);
       color: var(--ink);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     h1, h2, h3 {
       font-family: var(--serif);
       font-weight: 500;
-      line-height: 1.05;
+      line-height: 1.08;
+      letter-spacing: -0.015em;
       /* Fraunces variable optical sizing: let big headings use the
          display cut automatically. */
       font-optical-sizing: auto;
     }
+    h2 { font-size: var(--fs-h2); }
+    h3 { font-size: var(--fs-h3); }
+
+    /* Body copy: one consistent size, colour and measure everywhere
+       from About onwards. */
+    p { font-size: var(--fs-body); line-height: var(--lh-body); }
+    .prose p { color: var(--mut); max-width: var(--measure); margin-bottom: 1.5rem; }
+    .prose p:last-child { margin-bottom: 0; }
 
     img { max-width: 100%; display: block; }
     a   { color: inherit; text-decoration: none; }
@@ -83,18 +103,19 @@
 
     .eyebrow {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--terra);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.6rem;
     }
 
     .section-title {
-      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-size: var(--fs-h2);
       color: var(--teal);
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.8rem;
+      max-width: 20ch;
     }
     .teal .section-title { color: var(--bg); }
 
@@ -274,18 +295,28 @@
     .hero .wrap { position: relative; z-index: 1; text-align: center; }
     .scroll-hint { z-index: 1; }   /* stays above the hero background */
 
+    /* Large centred portrait — the visual anchor of the page. A white
+       inner border + thin terracotta ring lifts it off the cream and
+       reads as considered/editorial for a finance portfolio. */
     .hero-photo {
-      width: 72px; height: 72px;
+      width: clamp(150px, 21vw, 200px);
+      height: clamp(150px, 21vw, 200px);
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--line);
-      margin: 0 auto 2rem;
+      border: 5px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--terra), 0 22px 48px -16px rgba(20, 20, 20, 0.4);
+      margin: 0 auto 2.2rem;
+      animation: heroPhotoIn 0.9s var(--ease) both;
+    }
+    @keyframes heroPhotoIn {
+      from { opacity: 0; transform: scale(0.86); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
     /* The big name. JS splits it into .ch spans; each character fades
        up from blur. Without JS the plain text simply shows. */
     .hero-name {
-      font-size: clamp(3rem, 9vw, 6.5rem);
+      font-size: var(--fs-display);
       color: var(--teal);
       margin-bottom: 1.8rem;
       letter-spacing: -0.01em;
@@ -305,9 +336,9 @@
        plain Inter, no terminal styling, no cursor. Each character is a
        span that fades in; once written, it simply rests. */
     .hero-line {
-      font-size: 1.05rem;
+      font-size: var(--fs-lead);
       color: var(--mut);
-      max-width: 36rem;
+      max-width: 40rem;
       margin: 0 auto 2.6rem;
       min-height: 1.8em;   /* reserve the line before it types */
     }
@@ -440,43 +471,19 @@
     .ph { background: linear-gradient(135deg, #EFEEE8 0%, #E4E2DB 100%) !important; }
     .ph img { visibility: hidden; }
     .hero-photo-ph {
-      width: 72px; height: 72px;
+      width: clamp(150px, 21vw, 200px);
+      height: clamp(150px, 21vw, 200px);
       border-radius: 50%;
-      border: 2px solid var(--line);
+      border: 5px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--terra), 0 22px 48px -16px rgba(20, 20, 20, 0.4);
       background: linear-gradient(135deg, #EFEEE8, #E4E2DB);
       display: grid; place-items: center;
       font-family: var(--serif);
-      font-size: 1.25rem;
+      font-size: 2.6rem;
       color: var(--teal);
-      margin: 0 auto 2rem;
+      margin: 0 auto 2.2rem;
     }
 
-    /* Floating card shown beside a hovered/tapped Noce map point */
-    .noce-card {
-      position: absolute;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 0.7rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--ink);
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transform: translate(-50%, calc(-100% - 14px)) scale(0.96);
-      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
-      z-index: 5;
-    }
-    .noce-card.show { opacity: 1; transform: translate(-50%, calc(-100% - 14px)) scale(1); }
-    .noce-card::before {
-      content: '';
-      display: inline-block;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--terra);
-      margin-right: 0.5rem;
-    }
 
     /* ============================================================
        14. UNIVERSITY JOURNEY (inside About) — a gently WINDING
@@ -486,42 +493,44 @@
        with a terracotta glow.
        ============================================================ */
     .vjourney { margin-top: 4.5rem; }
-    .vjourney .eyebrow { margin-bottom: 1rem; }
-    .vj-rail { position: relative; height: 620px; }
+    .vjourney .eyebrow { margin-bottom: 1.5rem; }
+    /* Desktop: a WIDE horizontal S so the plane/bike get a long, clearly
+       visible journey across the page. Tall rail + curves that leave each
+       node vertically (control points stacked above/below the anchor), so
+       the sweep happens in the middle band where no text lives. */
+    .vj-rail { position: relative; height: clamp(820px, 105vh, 1000px); }
     .vj-svg {
       position: absolute;
       inset: 0;
       width: 100%; height: 100%;
       overflow: visible;
+      pointer-events: none;
     }
     .vj-svg path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
     .vj-ghost { stroke: var(--line); }
-    /* JS rebuilds the path in pixel coordinates and drives the dash
-       from its real measured length (pathLength + non-uniform viewBox
-       stretching corrupts dash math in Chromium) */
+    /* JS rebuilds the path in real pixel coordinates and drives the dash
+       from its measured length */
     .vj-draw  { stroke: var(--teal); }
 
-    /* items sit on the curve's anchor points, alternating sides */
+    /* universities hang off the curve, alternating sides */
     .vj-item {
       position: absolute;
       display: flex;
       align-items: center;
-      gap: 1.4rem;
-      width: min(430px, 78%);
+      gap: 2.2rem;                 /* keeps text well clear of the curve */
+      width: min(400px, 44%);
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(calc(-50% + 18px));
       transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
     }
-    .vj-item.on { opacity: 1; transform: translateY(0); }
-    .vj-i1 { left: 15%; top: 14%; margin-left: -32px; transform: translateY(calc(-50% + 18px)); }
-    .vj-i1.on { transform: translateY(-50%); }
-    .vj-i2 { right: 15%; top: 50%; margin-right: -32px; flex-direction: row-reverse; text-align: right;
-             transform: translateY(calc(-50% + 18px)); }
-    .vj-i2.on { transform: translateY(-50%); }
-    .vj-i3 { left: 15%; top: 86%; margin-left: -32px; transform: translateY(calc(-50% + 18px)); }
-    .vj-i3.on { transform: translateY(-50%); }
+    .vj-item.on { opacity: 1; transform: translateY(-50%); }
+    .vj-i1 { left: 15%;  top: 11%; margin-left: -32px; }
+    .vj-i2 { right: 15%; top: 50%; margin-right: -32px; flex-direction: row-reverse; text-align: right; }
+    .vj-i3 { left: 15%;  top: 89%; margin-left: -32px; }
 
     .vj-badge {
+      position: relative;
+      overflow: hidden;
       flex-shrink: 0;
       width: 64px; height: 64px;
       border-radius: 50%;
@@ -534,10 +543,25 @@
       color: var(--teal);
       transition: border-color 0.5s, color 0.5s, box-shadow 0.5s;
     }
-    .vj-name { font-family: var(--serif); font-size: 1.35rem; }
+    /* Logo images are cut to fit in the circle */
+    .vj-logo {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      background: transparent;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    /* logos that carry their own solid brand background (RSM navy,
+       Athena purple, Ex Primo, Picnic red) fill the whole disc instead
+       of floating in it */
+    .vj-logo.logo-fill { padding: 0; object-fit: cover; }
+    .vj-badge-txt { position: relative; z-index: 0; }
+    .vj-name { font-family: var(--serif); font-size: var(--fs-h3); line-height: 1.15; color: var(--teal); }
     .vj-name a { border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color 0.25s, border-color 0.25s; }
     .vj-name a:hover { color: var(--teal); border-color: var(--teal); }
-    .vj-course { font-size: 0.88rem; color: var(--mut); margin-top: 0.25rem; }
+    .vj-course { font-size: var(--fs-meta); color: var(--mut); margin-top: 0.5rem; line-height: 1.55; }
     .vj-thesis-link {
       display: inline-block;
       margin-top: 0.35rem;
@@ -554,6 +578,60 @@
       box-shadow: 0 0 18px rgba(199, 98, 63, 0.45);
     }
     .vj-final .vj-name a:hover { color: var(--terra); border-color: var(--terra); }
+
+    /* Travellers: a point positioned on the curve (transform:translate
+       set by JS). Children are offset by half their size so they centre
+       on that point; the vehicle rotates to the path tangent while the
+       face stays upright. Hidden until JS places them (so reduced-motion
+       and no-JS never show them). */
+    .traveler {
+      position: absolute;
+      left: 0; top: 0;
+      width: 0; height: 0;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .traveler.on { opacity: 1; }
+
+    /* The whole vehicle — body AND face slot — rotates to the tangent,
+       so the face is always anchored to the right spot (cockpit window /
+       saddle) and no connecting line is ever left dangling. --flip
+       mirrors it on the right-to-left leg so it never travels upside-down. */
+    .trav-rot {
+      position: absolute;
+      left: 0; top: 0;
+      width: 84px; height: 84px;
+      margin: -42px 0 0 -42px;
+      color: var(--terra);
+      transform: rotate(var(--ang, 0deg)) scaleX(var(--flip, 1));
+    }
+    .trav-veh {
+      width: 100%; height: 100%;
+      display: block;
+      overflow: visible;          /* strokes must not be clipped */
+    }
+    .trav-veh .veh-body { fill: var(--bg); stroke: currentColor; stroke-width: 4.5; stroke-linejoin: round; }
+    .trav-veh .veh-line { fill: none;      stroke: currentColor; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .trav-veh .veh-wheel { fill: var(--bg); stroke: currentColor; stroke-width: 5; }
+
+    /* the seat sits in VEHICLE coordinates; the photo inside counter-
+       rotates by the same angle so my face always reads upright */
+    .trav-seat { position: absolute; }
+    .trav-face {
+      display: block;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid var(--terra);
+      background: var(--bg);
+      transform: scaleX(var(--flip, 1)) rotate(calc(-1 * var(--ang, 0deg)));
+    }
+    /* plane: face in the fuselage window (viewBox 50,50 of 100 → 84px box) */
+    #planeTrav .trav-seat { left: 25px; top: 25px; width: 34px; height: 34px; }
+    /* bike: face is the rider's head at the top of the torso (50,20) */
+    #bikeTrav  .trav-seat { left: 27px; top: 2px;  width: 30px; height: 30px; }
 
     /* ============================================================
        14b. EXPERIENCE TIMELINE — the same visual language as the
@@ -597,23 +675,38 @@
        education journey. The stylised chart draws itself while the
        three stats count up in sync (JS, IntersectionObserver).
        ============================================================ */
-    .thesis-title { font-size: clamp(1.9rem, 4vw, 2.9rem); color: var(--bg); margin-bottom: 0.8rem; }
-    .thesis-sub   { color: var(--mut-d); font-size: 0.95rem; margin-bottom: 2rem; }
+    .thesis-title { font-size: var(--fs-h2); color: var(--bg); margin-bottom: 1rem; max-width: 22ch; }
+    .thesis-sub   { color: var(--mut-d); font-size: var(--fs-meta); letter-spacing: 0.03em; margin-bottom: 2.4rem; }
     .thesis p.body { color: var(--mut-d); max-width: 44rem; margin-bottom: 3.5rem; }
-    .thesis-viz { position: relative; padding: 2.5rem 0 1rem; }
+    .thesis-viz { position: relative; padding: 1rem 0 0; }
+    /* the chart lives in its own band UNDER the figures, so nothing
+       is ever struck through */
+    .tchart-wrap {
+      position: relative;
+      height: 150px;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line-d);
+    }
     .tchart {
-      position: absolute;
-      inset: 0;
+      display: block;
       width: 100%; height: 100%;
-      opacity: 0.3;
+      opacity: 0.55;
       pointer-events: none;
     }
     .tline { fill: none; stroke: var(--bg); stroke-width: 2; }
+    .tchart-cap {
+      position: absolute;
+      top: 1.5rem; right: 0;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--mut-d);
+    }
     .tstats {
       position: relative;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
+      gap: 2.5rem;
       text-align: center;
     }
     .tnum {
@@ -625,7 +718,7 @@
       margin-bottom: 0.5rem;
       font-variant-numeric: tabular-nums;
     }
-    .tlabel { font-size: 0.82rem; color: var(--mut-d); letter-spacing: 0.04em; }
+    .tlabel { font-size: var(--fs-meta); color: var(--mut-d); letter-spacing: 0.04em; line-height: 1.4; display: block; }
 
     /* ============================================================
        15. PROJECTS — ROTATING PANEL SHOWCASE
@@ -637,7 +730,7 @@
        the front fade and blur slightly for depth. With .stacked
        (mobile / reduced motion) it degrades to plain vertical cards.
        ============================================================ */
-    .showcase { height: 380vh; padding: 0; }
+    .showcase { height: 330vh; padding: 0; }
     .show-sticky {
       position: sticky;
       top: 0;
@@ -647,79 +740,87 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 2.4rem;
     }
-    .show-head { position: absolute; top: 4.5rem; text-align: center; }
-    .show-stage {
+    .show-head { text-align: center; }
+    .show-head .eyebrow { margin-bottom: 0.6rem; }
+
+    /* the rail slides horizontally; the active slide lands dead centre */
+    .show-viewport { width: 100%; overflow: hidden; }
+    .show-track {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 4.5rem;
-      width: 100%;
-      padding: 0 2rem;
+      gap: var(--slide-gap);
+      will-change: transform;
     }
-    .carousel {
-      position: relative;
-      /* 4:5 panel, capped by width AND by viewport height so it never
-         collides with the section eyebrow on short screens */
-      width: min(420px, 84vw, calc((100vh - 190px) * 0.8));
-      aspect-ratio: 4 / 5;
-      perspective: 1300px;
-      flex-shrink: 0;
+    :root {
+      --slide-gap: 3rem;
+      /* capped by width AND viewport height so the caption always fits */
+      --slide-w: min(400px, 78vw, calc((100vh - 330px) * 0.8));
     }
+
     .panel {
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
+      position: relative;
+      flex: 0 0 auto;
+      width: var(--slide-w);
+      aspect-ratio: 4 / 5;
+      border-radius: 16px;
       background: #fff;
       border: 1px solid var(--line);
       overflow: hidden;
-      backface-visibility: hidden;
-      pointer-events: none;          /* JS grants it to the front panel */
-      will-change: transform, opacity, filter;
+      pointer-events: none;          /* JS grants it to the active slide */
+      transition: box-shadow 0.5s var(--ease);
+      will-change: transform, opacity;
     }
-    .panel.front { pointer-events: auto; }
-    .panel canvas { display: block; width: 100%; height: 100%; }
-    .panel-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .panel.front { pointer-events: auto; box-shadow: 0 26px 60px -30px rgba(20,20,20,0.35); }
+    .panel-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 
-    /* Volunteers: the group photo is landscape, so instead of a brutal
-       4:5 crop it sits matted like a print — full photo visible on a
-       warm neutral card. The scale-up pop still applies to the print. */
-    .panel-vol {
-      overflow: visible;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(160deg, #F4F3EE 0%, #E9E7DF 100%);
-      padding: 1.3rem;
-    }
-    .panel-vol .panel-img {
-      width: 100%;
-      height: auto;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-    }
+    /* Volunteers: fills the frame cleanly — cover + centred, no squash */
     @keyframes volPop {
       0%   { transform: scale(1); }
-      55%  { transform: scale(1.10); }
+      55%  { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
     .panel-vol .panel-img.pop { animation: volPop 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* Newsletter: generated editorial cover — pure HTML/CSS, palette only */
-    .nl-cover { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; padding: 2rem; }
-    .nl-mast { font-family: var(--serif); font-size: 2.1rem; color: var(--teal); line-height: 1; }
-    .nl-sub  { font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mut); margin-top: 0.55rem; }
-    .nl-rule { height: 3px; background: var(--terra); margin: 1.2rem 0 1.3rem; }
-    .nl-head { font-family: var(--serif); font-size: 1.45rem; line-height: 1.15; color: var(--ink); margin-bottom: 1.2rem; }
-    .nl-cols { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .nl-col  { border-radius: 2px; opacity: 0.85;
-      background: repeating-linear-gradient(to bottom, var(--line) 0 2px, transparent 2px 11px); }
-    .nl-foot { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); margin-top: 1.2rem; }
+    /* ---- Newsletter: clean editorial digest mock-up ---- */
+    .nl-cover { position: absolute; inset: 0; background: #fff; display: flex; flex-direction: column; }
+    .nl-top { padding: 1.4rem 1.5rem 1.1rem; border-bottom: 2px solid var(--teal); }
+    .nl-mast { font-family: var(--serif); font-size: 1.75rem; color: var(--teal); line-height: 1; letter-spacing: -0.02em; }
+    .nl-sub  { font-size: 0.58rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--mut); margin-top: 0.5rem; }
+    .nl-shot { flex: 1; overflow: hidden; }
+    .nl-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .nl-foot {
+      padding: 0.9rem 1.5rem 1.1rem;
+      border-top: 1px solid var(--line);
+      display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    }
+    .nl-foot b { font-family: var(--serif); font-weight: 500; font-size: 0.95rem; color: var(--ink); }
+    .nl-foot span { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); white-space: nowrap; }
 
-    /* Side meta — one block per project, cross-faded by JS */
-    .show-meta { position: relative; width: min(300px, 84vw); min-height: 230px; }
+    /* ---- Noce: clean minimal SVG map (no WebGL) ---- */
+    .map-card { position: absolute; inset: 0; background: linear-gradient(170deg, #F2F5F3 0%, #E6EDEA 100%); }
+    .map-card svg { width: 100%; height: 100%; display: block; }
+    .map-land { fill: #CFDEDA; stroke: var(--teal); stroke-width: 0.8; stroke-linejoin: round; opacity: 0.95; }
+    .map-grid { stroke: rgba(27,77,75,0.10); stroke-width: 0.5; }
+    .map-pin  { fill: var(--terra); transform-origin: center; animation: pinPulse 3.2s var(--ease) infinite; }
+    .map-halo { fill: rgba(199,98,63,0.22); animation: haloPulse 3.2s var(--ease) infinite; transform-origin: center; }
+    @keyframes pinPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+    @keyframes haloPulse { 0%,100% { opacity: 0.55; transform: scale(1); } 50% { opacity: 0.15; transform: scale(1.65); } }
+    .map-tag {
+      position: absolute; left: 1.2rem; bottom: 1.2rem;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.72rem; font-weight: 500; color: var(--teal);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .map-tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--terra); }
+
+    /* ---- caption under the carousel ---- */
+    .show-meta { position: relative; width: min(560px, 86vw); min-height: 168px; text-align: center; }
+    .show-meta .chips { justify-content: center; }
     .meta-item {
       position: absolute;
       inset: 0;
@@ -729,46 +830,48 @@
       pointer-events: none;
     }
     .meta-item.on { opacity: 1; transform: none; pointer-events: auto; }
-    .meta-index { display: block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; color: var(--terra); margin-bottom: 0.8rem; }
-    .meta-item h3 { font-size: 1.9rem; color: var(--teal); margin-bottom: 0.7rem; }
-    .meta-item p { font-size: 0.92rem; color: var(--mut); margin-bottom: 1rem; }
+    .meta-index { display: block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.2em; color: var(--terra); margin-bottom: 0.7rem; }
+    .meta-item h3 { font-size: var(--fs-h3); color: var(--teal); margin-bottom: 0.7rem; }
+    .meta-item p { font-size: var(--fs-body); color: var(--mut); margin: 0 auto 1rem; max-width: 52ch; }
 
-    /* Carousel mode on narrower viewports: meta drops below the wheel */
-    @media (max-width: 1080px) {
-      .show-stage { flex-direction: column; gap: 2.2rem; }
-      .show-meta { min-height: 190px; text-align: center; }
-      .show-meta .chips { justify-content: center; }
-      .carousel { width: min(380px, 80vw); }
+    /* arrows + dots */
+    .show-nav { display: flex; align-items: center; justify-content: center; gap: 1.4rem; }
+    .show-arrow {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid; place-items: center;
+      color: var(--teal);
+      transition: background 0.3s, border-color 0.3s, color 0.3s, opacity 0.3s;
     }
+    .show-arrow:hover { background: var(--teal); border-color: var(--teal); color: var(--bg); }
+    .show-arrow[disabled] { opacity: 0.3; pointer-events: none; }
+    .show-arrow svg { width: 17px; height: 17px; }
+    .show-dots { display: flex; gap: 0.5rem; }
+    .show-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: background 0.35s, transform 0.35s; }
+    .show-dots i.on { background: var(--terra); transform: scale(1.35); }
 
-    /* Stacked fallback (mobile / reduced motion): no pin, no 3D —
-       three plain cards, each with its meta re-parented beneath it. */
+    /* Stacked fallback (mobile / reduced motion): plain vertical cards,
+       each meta re-parented beneath its own card. */
     .showcase.stacked { height: auto; padding: 6rem 0; }
     .showcase.stacked .show-sticky { position: static; height: auto; overflow: visible; display: block; }
-    .showcase.stacked .show-head { position: static; margin-bottom: 3rem; }
-    .showcase.stacked .show-stage { flex-direction: column; padding: 0 1.5rem; }
-    .showcase.stacked .carousel {
-      perspective: none;
-      width: 100%;
-      aspect-ratio: auto;
-      display: flex;
+    .showcase.stacked .show-head { margin-bottom: 3rem; }
+    .showcase.stacked .show-viewport { overflow: visible; }
+    .showcase.stacked .show-track {
       flex-direction: column;
       align-items: center;
       gap: 1.6rem;
+      transform: none !important;
+      padding: 0 1.5rem;
     }
     .showcase.stacked .panel {
-      position: relative;
-      inset: auto;
       width: min(420px, 100%);
-      aspect-ratio: 4 / 5;
       transform: none !important;
       opacity: 1 !important;
-      filter: none !important;
-      visibility: visible !important;
       pointer-events: auto;
-      flex-shrink: 0;
     }
-    .showcase.stacked .show-meta { display: none; }
+    .showcase.stacked .show-meta,
+    .showcase.stacked .show-nav { display: none; }
     .showcase.stacked .meta-item {
       position: static;
       opacity: 1;
@@ -776,22 +879,42 @@
       pointer-events: auto;
       width: min(420px, 100%);
       margin-bottom: 2.6rem;
+      text-align: left;
     }
+    .showcase.stacked .meta-item p { margin-left: 0; }
+    .showcase.stacked .show-meta .chips { justify-content: flex-start; }
 
     /* ============================================================
        16. EXPERIENCE — field styles used inside the timeline items
        ============================================================ */
-    .xp-period { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.03em; }
-    .xp-role   { font-family: var(--serif); font-size: 1.45rem; margin-bottom: 0.15rem; }
-    .xp-org    { font-size: 0.85rem; font-weight: 600; color: var(--terra); letter-spacing: 0.05em; margin-bottom: 0.7rem; }
-    .xp-desc   { font-size: 0.92rem; color: var(--mut); max-width: 38rem; }
-    .xp-photo  { margin-top: 1.2rem; width: 220px; aspect-ratio: 3 / 2; }
+    .xp-period {
+      font-size: var(--fs-meta);
+      color: var(--mut);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .xp-role   { font-family: var(--serif); font-size: var(--fs-h3); color: var(--teal); margin-bottom: 0.3rem; }
+    .xp-org    { font-size: var(--fs-meta); font-weight: 600; color: var(--terra); letter-spacing: 0.04em; margin-bottom: 0.9rem; }
+    .xp-desc   { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--mut); max-width: var(--measure); }
+    .xp-photo  { margin-top: 1.4rem; width: 240px; aspect-ratio: 3 / 2; }
+
+    /* company lockup — used where one entry covers two employers
+       (Picnic & Jumbo), so both marks are shown properly */
+    .xp-logos { display: flex; align-items: center; gap: 1.4rem; margin-top: 1.2rem; }
+    .xp-logos img {
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.9;
+    }
 
     /* ============================================================
        18. CONTACT + FOOTER
        ============================================================ */
     .contact-title {
-      font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+      font-size: var(--fs-h2);
       color: var(--bg);
       max-width: 20ch;
       margin-bottom: 3rem;
@@ -850,14 +973,30 @@
       .hero { padding: 7rem 0 5rem; }
       .scroll-hint { left: 1.5rem; }
 
-      /* winding journey tightens */
-      .vj-rail { height: 560px; }
-      .vj-item { gap: 1rem; width: 84%; }
-      .vj-i1, .vj-i3 { margin-left: -26px; }
-      .vj-i2 { margin-right: -26px; }
+      /* mobile: the wide S has no room — collapse to a left rail with
+         the badges in a column and the text beside them */
+      .vj-rail { height: auto; }
+      .vj-svg { inset: auto; left: 0; top: 0; width: 90px; height: 100%; }
+      .vj-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: 52px 1fr;
+        gap: 1.1rem;
+        width: auto;
+        padding: 1.6rem 0;
+        margin: 0;
+        left: auto; right: auto; top: auto;
+        text-align: left;
+        transform: translateY(18px);
+      }
+      .vj-item.on { transform: none; }
       .vj-badge { width: 52px; height: 52px; font-size: 0.85rem; }
       .vj-name { font-size: 1.1rem; }
-      .vj-course { font-size: 0.8rem; }
+      .vj-course { font-size: 0.82rem; }
+      /* vehicles scale down; seats keep their vehicle-space ratios */
+      .trav-rot { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
+      #planeTrav .trav-seat { left: 19px; top: 19px; width: 26px; height: 26px; }
+      #bikeTrav  .trav-seat { left: 21px; top: 2px;  width: 22px; height: 22px; }
 
       /* experience timeline tightens */
       .xtl-item { grid-template-columns: 52px 1fr; gap: 1.1rem; padding: 1.8rem 0; }
@@ -884,13 +1023,10 @@
       html.js .unfold .stg { opacity: 1; transform: none; }
       html.js .plx-wrap { clip-path: none; }
       .scroll-hint i { display: none; }
-      /* journeys and timeline: fully drawn, all nodes visible.
-         (vj items keep their -50% anchor transform — never "none".) */
-      .vj-item { opacity: 1 !important; }
-      .vj-i1, .vj-i2, .vj-i3 { transform: translateY(-50%) !important; }
-      .vj-draw { stroke-dashoffset: 0 !important; }
-      .xtl-item { opacity: 1 !important; transform: none !important; }
-      #xtlDraw { stroke-dashoffset: 0 !important; }
+      /* journeys and timeline: fully drawn, all nodes visible */
+      .vj-item, .xtl-item { opacity: 1 !important; transform: none !important; }
+      #vjDraw, #xtlDraw { stroke-dashoffset: 0 !important; }
+      .traveler { display: none !important; }
       /* showcase: JS applies .stacked, so panels are static cards;
          metas are forced visible here as well */
       .meta-item { opacity: 1; transform: none; pointer-events: auto; }
@@ -936,7 +1072,7 @@
     <!-- background photo + readability gradient; JS drives the drift/scale -->
     <div class="hero-bg" aria-hidden="true"><img id="heroBg" src="images/hero-bg.jpg" alt=""></div>
     <div class="wrap">
-      <img class="hero-photo" src="images/antonio.jpg" alt="Portrait of Antonio Di Domenico" width="72" height="72">
+      <img class="hero-photo" src="images/antonio.jpg" alt="Portrait of Antonio Di Domenico" width="200" height="200">
       <span class="eyebrow" data-i18n="hero.eyebrow">MSc Finance · RSM Rotterdam</span>
       <!-- JS splits this into per-character spans for the filmic reveal -->
       <h1 class="hero-name" id="heroName">Antonio Di Domenico</h1>
@@ -962,38 +1098,72 @@
       <p class="stg" data-i18n="about.p2">Since then I've followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I've built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.</p>
       <p class="stg" data-i18n="about.p3">This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I'm in the middle of something I don't yet know how to finish.</p>
 
-      <!-- winding vertical path; universities alternate sides along it.
-           The curve passes exactly through the three badge anchors
-           (15%,14%) → (85%,50%) → (15%,86%). -->
+      <!-- Education: badges in a left column, wide text to the right.
+           A serpentine line draws itself down through the three badge
+           centres (scroll-linked), bulging left/right between them but
+           staying clear of the text. Two travellers ride that exact
+           line: my face in a plane over UU→PUC (flew to Brazil), then
+           on a bike over PUC→RSM (moved to Rotterdam). -->
       <div class="vjourney stg" id="vjourney">
         <span class="eyebrow" data-i18n="edu.eyebrow">Education</span>
         <div class="vj-rail" id="vjRail">
           <!-- JS rewrites both paths in pixel coordinates on measure;
                the markup d is only the no-JS static fallback -->
-          <svg class="vj-svg" id="vjSvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <path class="vj-ghost" id="vjGhost" d="M15,4 C15,8 15,11 15,14 C15,30 85,34 85,50 C85,66 15,70 15,86 C15,89 15,92 15,96"/>
-            <path class="vj-draw" id="vjDraw" d="M15,4 C15,8 15,11 15,14 C15,30 85,34 85,50 C85,66 15,70 15,86 C15,89 15,92 15,96"/>
+          <svg class="vj-svg" id="vjSvg" viewBox="0 0 120 100" preserveAspectRatio="none" aria-hidden="true">
+            <path class="vj-ghost" id="vjGhost" d="M32,2 C66,20 66,30 32,50 C-2,70 -2,80 32,98"/>
+            <path class="vj-draw"  id="vjDraw"  d="M32,2 C66,20 66,30 32,50 C-2,70 -2,80 32,98"/>
           </svg>
+
+          <!-- flat, hollow vehicles (cream body + terracotta outline) so
+               my face shows through as the window / the rider's head -->
+          <div class="traveler" id="planeTrav" aria-hidden="true">
+            <span class="trav-rot">
+              <svg class="trav-veh" viewBox="0 0 100 100">
+                <path class="veh-body" d="M58,42 L30,10 L46,42 Z"/>
+                <path class="veh-body" d="M58,58 L30,90 L46,58 Z"/>
+                <path class="veh-body" d="M22,44 L8,26 L20,44 Z"/>
+                <path class="veh-body" d="M22,56 L8,74 L20,56 Z"/>
+                <ellipse class="veh-body" cx="50" cy="50" rx="38" ry="23"/>
+              </svg>
+              <span class="trav-seat"><img class="trav-face" src="images/face.jpg" alt=""></span>
+            </span>
+          </div>
+          <div class="traveler" id="bikeTrav" aria-hidden="true">
+            <span class="trav-rot">
+              <svg class="trav-veh" viewBox="0 0 100 100">
+                <circle class="veh-wheel" cx="22" cy="72" r="18"/>
+                <circle class="veh-wheel" cx="78" cy="72" r="18"/>
+                <path class="veh-line" d="M22,72 L42,42 L66,42"/>
+                <path class="veh-line" d="M42,42 L60,72"/>
+                <path class="veh-line" d="M78,72 L64,42"/>
+                <path class="veh-line" d="M58,40 L70,40"/>
+                <path class="veh-line" d="M36,40 L48,40"/>
+                <path class="veh-line" d="M43,40 L50,22"/>
+              </svg>
+              <span class="trav-seat"><img class="trav-face" src="images/face.jpg" alt=""></span>
+            </span>
+          </div>
+
           <div class="vj-item vj-i1">
-            <div class="vj-badge" aria-hidden="true">UU</div>
+            <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-uu.png" alt=""><span class="vj-badge-txt">UU</span></div>
             <div>
               <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a></div>
-              <div class="vj-course" data-i18n="edu.uu">BSc Economics &amp; Business Economics · Honours Programme</div>
+              <div class="vj-course" data-i18n="edu.uu">BSc Economics &amp; Business Economics · Minor in Law · Honours Programme</div>
               <a class="vj-thesis-link" href="#thesis" data-i18n="edu.uuthesis">Bachelor thesis · graded 9.2 ↓</a>
             </div>
           </div>
           <div class="vj-item vj-i2">
-            <div class="vj-badge" aria-hidden="true">PUC</div>
+            <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-puc.png" alt=""><span class="vj-badge-txt">PUC</span></div>
             <div>
               <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a></div>
-              <div class="vj-course" data-i18n="edu.puc">Exchange semester · first time leaving Europe</div>
+              <div class="vj-course" data-i18n="edu.puc">Exchange semester · Business, Law &amp; Portuguese coursework</div>
             </div>
           </div>
           <div class="vj-item vj-i3 vj-final">
-            <div class="vj-badge" aria-hidden="true">RSM</div>
+            <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-rsm.png" alt=""><span class="vj-badge-txt">RSM</span></div>
             <div>
-              <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM Rotterdam</a></div>
-              <div class="vj-course" data-i18n="edu.rsm">MSc Finance &amp; Investments · September 2026</div>
+              <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM · Erasmus University Rotterdam</a></div>
+              <div class="vj-course" data-i18n="edu.rsm">MSc Finance &amp; Investments · 2026–2027</div>
             </div>
           </div>
         </div>
@@ -1013,16 +1183,20 @@
       <p class="thesis-sub stg" data-i18n="thesis.sub">Bachelor Thesis · Utrecht University · Graded 9.2 / 10</p>
       <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
 
-      <!-- Stylised chart (not real data) draws itself behind the stats;
-           the numbers count up in sync with the line. -->
+      <!-- Stats first, then the stylised chart in its own band below —
+           the line used to be absolutely positioned across the whole
+           block, which struck through the digits. -->
       <div class="thesis-viz stg" id="thesisViz">
-        <svg class="tchart" viewBox="0 0 900 260" preserveAspectRatio="none" aria-hidden="true">
-          <path class="tline" id="tLine" d="M0,205 C60,198 90,212 150,192 C210,172 250,180 310,168 C370,156 420,130 480,138 C540,146 590,108 650,96 C710,84 770,88 830,64 C860,52 880,48 900,40"/>
-        </svg>
         <div class="tstats">
           <div><span class="tnum" data-target="600" data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
           <div><span class="tnum" data-target="22"  data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
           <div><span class="tnum" data-target="9.2" data-decimals="1">0.0</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
+        </div>
+        <div class="tchart-wrap">
+          <svg class="tchart" viewBox="0 0 900 200" preserveAspectRatio="none" aria-hidden="true">
+            <path class="tline" id="tLine" d="M0,168 C60,160 90,175 150,152 C210,130 250,140 310,126 C370,112 420,86 480,95 C540,104 590,64 650,52 C710,40 770,44 830,22 C860,12 880,8 900,4"/>
+          </svg>
+          <span class="tchart-cap" data-i18n="thesis.chartcap">Illustrative cost-of-debt trend · 2002–2024</span>
         </div>
       </div>
     </div>
@@ -1044,9 +1218,9 @@
           <path class="vj-draw" id="xtlDraw" d="M1,0 L1,100"/>
         </svg>
 
-        <!-- Ex Primo first and visually lead -->
+        <!-- 1. Ex Primo -->
         <div class="xtl-item xtl-lead">
-          <div class="vj-badge" aria-hidden="true">EP</div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-exprimo.png" alt="Ex Primo"><span class="vj-badge-txt">EP</span></div>
           <div>
             <div class="xp-period">Jun 2026 – present</div>
             <h3 class="xp-role" data-i18n="exp1.role">Accounting Assistant</h3>
@@ -1055,25 +1229,30 @@
           </div>
         </div>
 
+        <!-- 2. AthenaSummary -->
         <div class="xtl-item">
-          <div class="vj-badge" aria-hidden="true">AS</div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-athena.png" alt="AthenaSummary"><span class="vj-badge-txt">AS</span></div>
           <div>
             <div class="xp-period">Oct 2024 – Jun 2025</div>
-            <h3 class="xp-role" data-i18n="exp2.role">Mathematics &amp; Statistics Tutor</h3>
+            <h3 class="xp-role" data-i18n="exp2.role">Mathematics & Statistics Tutor</h3>
             <div class="xp-org" data-i18n="exp2.org">AthenaSummary</div>
-            <p class="xp-desc" data-i18n="exp2.desc">Built the full online course material from scratch — slides, worked examples and statistics exercises.</p>
-            <div class="xp-photo plx-wrap"><img class="plx" src="images/athena-1.jpg" alt="AthenaSummary course material"></div>
+            <p class="xp-desc" data-i18n="exp2.desc">Delivered small-group tutorials (5–20 students) to first-year Economics students, focusing on exam preparation in quantitative subjects.</p>
           </div>
         </div>
 
+        <!-- 3. Picnic & Jumbo -->
         <div class="xtl-item">
-          <div class="vj-badge" aria-hidden="true">PJ</div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-picnic.png" alt="Picnic"><span class="vj-badge-txt">PJ</span></div>
           <div>
-            <div class="xp-period">Feb 2024 – present</div>
+            <div class="xp-period">Feb 2024 – Present</div>
             <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
-            <div class="xp-org" data-i18n="exp3.org">Picnic &amp; Jumbo</div>
-            <p class="xp-desc" data-i18n="exp3.desc">Steady, practical work alongside my studies.</p>
-            <div class="xp-photo plx-wrap"><img class="plx" src="images/jumbo.jpg" alt="Working at Jumbo"></div>
+            <div class="xp-org" data-i18n="exp3.org">Picnic & Jumbo</div>
+            <p class="xp-desc" data-i18n="exp3.desc">Order preparation and fulfilment for two leading Dutch grocery operators; sustained part-time employment alongside a full-time degree.</p>
+            <!-- both employers shown, since this entry covers two -->
+            <div class="xp-logos" aria-hidden="true">
+              <img src="images/logo-picnic.png" alt="Picnic">
+              <img src="images/logo-jumbo.png" alt="Jumbo">
+            </div>
           </div>
         </div>
       </div>
@@ -1081,58 +1260,99 @@
   </section>
 
   <!-- ============================================================
-       4. PROJECTS — ROTATING PANEL SHOWCASE (pinned).
-       Three identical 4:5 panels rotate through the single front
-       position, scroll-linked with expo-out settling. Panel 1 hosts
-       the LIVE Noce Three.js map (interactive only when front-flat),
-       panel 2 a generated editorial cover, panel 3 the volunteers
-       photo with a scale-up on settle. JS adds .stacked on mobile /
-       reduced motion, which degrades everything to static cards.
+       4. PROJECTS — HORIZONTAL CAROUSEL (pinned).
+       Three identical 4:5 slides ride a rail that slides sideways;
+       the active one sits dead centre with its caption underneath.
+       Scroll drives it (expo-out settling into each slide) and the
+       arrows jump to a slide. JS adds .stacked on mobile / reduced
+       motion, which degrades everything to plain vertical cards.
        ============================================================ -->
   <section id="projects" class="showcase" aria-label="Selected projects">
     <div class="show-sticky" id="showSticky">
       <div class="show-head">
         <span class="eyebrow" data-i18n="show.eyebrow">Selected Projects</span>
       </div>
-      <div class="show-stage">
-        <div class="carousel" id="carousel">
+
+      <div class="show-viewport">
+        <div class="show-track" id="showTrack">
+          <!-- 1 · Noce — minimal stylised map, pure SVG -->
           <div class="panel panel-noce">
-            <!-- Three.js canvas is inserted here by JS -->
-            <div class="noce-card" id="noceCard"></div>
-          </div>
-          <div class="panel panel-news">
-            <!-- generated editorial cover: design element, stays English -->
-            <div class="nl-cover" aria-hidden="true">
-              <div class="nl-mast">Honours</div>
-              <div class="nl-sub">Utrecht University · Programme Newsletter</div>
-              <div class="nl-rule"></div>
-              <div class="nl-head">Voices from the Programme — the Interview Issue</div>
-              <div class="nl-cols"><div class="nl-col"></div><div class="nl-col"></div></div>
-              <div class="nl-foot">Edition 12 · Spring</div>
+            <div class="map-card">
+              <svg viewBox="0 0 200 250" aria-hidden="true">
+                <g class="map-grid">
+                  <path d="M0,50 H200 M0,100 H200 M0,150 H200 M0,200 H200"/>
+                  <path d="M50,0 V250 M100,0 V250 M150,0 V250"/>
+                </g>
+                <!-- simplified continental shapes -->
+                <path class="map-land" d="M42,58 C58,44 84,42 100,52 C118,63 132,58 146,66 C160,74 158,92 148,104 C138,116 142,132 132,144 C120,158 96,160 82,150 C66,138 66,120 56,110 C44,98 30,76 42,58 Z"/>
+                <path class="map-land" d="M116,158 C130,152 148,158 154,172 C160,188 150,206 134,210 C118,214 104,204 102,188 C100,172 104,163 116,158 Z"/>
+                <path class="map-land" d="M28,120 C36,114 46,120 46,130 C46,140 36,146 28,140 C21,135 21,125 28,120 Z"/>
+                <!-- pins -->
+                <g><circle class="map-halo" cx="66"  cy="74"  r="7"/><circle class="map-pin" cx="66"  cy="74"  r="3.4"/></g>
+                <g><circle class="map-halo" cx="104" cy="66"  r="7"/><circle class="map-pin" cx="104" cy="66"  r="3.4"/></g>
+                <g><circle class="map-halo" cx="132" cy="88"  r="7"/><circle class="map-pin" cx="132" cy="88"  r="3.4"/></g>
+                <g><circle class="map-halo" cx="88"  cy="104" r="7"/><circle class="map-pin" cx="88"  cy="104" r="3.4"/></g>
+                <g><circle class="map-halo" cx="118" cy="126" r="7"/><circle class="map-pin" cx="118" cy="126" r="3.4"/></g>
+                <g><circle class="map-halo" cx="74"  cy="138" r="7"/><circle class="map-pin" cx="74"  cy="138" r="3.4"/></g>
+                <g><circle class="map-halo" cx="130" cy="180" r="7"/><circle class="map-pin" cx="130" cy="180" r="3.4"/></g>
+                <g><circle class="map-halo" cx="36"  cy="130" r="7"/><circle class="map-pin" cx="36"  cy="130" r="3.4"/></g>
+              </svg>
+              <span class="map-tag" data-i18n="noce.tag">Places only locals know</span>
             </div>
           </div>
+
+          <!-- 2 · Honours Newsletter — editorial digest mock-up -->
+          <div class="panel panel-news">
+            <div class="nl-cover">
+              <div class="nl-top">
+                <div class="nl-mast">Honours</div>
+                <div class="nl-sub">Utrecht University · Newsletter</div>
+              </div>
+              <div class="nl-shot">
+                <img src="images/newsletter-cover.jpg" alt="Honours Programme newsletter">
+              </div>
+              <div class="nl-foot">
+                <b>The Interview Issue</b><span>Editorial lead</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 · Volunteers — photo, cover-cropped, no distortion -->
           <div class="panel panel-vol">
             <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive">
           </div>
         </div>
-        <div class="show-meta" id="showMeta">
-          <div class="meta-item">
-            <span class="meta-index">01 / 03</span>
-            <h3 data-i18n="sp1.title">Noce</h3>
-            <p data-i18n="sp1.cap">Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.</p>
-            <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span></div>
-          </div>
-          <div class="meta-item">
-            <span class="meta-index">02 / 03</span>
-            <h3 data-i18n="sp2.title">Honours Newsletter</h3>
-            <p data-i18n="sp2.cap">Led the editorial team and LinkedIn of the Utrecht Honours Programme for two years.</p>
-          </div>
-          <div class="meta-item">
-            <span class="meta-index">03 / 03</span>
-            <h3 data-i18n="sp3.title">Volunteers</h3>
-            <p data-i18n="sp3.cap">Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.</p>
-          </div>
+      </div>
+
+      <div class="show-meta" id="showMeta">
+        <div class="meta-item">
+          <span class="meta-index">01 / 03</span>
+          <h3 data-i18n="sp1.title">Noce</h3>
+          <p data-i18n="sp1.cap">Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.</p>
+          <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span></div>
         </div>
+        <div class="meta-item">
+          <span class="meta-index">02 / 03</span>
+          <h3 data-i18n="sp2.title">Honours Newsletter</h3>
+          <p data-i18n="sp2.cap">Led the editorial team and LinkedIn of the Utrecht Honours Programme for two years.</p>
+          <div class="chips"><span class="chip">Canva</span><span class="chip">LinkedIn</span></div>
+        </div>
+        <div class="meta-item">
+          <span class="meta-index">03 / 03</span>
+          <h3 data-i18n="sp3.title">Volunteers</h3>
+          <p data-i18n="sp3.cap">Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.</p>
+          <div class="chips"><span class="chip">EN / NL</span><span class="chip">Canva</span></div>
+        </div>
+      </div>
+
+      <div class="show-nav">
+        <button class="show-arrow" id="showPrev" aria-label="Previous project">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 L8 12 L15 19"/></svg>
+        </button>
+        <div class="show-dots" id="showDots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+        <button class="show-arrow" id="showNext" aria-label="Next project">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5 L16 12 L9 19"/></svg>
+        </button>
       </div>
     </div>
   </section>
@@ -1145,9 +1365,9 @@
       <span class="eyebrow stg" data-i18n="contact.eyebrow">Contact</span>
       <h2 class="contact-title stg" data-i18n="contact.title">Always open to interesting projects and conversations.</h2>
       <div class="contact-links stg">
-        <a class="magnetic" href="mailto:madlamps.co@gmail.com"><span data-i18n="contact.email">Email</span> <span class="arrow">↗</span></a>
+        <a class="magnetic" href="mailto:antoniodidomenico.work@gmail.com"><span data-i18n="contact.email">Email</span> <span class="arrow">↗</span></a>
         <!-- TODO: replace with the real LinkedIn profile URL before going live -->
-        <a class="magnetic" href="https://www.linkedin.com/in/antonio-di-domenico" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
+        <a class="magnetic" href="https://www.linkedin.com/in/adidomenico0/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
       </div>
     </div>
   </section>
@@ -1192,9 +1412,9 @@
         'about.p2': 'Since then I’ve followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I’ve built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.',
         'about.p3': 'This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I’m in the middle of something I don’t yet know how to finish.',
         'edu.eyebrow': 'Education',
-        'edu.uu': 'BSc Economics &amp; Business Economics · Honours Programme',
-        'edu.puc': 'Exchange semester · first time leaving Europe',
-        'edu.rsm': 'MSc Finance &amp; Investments · September 2026',
+        'edu.uu': 'BSc Economics &amp; Business Economics · Minor in Law · Honours Programme',
+        'edu.puc': 'Exchange semester · Business, Law &amp; Portuguese coursework',
+        'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
         'edu.uuthesis': 'Bachelor thesis · graded 9.2 ↓',
         'thesis.eyebrow': 'Research',
         'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
@@ -1203,6 +1423,7 @@
         'thesis.s1': 'STOXX Europe 600 firms',
         'thesis.s2': 'years of panel data',
         'thesis.s3': 'final grade',
+        'thesis.chartcap': 'Illustrative cost-of-debt trend · 2002–2024',
 
         'show.eyebrow': 'Selected Projects',
         'sp1.title': 'Noce',
@@ -1212,14 +1433,7 @@
         'sp3.title': 'Volunteers',
         'sp3.cap': 'Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.',
 
-        'noce.spot1': 'Hidden thermal spring',
-        'noce.spot2': 'Unmarked Roman ruin',
-        'noce.spot3': 'A statue only locals can name',
-        'noce.spot4': 'Forgotten mountain path',
-        'noce.spot5': 'The story behind a street corner',
-        'noce.spot6': 'Ancient olive tree',
-        'noce.spot7': 'A roadside shrine',
-        'noce.spot8': 'Where the best view actually is',
+        'noce.tag': 'Places only locals know',
 
         'exp.eyebrow': 'Experience',
         'exp.title': 'Work, study, and everything in between.',
@@ -1244,13 +1458,12 @@
         'about.eyebrow': '[IT: translate]', 'about.p1': '[IT: translate]', 'about.p2': '[IT: translate]', 'about.p3': '[IT: translate]',
         'edu.eyebrow': '[IT: translate]', 'edu.uu': '[IT: translate]', 'edu.puc': '[IT: translate]', 'edu.rsm': '[IT: translate]', 'edu.uuthesis': '[IT: translate]',
         'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
-        'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]',
+        'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]', 'thesis.chartcap': '[IT: translate]',
         'show.eyebrow': '[IT: translate]',
         'sp1.title': 'Noce', 'sp1.cap': '[IT: translate]',
         'sp2.title': '[IT: translate]', 'sp2.cap': '[IT: translate]',
         'sp3.title': '[IT: translate]', 'sp3.cap': '[IT: translate]',
-        'noce.spot1': '[IT: translate]', 'noce.spot2': '[IT: translate]', 'noce.spot3': '[IT: translate]', 'noce.spot4': '[IT: translate]',
-        'noce.spot5': '[IT: translate]', 'noce.spot6': '[IT: translate]', 'noce.spot7': '[IT: translate]', 'noce.spot8': '[IT: translate]',
+        'noce.tag': '[IT: translate]',
         'exp.eyebrow': '[IT: translate]', 'exp.title': '[IT: translate]',
         'exp1.role': '[IT: translate]', 'exp1.org': '[IT: translate]', 'exp1.desc': '[IT: translate]',
         'exp2.role': '[IT: translate]', 'exp2.org': '[IT: translate]', 'exp2.desc': '[IT: translate]',
@@ -1267,13 +1480,12 @@
         'about.eyebrow': '[NL: translate]', 'about.p1': '[NL: translate]', 'about.p2': '[NL: translate]', 'about.p3': '[NL: translate]',
         'edu.eyebrow': '[NL: translate]', 'edu.uu': '[NL: translate]', 'edu.puc': '[NL: translate]', 'edu.rsm': '[NL: translate]', 'edu.uuthesis': '[NL: translate]',
         'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
-        'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]',
+        'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]', 'thesis.chartcap': '[NL: translate]',
         'show.eyebrow': '[NL: translate]',
         'sp1.title': 'Noce', 'sp1.cap': '[NL: translate]',
         'sp2.title': '[NL: translate]', 'sp2.cap': '[NL: translate]',
         'sp3.title': '[NL: translate]', 'sp3.cap': '[NL: translate]',
-        'noce.spot1': '[NL: translate]', 'noce.spot2': '[NL: translate]', 'noce.spot3': '[NL: translate]', 'noce.spot4': '[NL: translate]',
-        'noce.spot5': '[NL: translate]', 'noce.spot6': '[NL: translate]', 'noce.spot7': '[NL: translate]', 'noce.spot8': '[NL: translate]',
+        'noce.tag': '[NL: translate]',
         'exp.eyebrow': '[NL: translate]', 'exp.title': '[NL: translate]',
         'exp1.role': '[NL: translate]', 'exp1.org': '[NL: translate]', 'exp1.desc': '[NL: translate]',
         'exp2.role': '[NL: translate]', 'exp2.org': '[NL: translate]', 'exp2.desc': '[NL: translate]',
@@ -1423,7 +1635,9 @@
        ========================================================== */
     document.querySelectorAll('img').forEach(function (img) {
       function fail() {
-        if (img.classList.contains('hero-photo')) {
+        if (img.classList.contains('vj-logo') || img.classList.contains('trav-face')) {
+          img.style.display = 'none';               /* reveals initials / icon behind */
+        } else if (img.classList.contains('hero-photo')) {
           var d = document.createElement('div');   /* initials medallion */
           d.className = 'hero-photo-ph';
           d.textContent = 'AD';
@@ -1479,30 +1693,99 @@
     var vjDraw  = document.getElementById('vjDraw');
     var vjItems = Array.prototype.slice.call(document.querySelectorAll('.vj-item'));
 
-    /* fractions of the winding path's length at which the curve reaches
-       each university's badge anchor (lead-in, mid-sweep, final node) */
-    var VJ_T = [0.08, 0.5, 0.9];
+    /* path-length fractions at which the serpentine reaches each badge
+       centre — measured in vjBuild(), used for reveals and travellers */
+    var vjFrac = [0.1, 0.5, 0.9];
     var vjLen = 0;
 
-    /* Rebuild the winding path in REAL pixel coordinates (viewBox ==
-       rail size, no stretching) so dash math is exact everywhere.
-       Anchors: (15%,14%) → (85%,50%) → (15%,86%), matching the CSS. */
+    /* scroll-driven travellers (plane UU→PUC, bike PUC→RSM) */
+    var planeTrav = document.getElementById('planeTrav');
+    var planeIcon = planeTrav && planeTrav.querySelector('.trav-rot');
+    var bikeTrav  = document.getElementById('bikeTrav');
+    var bikeIcon  = bikeTrav && bikeTrav.querySelector('.trav-rot');
+
+    /* Place a traveller at a fraction of the path length and aim its
+       vehicle along the local tangent (sampled ±2px). Travelling right
+       to left mirrors the vehicle instead of rotating it past vertical,
+       so it never flies upside-down; maxTilt keeps the pose readable. */
+    function placeTrav(el, icon, frac, maxTilt) {
+      if (!el || !vjLen) return;
+      var L = vjLen * frac;
+      var pt = vjDraw.getPointAtLength(L);
+      var a = vjDraw.getPointAtLength(Math.max(0, L - 2));
+      var b = vjDraw.getPointAtLength(Math.min(vjLen, L + 2));
+      var dx = b.x - a.x, dy = b.y - a.y;
+      var flip = dx < 0 ? -1 : 1;
+      var ang = Math.atan2(dy * flip, dx * flip) * 180 / Math.PI;
+      if (maxTilt) ang = Math.max(-maxTilt, Math.min(maxTilt, ang));
+      el.style.transform = 'translate(' + pt.x + 'px,' + pt.y + 'px)';
+      if (icon) {
+        icon.style.setProperty('--ang', ang + 'deg');
+        icon.style.setProperty('--flip', flip);
+      }
+    }
+
+    /* Build the serpentine in REAL pixel coordinates: it runs down the
+       badge column (x≈32px) and bulges right then left between the three
+       badge centres, staying inside the 120px band so text never meets
+       it. The svg is 120px wide so 1 user unit == 1px (no stretching).
+       We then measure the path-length fraction of each badge centre. */
     function vjBuild() {
-      if (!vjRail || REDUCED) return;
+      if (!vjRail || REDUCED || !vjItems.length) return;
       var W = vjRail.clientWidth, H = vjRail.clientHeight;
       if (!W || !H) return;
       var svg = document.getElementById('vjSvg');
       svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-      var xl = 0.15 * W, xr = 0.85 * W;
-      var d = 'M' + xl + ',' + 0.04 * H
-        + ' C' + xl + ',' + 0.08 * H + ' ' + xl + ',' + 0.11 * H + ' ' + xl + ',' + 0.14 * H
-        + ' C' + xl + ',' + 0.30 * H + ' ' + xr + ',' + 0.34 * H + ' ' + xr + ',' + 0.50 * H
-        + ' C' + xr + ',' + 0.66 * H + ' ' + xl + ',' + 0.70 * H + ' ' + xl + ',' + 0.86 * H
-        + ' C' + xl + ',' + 0.89 * H + ' ' + xl + ',' + 0.92 * H + ' ' + xl + ',' + 0.96 * H;
+      var d, anchors, i, y0, y1, dy;
+
+      if (isMobile()) {
+        /* phone: serpentine down the badge column, text beside it */
+        var cx = 26, bulge = 28;
+        var cy = vjItems.map(function (it) { return it.offsetTop + it.offsetHeight / 2; });
+        anchors = cy.map(function (y) { return { x: cx, y: y }; });
+        d = 'M' + cx + ',' + (cy[0] - 26) + ' L' + cx + ',' + cy[0];
+        for (i = 0; i < cy.length - 1; i++) {
+          var bx = cx + ((i % 2 === 0) ? bulge : -bulge);
+          y0 = cy[i]; y1 = cy[i + 1]; dy = y1 - y0;
+          d += ' C' + bx + ',' + (y0 + dy * 0.35) + ' ' + bx + ',' + (y0 + dy * 0.65) + ' ' + cx + ',' + y1;
+        }
+        d += ' L' + cx + ',' + (cy[cy.length - 1] + 26);
+      } else {
+        /* desktop: a wide S across the page. Control points sit directly
+           above/below each anchor, so the curve leaves every node
+           vertically and does all its sweeping in the middle band —
+           which is exactly where no text sits. */
+        var xl = 0.15 * W, xr = 0.85 * W;
+        var ya = 0.11 * H, yb = 0.50 * H, yc = 0.89 * H;
+        anchors = [{ x: xl, y: ya }, { x: xr, y: yb }, { x: xl, y: yc }];
+        /* hold the line vertical for a stretch above and below every node,
+           so each text block sits beside a straight run and the sweep
+           happens only in the empty middle */
+        var hold = Math.max(78, 0.10 * H);
+        var s1 = (yb - hold) - (ya + hold), s2 = (yc - hold) - (yb + hold);
+        d = 'M' + xl + ',' + (ya - hold) + ' L' + xl + ',' + (ya + hold)
+          + ' C' + xl + ',' + (ya + hold + s1 * 0.42) + ' ' + xr + ',' + (yb - hold - s1 * 0.42) + ' ' + xr + ',' + (yb - hold)
+          + ' L' + xr + ',' + (yb + hold)
+          + ' C' + xr + ',' + (yb + hold + s2 * 0.42) + ' ' + xl + ',' + (yc - hold - s2 * 0.42) + ' ' + xl + ',' + (yc - hold)
+          + ' L' + xl + ',' + (yc + hold);
+      }
+
       document.getElementById('vjGhost').setAttribute('d', d);
       vjDraw.setAttribute('d', d);
       vjLen = vjDraw.getTotalLength();
       vjDraw.style.strokeDasharray = vjLen;
+
+      /* measure where along the path each badge centre falls */
+      vjFrac = anchors.map(function (pt) {
+        var best = 0, bestD = Infinity;
+        for (var s = 0; s <= 240; s++) {
+          var L = vjLen * s / 240;
+          var q = vjDraw.getPointAtLength(L);
+          var dd = Math.abs(q.y - pt.y) + Math.abs(q.x - pt.x);
+          if (dd < bestD) { bestD = dd; best = L / vjLen; }
+        }
+        return best;
+      });
     }
 
     function vjourneyUpdate() {
@@ -1511,7 +1794,20 @@
       var p = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - r.top) / r.height));
       vjDraw.style.strokeDashoffset = vjLen * (1 - p);
       for (var i = 0; i < vjItems.length; i++) {
-        vjItems[i].classList.toggle('on', p >= VJ_T[i]);
+        vjItems[i].classList.toggle('on', p >= vjFrac[i] - 0.02);
+      }
+
+      /* Travellers ride the leading edge of the drawn line across their
+         segment: plane over UU→PUC, bike over PUC→RSM. Clamped to their
+         segment; shown only mid-segment so they never cover a badge. */
+      var f0 = vjFrac[0], f1 = vjFrac[1], f2 = vjFrac[2];
+      if (planeTrav) {
+        placeTrav(planeTrav, planeIcon, Math.min(f1, Math.max(f0, p)), 55);
+        planeTrav.classList.toggle('on', p > f0 + 0.02 && p < f1 - 0.02);
+      }
+      if (bikeTrav) {
+        placeTrav(bikeTrav, bikeIcon, Math.min(f2, Math.max(f1, p)), 30);
+        bikeTrav.classList.toggle('on', p > f1 + 0.02 && p < f2 - 0.02);
       }
     }
 
@@ -1602,20 +1898,22 @@
        static cards and each meta block moves beneath its panel.
        ========================================================== */
     var showEl    = document.getElementById('projects');
+    var showTrack = document.getElementById('showTrack');
     var panels    = Array.prototype.slice.call(document.querySelectorAll('.panel'));
     var metaBox   = document.getElementById('showMeta');
     var metaItems = Array.prototype.slice.call(document.querySelectorAll('.meta-item'));
     var volImg    = document.getElementById('volImg');
-    var noceTick = null, noceOnResize = null;   /* wired up by the Noce module below */
+    var showDots  = Array.prototype.slice.call(document.querySelectorAll('#showDots i'));
+    var showPrev  = document.getElementById('showPrev');
+    var showNext  = document.getElementById('showNext');
 
     var show = { s: 0, target: 0, active: -1, stacked: false, modeSet: false, volFront: false };
-    var SHOW_DWELL = 0.18;                      /* scroll fraction spent flat per panel */
+    var SHOW_DWELL = 0.18;                      /* scroll fraction resting on a slide */
     var SHOW_TRANS = (1 - 3 * SHOW_DWELL) / 2;  /* scroll fraction per transition */
-    var WHEEL_R = 300;                          /* px — wheel radius, axis behind the panels */
 
     function expoOut(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
 
-    function showTarget(p) {                    /* progress 0..1 → wheel position 0..2 */
+    function showTarget(p) {                    /* progress 0..1 → slide position 0..2 */
       var d = SHOW_DWELL, t = SHOW_TRANS;
       if (p <= d) return 0;
       if (p <= d + t) return expoOut((p - d) / t);
@@ -1644,14 +1942,13 @@
         for (i = 0; i < 3; i++) {
           metaItems[i].classList.add('on');
           panels[i].style.transform = ''; panels[i].style.opacity = '';
-          panels[i].style.filter = ''; panels[i].style.visibility = '';
           panels[i].classList.add('front');
         }
+        if (showTrack) showTrack.style.transform = '';
       } else {
         for (i = 0; i < 3; i++) metaBox.appendChild(metaItems[i]);
         for (i = 0; i < 3; i++) metaItems[i].classList.toggle('on', i === Math.max(0, show.active));
       }
-      if (noceOnResize) noceOnResize();
     }
 
     function showMeasure() { showApplyMode(); }
@@ -1668,38 +1965,58 @@
       show.target = showTarget(p);
     }
 
-    function showFrame() {                      /* every frame: lerp + write transforms */
-      if (!showEl || show.stacked) return;
+    /* every frame: ease the rail sideways so the active slide is centred */
+    function showFrame() {
+      if (!showEl || show.stacked || !showTrack) return;
       var diff = show.target - show.s;
-      if (Math.abs(diff) < 0.0006) show.s = show.target;   /* snap → perfectly flat */
+      if (Math.abs(diff) < 0.0006) show.s = show.target;   /* snap → dead centre */
       else show.s += diff * 0.14;
 
+      var w = panels[0].offsetWidth;
+      if (!w) return;
+      var cs = getComputedStyle(showTrack);
+      var gap = parseFloat(cs.columnGap || cs.gap) || 0;
+      var step = w + gap;
+      var viewportW = showTrack.parentNode.clientWidth;
+      var x = viewportW / 2 - (show.s * step + w / 2);
+      showTrack.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
+
       for (var i = 0; i < 3; i++) {
-        var ang = (i - show.s) * 90;
-        var abs = Math.abs(ang);
-        var el = panels[i];
-        if (abs > 100) { el.style.visibility = 'hidden'; el.classList.remove('front'); continue; }
-        el.style.visibility = 'visible';
-        el.style.transform = 'translateZ(' + (-WHEEL_R) + 'px) rotateX(' + ang.toFixed(3) + 'deg) translateZ(' + WHEEL_R + 'px)';
-        el.style.opacity = (1 - Math.min(abs, 90) / 90 * 0.55).toFixed(3);
-        el.style.filter = abs < 0.5 ? '' : 'blur(' + Math.min(abs / 22, 5).toFixed(2) + 'px)';
-        var front = abs < 8;
-        el.classList.toggle('front', front);
-        if (i === 2) {                          /* volunteers settles front → pop */
+        var d = Math.min(Math.abs(i - show.s), 1);
+        panels[i].style.transform = 'scale(' + (1 - d * 0.13).toFixed(4) + ')';
+        panels[i].style.opacity = (1 - d * 0.55).toFixed(3);
+        var front = Math.abs(i - show.s) < 0.12;
+        panels[i].classList.toggle('front', front);
+        if (i === 2) {                          /* volunteers settles centre → pop */
           if (front && !show.volFront) volPop();
           show.volFront = front;
         }
       }
 
-      var a = Math.round(show.s);               /* cross-fade the side meta */
+      var a = Math.round(show.s);               /* cross-fade caption + dots */
       if (a !== show.active && Math.abs(show.s - a) < 0.35) {
         show.active = a;
-        for (var m = 0; m < 3; m++) metaItems[m].classList.toggle('on', m === a);
+        for (var m = 0; m < 3; m++) {
+          metaItems[m].classList.toggle('on', m === a);
+          if (showDots[m]) showDots[m].classList.toggle('on', m === a);
+        }
+        if (showPrev) showPrev.disabled = (a === 0);
+        if (showNext) showNext.disabled = (a === 2);
       }
     }
 
-    /* degrees panel 0 (the live Noce map) is away from front-flat */
-    function noceAngle() { return show.stacked ? 0 : Math.abs(show.s * 90); }
+    /* arrows scroll to the middle of a slide's dwell */
+    function showGoTo(k) {
+      if (!showEl || show.stacked) return;
+      k = Math.max(0, Math.min(2, k));
+      var d = SHOW_DWELL, t = SHOW_TRANS;
+      var frac = [d * 0.5, 1.5 * d + t, 2.5 * d + 2 * t][k];
+      var r = showEl.getBoundingClientRect();
+      var run = r.height - window.innerHeight;
+      window.scrollTo({ top: r.top + window.scrollY + run * frac, behavior: 'smooth' });
+    }
+    if (showPrev) showPrev.addEventListener('click', function () { showGoTo(Math.round(show.s) - 1); });
+    if (showNext) showNext.addEventListener('click', function () { showGoTo(Math.round(show.s) + 1); });
 
     /* stacked mode: volunteers pop once on scroll-into-view instead */
     if (!REDUCED && panels.length === 3) {
@@ -1818,7 +2135,6 @@
         }
       }
       if (!REDUCED) showFrame();          /* wheel lerp + transforms — every frame */
-      if (noceTick) noceTick();           /* live Noce render — SAME loop, no second rAF */
       if (desktopFx()) { cursorFrame(); magneticFrame(); }
       requestAnimationFrame(mainFrame);
     }
@@ -1835,217 +2151,6 @@
     measureAll();
     requestAnimationFrame(mainFrame);
 
-    /* ==========================================================
-       11. NOCE — live Three.js low-poly map on the FRONT FACE of
-       showcase panel 1.
-       - flat-shaded displaced plane in teal, slowly auto-rotating,
-         9 pulsing terracotta markers with hover/tap cards
-       - tilts a few degrees toward the cursor
-       - pointer input counts ONLY while the panel is within 8° of
-         front-flat (noceAngle() — always 0 in stacked mode)
-       - rendered from the ONE shared main loop via noceTick; only
-         while the showcase is on screen; no second rAF anywhere
-       - pixelRatio capped at 2 (1.5 mobile); disposed on pagehide
-       ========================================================== */
-    (function initNoce() {
-      var host = document.querySelector('.panel-noce');
-      var card = document.getElementById('noceCard');
-      if (!host || !showEl || !window.THREE) return; /* CDN blocked → static panel */
-
-      /* WebGL can be unavailable (old GPU, blocklist, headless).
-         In that case the panel simply stays a quiet blank card. */
-      var renderer;
-      try {
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      } catch (err) {
-        return;
-      }
-      var W = host.clientWidth || 420, H = host.clientHeight || 525;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1.5 : 2));
-      renderer.setSize(W, H);
-      host.insertBefore(renderer.domElement, card);
-
-      var scene  = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
-      camera.position.set(0, 6.2, 6.6);
-      camera.lookAt(0, 0, -0.2);
-
-      scene.add(new THREE.HemisphereLight(0xFAFAF7, 0x0E2A29, 1.0));
-      var sun = new THREE.DirectionalLight(0xFFFFFF, 0.75);
-      sun.position.set(4, 7, 3);
-      scene.add(sun);
-
-      var group = new THREE.Group();
-      scene.add(group);
-
-      /* --- stylised EUROPE: hand-simplified coastlines, extruded flat-
-         shaded landmasses in teals resting on a pale sea plate. It has
-         to read as a map at a glance — not abstract terrain. --- */
-      var S = 0.75;                                  /* map scale for the panel */
-      var LAND_DEPTH = 0.32;
-      var disposables = [];
-
-      function landMesh(pts, color) {
-        var shape = new THREE.Shape();
-        shape.moveTo(pts[0][0] * S, pts[0][1] * S);
-        for (var i = 1; i < pts.length; i++) shape.lineTo(pts[i][0] * S, pts[i][1] * S);
-        shape.closePath();
-        var g = new THREE.ExtrudeGeometry(shape, {
-          depth: LAND_DEPTH, bevelEnabled: true, bevelThickness: 0.06,
-          bevelSize: 0.05, bevelSegments: 2, curveSegments: 4
-        });
-        g.rotateX(-Math.PI / 2);                     /* lay flat: north = away */
-        var mat = new THREE.MeshStandardMaterial({ color: color, flatShading: true, roughness: 0.95, metalness: 0 });
-        disposables.push(g, mat);
-        return new THREE.Mesh(g, mat);
-      }
-
-      /* coastline polygons (x = east, y = north), deliberately low-poly */
-      var MAINLAND = [[-3.3,-0.7],[-3.5,-1.6],[-2.9,-2.4],[-1.9,-2.3],[-1.3,-1.5],[-0.9,-0.9],
-        [-0.4,-1.0],[-0.1,-1.7],[0.15,-2.35],[0.4,-2.1],[0.75,-2.4],[0.65,-1.5],[1.0,-0.9],
-        [1.35,-1.7],[1.75,-2.45],[2.15,-1.8],[2.55,-1.15],[3.1,-0.4],[3.3,0.9],[2.4,1.35],
-        [1.55,1.15],[0.95,1.5],[0.65,1.15],[-0.05,1.05],[-0.9,0.85],[-1.75,0.75],[-1.55,0.05],[-2.3,-0.3]];
-      var SCANDINAVIA = [[1.05,1.75],[0.8,2.5],[1.05,3.15],[1.7,3.3],[2.25,2.6],[2.0,1.9],[1.45,1.7]];
-      var BRITAIN = [[-1.55,1.35],[-1.95,1.95],[-1.6,2.5],[-1.15,2.05],[-1.2,1.5]];
-      var IRELAND = [[-2.35,1.7],[-2.6,2.1],[-2.25,2.35],[-2.0,2.0]];
-
-      group.add(landMesh(MAINLAND, 0x1B4D4B));
-      group.add(landMesh(SCANDINAVIA, 0x256058));
-      group.add(landMesh(BRITAIN, 0x256058));
-      group.add(landMesh(IRELAND, 0x256058));
-
-      /* pale sea plate beneath the land */
-      var seaGeo = new THREE.PlaneGeometry(7.4, 8.6);
-      seaGeo.rotateX(-Math.PI / 2);
-      var seaMat = new THREE.MeshStandardMaterial({ color: 0xDCE7E3, roughness: 1, metalness: 0 });
-      disposables.push(seaGeo, seaMat);
-      var sea = new THREE.Mesh(seaGeo, seaMat);
-      sea.position.y = -0.07;
-      group.add(sea);
-
-      /* markers — pulsing terracotta points at city-ish spots on land */
-      var SPOTS = [[-3.1,-1.9],[-2.2,-1.4],[0.15,-1.45],[-1.0,0.35],[-0.05,0.9],
-                   [0.7,0.85],[1.1,0.05],[1.75,-2.2],[1.5,2.4]];
-      var markerGeo = new THREE.SphereGeometry(0.085, 16, 16);
-      disposables.push(markerGeo);
-      var markers = SPOTS.map(function (s, idx) {
-        var mat = new THREE.MeshBasicMaterial({ color: 0xC7623F });
-        disposables.push(mat);
-        var m = new THREE.Mesh(markerGeo, mat);
-        m.position.set(s[0] * S, LAND_DEPTH + 0.13, -s[1] * S);
-        m.userData = { idx: idx, s: 1 };            /* s = current scale (lerped) */
-        group.add(m);
-        return m;
-      });
-
-      var raycaster = new THREE.Raycaster();
-      var pointer = { x: 0, y: 0, active: false };  /* NDC coords over the canvas */
-      var hovered = -1;                              /* marker index or -1 */
-      var vec = new THREE.Vector3();
-      var showVisible = false;
-
-      /* the interaction gate: stacked mode, or within 8° of flat */
-      function interactive() { return noceAngle() < 8; }
-
-      function toNDC(clientX, clientY) {
-        var r = renderer.domElement.getBoundingClientRect();
-        pointer.x = ((clientX - r.left) / r.width) * 2 - 1;
-        pointer.y = -((clientY - r.top) / r.height) * 2 + 1;
-      }
-      renderer.domElement.addEventListener('mousemove', function (e) {
-        if (!interactive()) return;
-        toNDC(e.clientX, e.clientY); pointer.active = true;
-      }, { passive: true });
-      renderer.domElement.addEventListener('mouseleave', function () {
-        pointer.active = false; hovered = -1;
-      }, { passive: true });
-      /* tap-to-select on touch devices (click also fires after a tap) */
-      renderer.domElement.addEventListener('click', function (e) {
-        if (!interactive()) return;
-        toNDC(e.clientX, e.clientY);
-        raycaster.setFromCamera(pointer, camera);
-        var hit = raycaster.intersectObjects(markers);
-        hovered = hit.length ? hit[0].object.userData.idx : -1;
-      });
-
-      /* one frame of the map — called from the shared main loop */
-      noceTick = function () {
-        if (!showVisible) return;
-        var now = performance.now();
-
-        /* leaving the front angle cleanly cancels any hover state */
-        if (!interactive() && (pointer.active || hovered !== -1)) {
-          pointer.active = false;
-          hovered = -1;
-          card.classList.remove('show');
-        }
-
-        if (!REDUCED) {
-          /* a map shouldn't spin 360° — it sways gently instead, and
-             tilts a few degrees toward the cursor while interactive */
-          var sway = 0.16 * Math.sin(now * 0.00025);
-          var tiltOK = interactive() && FINE && !isMobile();
-          var nx = tiltOK ? (mx / window.innerWidth) * 2 - 1 : 0;
-          var ny = tiltOK ? (my / window.innerHeight) * 2 - 1 : 0;
-          group.rotation.y = sway + nx * 0.10;
-          group.rotation.x = ny * 0.06;
-        }
-
-        /* hover detection (desktop, only while front-flat) */
-        if (pointer.active && interactive()) {
-          raycaster.setFromCamera(pointer, camera);
-          var hit = raycaster.intersectObjects(markers);
-          hovered = hit.length ? hit[0].object.userData.idx : -1;
-        }
-
-        /* pulse + grow */
-        for (var i = 0; i < markers.length; i++) {
-          var m = markers[i];
-          var target = (i === hovered) ? 1.9
-                     : REDUCED ? 1
-                     : 1 + 0.2 * Math.sin(now * 0.0024 + i * 0.7);
-          m.userData.s += (target - m.userData.s) * 0.15;
-          m.scale.setScalar(m.userData.s);
-        }
-
-        /* floating card beside the active marker */
-        if (hovered >= 0) {
-          var hm = markers[hovered];
-          hm.getWorldPosition(vec).project(camera);
-          card.style.left = ((vec.x * 0.5 + 0.5) * renderer.domElement.clientWidth) + 'px';
-          card.style.top  = ((-vec.y * 0.5 + 0.5) * renderer.domElement.clientHeight) + 'px';
-          card.textContent = t('noce.spot' + ((hovered % 8) + 1));
-          card.classList.add('show');
-        } else {
-          card.classList.remove('show');
-        }
-
-        renderer.render(scene, camera);
-      };
-
-      /* render only while the showcase is on screen */
-      new IntersectionObserver(function (entries) {
-        showVisible = entries[0].isIntersecting;
-      }, { threshold: 0.02 }).observe(showEl);
-
-      /* resize: keep the canvas matched to the panel (also called by
-         showApplyMode when the layout mode flips) */
-      noceOnResize = function () {
-        W = host.clientWidth || W; H = host.clientHeight || H;
-        camera.aspect = W / H;
-        camera.updateProjectionMatrix();
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile() ? 1.5 : 2));
-        renderer.setSize(W, H);
-      };
-      window.addEventListener('resize', function () { setTimeout(noceOnResize, 160); });
-
-      /* proper teardown: unhook from the loop, free GPU resources */
-      window.addEventListener('pagehide', function () {
-        noceTick = null;
-        disposables.forEach(function (d) { d.dispose(); });
-        renderer.dispose();
-      }, { once: true });
-    })();
 
   })();
   </script>
