@@ -270,7 +270,8 @@
       inset: 0;
       background: linear-gradient(180deg, rgba(250,250,247,0.55) 0%, rgba(250,250,247,0.85) 100%);
     }
-    .hero .wrap { position: relative; z-index: 1; }
+    /* hero content is centred — photo, eyebrow, name, line, buttons */
+    .hero .wrap { position: relative; z-index: 1; text-align: center; }
     .scroll-hint { z-index: 1; }   /* stays above the hero background */
 
     .hero-photo {
@@ -278,7 +279,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--line);
-      margin-bottom: 2rem;
+      margin: 0 auto 2rem;
     }
 
     /* The big name. JS splits it into .ch spans; each character fades
@@ -307,13 +308,13 @@
       font-size: 1.05rem;
       color: var(--mut);
       max-width: 36rem;
-      margin-bottom: 2.6rem;
+      margin: 0 auto 2.6rem;
       min-height: 1.8em;   /* reserve the line before it types */
     }
     .hero-line .hl { opacity: 0; transition: opacity 0.35s ease; }
     .hero-line .hl.on { opacity: 1; }
 
-    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
 
     .btn {
       display: inline-block;
@@ -447,7 +448,7 @@
       font-family: var(--serif);
       font-size: 1.25rem;
       color: var(--teal);
-      margin-bottom: 2rem;
+      margin: 0 auto 2rem;
     }
 
     /* Floating card shown beside a hovered/tapped Noce map point */
@@ -478,37 +479,50 @@
     }
 
     /* ============================================================
-       14. VERTICAL UNIVERSITY JOURNEY (inside About)
-       A line draws itself downward (SVG stroke, scroll-linked) past
-       three nodes; each reveals as the line reaches it. RSM is the
-       final, emphasised node with a terracotta glow.
+       14. UNIVERSITY JOURNEY (inside About) — a gently WINDING
+       vertical path (the wavy line, back by popular demand) that
+       draws itself downward, scroll-linked. The three universities
+       hang on the curve, alternating sides; RSM is the final node
+       with a terracotta glow.
        ============================================================ */
     .vjourney { margin-top: 4.5rem; }
-    .vjourney .eyebrow { margin-bottom: 0.5rem; }
-    .vj-rail { position: relative; }
+    .vjourney .eyebrow { margin-bottom: 1rem; }
+    .vj-rail { position: relative; height: 620px; }
     .vj-svg {
       position: absolute;
-      left: 31px; top: 12px;
-      width: 2px; height: calc(100% - 24px);
+      inset: 0;
+      width: 100%; height: 100%;
       overflow: visible;
     }
-    .vj-svg path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .vj-svg path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
     .vj-ghost { stroke: var(--line); }
-    /* pathLength="1" in the markup → dashoffset is simply 1 - progress */
-    .vj-draw  { stroke: var(--teal); stroke-dasharray: 1; stroke-dashoffset: 1; }
+    /* JS rebuilds the path in pixel coordinates and drives the dash
+       from its real measured length (pathLength + non-uniform viewBox
+       stretching corrupts dash math in Chromium) */
+    .vj-draw  { stroke: var(--teal); }
+
+    /* items sit on the curve's anchor points, alternating sides */
     .vj-item {
-      position: relative;
-      display: grid;
-      grid-template-columns: 64px 1fr;
-      gap: 1.6rem;
+      position: absolute;
+      display: flex;
       align-items: center;
-      padding: 2rem 0;
+      gap: 1.4rem;
+      width: min(430px, 78%);
       opacity: 0;
       transform: translateY(18px);
       transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
     }
-    .vj-item.on { opacity: 1; transform: none; }
+    .vj-item.on { opacity: 1; transform: translateY(0); }
+    .vj-i1 { left: 15%; top: 14%; margin-left: -32px; transform: translateY(calc(-50% + 18px)); }
+    .vj-i1.on { transform: translateY(-50%); }
+    .vj-i2 { right: 15%; top: 50%; margin-right: -32px; flex-direction: row-reverse; text-align: right;
+             transform: translateY(calc(-50% + 18px)); }
+    .vj-i2.on { transform: translateY(-50%); }
+    .vj-i3 { left: 15%; top: 86%; margin-left: -32px; transform: translateY(calc(-50% + 18px)); }
+    .vj-i3.on { transform: translateY(-50%); }
+
     .vj-badge {
+      flex-shrink: 0;
       width: 64px; height: 64px;
       border-radius: 50%;
       background: #fff;
@@ -524,12 +538,94 @@
     .vj-name a { border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color 0.25s, border-color 0.25s; }
     .vj-name a:hover { color: var(--teal); border-color: var(--teal); }
     .vj-course { font-size: 0.88rem; color: var(--mut); margin-top: 0.25rem; }
+    .vj-thesis-link {
+      display: inline-block;
+      margin-top: 0.35rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--terra);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s;
+    }
+    .vj-thesis-link:hover { border-color: var(--terra); }
     .vj-final.on .vj-badge {
       border-color: var(--terra);
       color: var(--terra);
       box-shadow: 0 0 18px rgba(199, 98, 63, 0.45);
     }
     .vj-final .vj-name a:hover { color: var(--terra); border-color: var(--terra); }
+
+    /* ============================================================
+       14b. EXPERIENCE TIMELINE — the same visual language as the
+       journey: a straight rail on the left that draws downward,
+       monogram badges, entries revealing one by one. This is what
+       ties Experience to the rest of the site.
+       ============================================================ */
+    .xtl { position: relative; margin-top: 1.5rem; }
+    .xtl-svg {
+      position: absolute;
+      left: 31px; top: 16px;
+      width: 2px; height: calc(100% - 32px);
+      overflow: visible;
+    }
+    .xtl-svg path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+    .xtl-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 1.7rem;
+      align-items: start;
+      padding: 2.4rem 0;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+    .xtl-item.on { opacity: 1; transform: none; }
+    .xtl-item .xp-period { padding-top: 0; margin-bottom: 0.3rem; }
+    /* Ex Primo — the lead entry: larger, terracotta-ringed badge */
+    .xtl-lead { padding: 2.8rem 0; }
+    .xtl-lead .xp-role { font-size: 2.1rem; color: var(--teal); }
+    .xtl-lead .xp-desc { font-size: 1rem; }
+    .xtl-lead.on .vj-badge {
+      border-color: var(--terra);
+      color: var(--terra);
+      box-shadow: 0 0 14px rgba(199, 98, 63, 0.35);
+    }
+
+    /* ============================================================
+       14c. THESIS — deep-teal interlude chapter right after the
+       education journey. The stylised chart draws itself while the
+       three stats count up in sync (JS, IntersectionObserver).
+       ============================================================ */
+    .thesis-title { font-size: clamp(1.9rem, 4vw, 2.9rem); color: var(--bg); margin-bottom: 0.8rem; }
+    .thesis-sub   { color: var(--mut-d); font-size: 0.95rem; margin-bottom: 2rem; }
+    .thesis p.body { color: var(--mut-d); max-width: 44rem; margin-bottom: 3.5rem; }
+    .thesis-viz { position: relative; padding: 2.5rem 0 1rem; }
+    .tchart {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    .tline { fill: none; stroke: var(--bg); stroke-width: 2; }
+    .tstats {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+    .tnum {
+      display: block;
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      line-height: 1;
+      color: var(--bg);
+      margin-bottom: 0.5rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .tlabel { font-size: 0.82rem; color: var(--mut-d); letter-spacing: 0.04em; }
 
     /* ============================================================
        15. PROJECTS — ROTATING PANEL SHOWCASE
@@ -585,10 +681,25 @@
     .panel canvas { display: block; width: 100%; height: 100%; }
     .panel-img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-    /* Volunteers: confident scale-up as the panel settles front —
-       overshoots slightly beyond the frame, then eases back to fit. */
-    .panel-vol { overflow: visible; }
-    .panel-vol .panel-img { border-radius: 14px; }
+    /* Volunteers: the group photo is landscape, so instead of a brutal
+       4:5 crop it sits matted like a print — full photo visible on a
+       warm neutral card. The scale-up pop still applies to the print. */
+    .panel-vol {
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #F4F3EE 0%, #E9E7DF 100%);
+      padding: 1.3rem;
+    }
+    .panel-vol .panel-img {
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
     @keyframes volPop {
       0%   { transform: scale(1); }
       55%  { transform: scale(1.10); }
@@ -668,26 +779,13 @@
     }
 
     /* ============================================================
-       16. EXPERIENCE — quiet editorial list on off-white.
-       Ordered by importance; the first entry (Ex Primo) is visually
-       lead: larger role, more breathing room.
+       16. EXPERIENCE — field styles used inside the timeline items
        ============================================================ */
-    .xp {
-      display: grid;
-      grid-template-columns: 170px 1fr;
-      gap: 2.2rem;
-      padding: 2.4rem 0;
-      border-top: 1px solid var(--line);
-    }
-    .xp-period { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.03em; padding-top: 0.45rem; }
+    .xp-period { font-size: 0.82rem; color: var(--mut); letter-spacing: 0.03em; }
     .xp-role   { font-family: var(--serif); font-size: 1.45rem; margin-bottom: 0.15rem; }
     .xp-org    { font-size: 0.85rem; font-weight: 600; color: var(--terra); letter-spacing: 0.05em; margin-bottom: 0.7rem; }
     .xp-desc   { font-size: 0.92rem; color: var(--mut); max-width: 38rem; }
     .xp-photo  { margin-top: 1.2rem; width: 220px; aspect-ratio: 3 / 2; }
-
-    .xp-lead { padding: 3.2rem 0; }
-    .xp-lead .xp-role { font-size: 2.1rem; color: var(--teal); }
-    .xp-lead .xp-desc { font-size: 1rem; }
 
     /* ============================================================
        18. CONTACT + FOOTER
@@ -752,16 +850,22 @@
       .hero { padding: 7rem 0 5rem; }
       .scroll-hint { left: 1.5rem; }
 
-      /* vertical journey tightens */
-      .vj-item { grid-template-columns: 52px 1fr; gap: 1.1rem; padding: 1.6rem 0; }
+      /* winding journey tightens */
+      .vj-rail { height: 560px; }
+      .vj-item { gap: 1rem; width: 84%; }
+      .vj-i1, .vj-i3 { margin-left: -26px; }
+      .vj-i2 { margin-right: -26px; }
       .vj-badge { width: 52px; height: 52px; font-size: 0.85rem; }
-      .vj-svg { left: 25px; }
-      .vj-name { font-size: 1.15rem; }
+      .vj-name { font-size: 1.1rem; }
+      .vj-course { font-size: 0.8rem; }
 
-      .xp { grid-template-columns: 1fr; gap: 0.4rem; padding: 1.8rem 0; }
+      /* experience timeline tightens */
+      .xtl-item { grid-template-columns: 52px 1fr; gap: 1.1rem; padding: 1.8rem 0; }
+      .xtl-svg { left: 25px; }
+      .xtl-lead .xp-role { font-size: 1.6rem; }
       .xp-photo { width: 180px; }
-      .xp-lead { padding: 2.4rem 0; }
-      .xp-lead .xp-role { font-size: 1.7rem; }
+
+      .tstats { gap: 1rem; }
     }
 
     /* ============================================================
@@ -780,9 +884,13 @@
       html.js .unfold .stg { opacity: 1; transform: none; }
       html.js .plx-wrap { clip-path: none; }
       .scroll-hint i { display: none; }
-      /* vertical journey: fully drawn, all nodes visible */
-      .vj-item { opacity: 1 !important; transform: none !important; }
+      /* journeys and timeline: fully drawn, all nodes visible.
+         (vj items keep their -50% anchor transform — never "none".) */
+      .vj-item { opacity: 1 !important; }
+      .vj-i1, .vj-i2, .vj-i3 { transform: translateY(-50%) !important; }
       .vj-draw { stroke-dashoffset: 0 !important; }
+      .xtl-item { opacity: 1 !important; transform: none !important; }
+      #xtlDraw { stroke-dashoffset: 0 !important; }
       /* showcase: JS applies .stacked, so panels are static cards;
          metas are forced visible here as well */
       .meta-item { opacity: 1; transform: none; pointer-events: auto; }
@@ -854,34 +962,67 @@
       <p class="stg" data-i18n="about.p2">Since then I've followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I've built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.</p>
       <p class="stg" data-i18n="about.p3">This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I'm in the middle of something I don't yet know how to finish.</p>
 
+      <!-- winding vertical path; universities alternate sides along it.
+           The curve passes exactly through the three badge anchors
+           (15%,14%) → (85%,50%) → (15%,86%). -->
       <div class="vjourney stg" id="vjourney">
         <span class="eyebrow" data-i18n="edu.eyebrow">Education</span>
         <div class="vj-rail" id="vjRail">
-          <svg class="vj-svg" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
-            <path class="vj-ghost" d="M1,0 L1,100" pathLength="1"/>
-            <path class="vj-draw" id="vjDraw" d="M1,0 L1,100" pathLength="1"/>
+          <!-- JS rewrites both paths in pixel coordinates on measure;
+               the markup d is only the no-JS static fallback -->
+          <svg class="vj-svg" id="vjSvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path class="vj-ghost" id="vjGhost" d="M15,4 C15,8 15,11 15,14 C15,30 85,34 85,50 C85,66 15,70 15,86 C15,89 15,92 15,96"/>
+            <path class="vj-draw" id="vjDraw" d="M15,4 C15,8 15,11 15,14 C15,30 85,34 85,50 C85,66 15,70 15,86 C15,89 15,92 15,96"/>
           </svg>
-          <div class="vj-item">
+          <div class="vj-item vj-i1">
             <div class="vj-badge" aria-hidden="true">UU</div>
             <div>
               <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a></div>
               <div class="vj-course" data-i18n="edu.uu">BSc Economics &amp; Business Economics · Honours Programme</div>
+              <a class="vj-thesis-link" href="#thesis" data-i18n="edu.uuthesis">Bachelor thesis · graded 9.2 ↓</a>
             </div>
           </div>
-          <div class="vj-item">
+          <div class="vj-item vj-i2">
             <div class="vj-badge" aria-hidden="true">PUC</div>
             <div>
               <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a></div>
               <div class="vj-course" data-i18n="edu.puc">Exchange semester · first time leaving Europe</div>
             </div>
           </div>
-          <div class="vj-item vj-final">
+          <div class="vj-item vj-i3 vj-final">
             <div class="vj-badge" aria-hidden="true">RSM</div>
             <div>
               <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM Rotterdam</a></div>
               <div class="vj-course" data-i18n="edu.rsm">MSc Finance &amp; Investments · September 2026</div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2b. THESIS — deep-teal interlude right after the education
+       journey (the Utrecht node links down to it). The chart draws
+       itself while the stats count up in sync.
+       ============================================================ -->
+  <section id="thesis" class="teal">
+    <div class="wrap unfold">
+      <span class="eyebrow stg" data-i18n="thesis.eyebrow">Research</span>
+      <h2 class="thesis-title stg" data-i18n="thesis.title">Do Chinese Capital Controls Raise the Cost of Debt for European Firms?</h2>
+      <p class="thesis-sub stg" data-i18n="thesis.sub">Bachelor Thesis · Utrecht University · Graded 9.2 / 10</p>
+      <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
+
+      <!-- Stylised chart (not real data) draws itself behind the stats;
+           the numbers count up in sync with the line. -->
+      <div class="thesis-viz stg" id="thesisViz">
+        <svg class="tchart" viewBox="0 0 900 260" preserveAspectRatio="none" aria-hidden="true">
+          <path class="tline" id="tLine" d="M0,205 C60,198 90,212 150,192 C210,172 250,180 310,168 C370,156 420,130 480,138 C540,146 590,108 650,96 C710,84 770,88 830,64 C860,52 880,48 900,40"/>
+        </svg>
+        <div class="tstats">
+          <div><span class="tnum" data-target="600" data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s1">STOXX Europe 600 firms</span></div>
+          <div><span class="tnum" data-target="22"  data-decimals="0">0</span><span class="tlabel" data-i18n="thesis.s2">years of panel data</span></div>
+          <div><span class="tnum" data-target="9.2" data-decimals="1">0.0</span><span class="tlabel" data-i18n="thesis.s3">final grade</span></div>
         </div>
       </div>
     </div>
@@ -895,30 +1036,40 @@
       <span class="eyebrow stg" data-i18n="exp.eyebrow">Experience</span>
       <h2 class="section-title stg" data-i18n="exp.title">Work, study, and everything in between.</h2>
 
-      <div class="stg">
+      <!-- timeline: same rail language as the education journey —
+           the line draws downward and each entry lights up in turn -->
+      <div class="xtl stg" id="xtl">
+        <svg class="xtl-svg" id="xtlSvg" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
+          <path class="vj-ghost" d="M1,0 L1,100"/>
+          <path class="vj-draw" id="xtlDraw" d="M1,0 L1,100"/>
+        </svg>
+
         <!-- Ex Primo first and visually lead -->
-        <div class="xp xp-lead">
-          <div class="xp-period">Jun 2026 – present</div>
+        <div class="xtl-item xtl-lead">
+          <div class="vj-badge" aria-hidden="true">EP</div>
           <div>
+            <div class="xp-period">Jun 2026 – present</div>
             <h3 class="xp-role" data-i18n="exp1.role">Accounting Assistant</h3>
             <div class="xp-org" data-i18n="exp1.org">Ex Primo · Communication &amp; Marketing Agency — Italy</div>
             <p class="xp-desc" data-i18n="exp1.desc">Support client accounting for a pension fund at a communication and marketing agency, reporting to the Head of Administration.</p>
           </div>
         </div>
 
-        <div class="xp">
-          <div class="xp-period">Oct 2024 – Jun 2025</div>
+        <div class="xtl-item">
+          <div class="vj-badge" aria-hidden="true">AS</div>
           <div>
+            <div class="xp-period">Oct 2024 – Jun 2025</div>
             <h3 class="xp-role" data-i18n="exp2.role">Mathematics &amp; Statistics Tutor</h3>
             <div class="xp-org" data-i18n="exp2.org">AthenaSummary</div>
             <p class="xp-desc" data-i18n="exp2.desc">Built the full online course material from scratch — slides, worked examples and statistics exercises.</p>
-            <div class="xp-photo plx-wrap"><img class="plx" src="images/athena-1.png" alt="AthenaSummary course material"></div>
+            <div class="xp-photo plx-wrap"><img class="plx" src="images/athena-1.jpg" alt="AthenaSummary course material"></div>
           </div>
         </div>
 
-        <div class="xp">
-          <div class="xp-period">Feb 2024 – present</div>
+        <div class="xtl-item">
+          <div class="vj-badge" aria-hidden="true">PJ</div>
           <div>
+            <div class="xp-period">Feb 2024 – present</div>
             <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
             <div class="xp-org" data-i18n="exp3.org">Picnic &amp; Jumbo</div>
             <p class="xp-desc" data-i18n="exp3.desc">Steady, practical work alongside my studies.</p>
@@ -1044,6 +1195,14 @@
         'edu.uu': 'BSc Economics &amp; Business Economics · Honours Programme',
         'edu.puc': 'Exchange semester · first time leaving Europe',
         'edu.rsm': 'MSc Finance &amp; Investments · September 2026',
+        'edu.uuthesis': 'Bachelor thesis · graded 9.2 ↓',
+        'thesis.eyebrow': 'Research',
+        'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
+        'thesis.sub': 'Bachelor Thesis · Utrecht University · Graded 9.2 / 10',
+        'thesis.p': 'My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I’m proudest of, not for the number but because the question was mine.',
+        'thesis.s1': 'STOXX Europe 600 firms',
+        'thesis.s2': 'years of panel data',
+        'thesis.s3': 'final grade',
 
         'show.eyebrow': 'Selected Projects',
         'sp1.title': 'Noce',
@@ -1083,7 +1242,9 @@
         'hero.eyebrow': '[IT: translate]', 'hero.line': '[IT: translate]',
         'hero.cta1': '[IT: translate]', 'hero.cta2': '[IT: translate]', 'hero.scroll': '[IT: translate]',
         'about.eyebrow': '[IT: translate]', 'about.p1': '[IT: translate]', 'about.p2': '[IT: translate]', 'about.p3': '[IT: translate]',
-        'edu.eyebrow': '[IT: translate]', 'edu.uu': '[IT: translate]', 'edu.puc': '[IT: translate]', 'edu.rsm': '[IT: translate]',
+        'edu.eyebrow': '[IT: translate]', 'edu.uu': '[IT: translate]', 'edu.puc': '[IT: translate]', 'edu.rsm': '[IT: translate]', 'edu.uuthesis': '[IT: translate]',
+        'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
+        'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]',
         'show.eyebrow': '[IT: translate]',
         'sp1.title': 'Noce', 'sp1.cap': '[IT: translate]',
         'sp2.title': '[IT: translate]', 'sp2.cap': '[IT: translate]',
@@ -1104,7 +1265,9 @@
         'hero.eyebrow': '[NL: translate]', 'hero.line': '[NL: translate]',
         'hero.cta1': '[NL: translate]', 'hero.cta2': '[NL: translate]', 'hero.scroll': '[NL: translate]',
         'about.eyebrow': '[NL: translate]', 'about.p1': '[NL: translate]', 'about.p2': '[NL: translate]', 'about.p3': '[NL: translate]',
-        'edu.eyebrow': '[NL: translate]', 'edu.uu': '[NL: translate]', 'edu.puc': '[NL: translate]', 'edu.rsm': '[NL: translate]',
+        'edu.eyebrow': '[NL: translate]', 'edu.uu': '[NL: translate]', 'edu.puc': '[NL: translate]', 'edu.rsm': '[NL: translate]', 'edu.uuthesis': '[NL: translate]',
+        'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
+        'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]',
         'show.eyebrow': '[NL: translate]',
         'sp1.title': 'Noce', 'sp1.cap': '[NL: translate]',
         'sp2.title': '[NL: translate]', 'sp2.cap': '[NL: translate]',
@@ -1316,16 +1479,113 @@
     var vjDraw  = document.getElementById('vjDraw');
     var vjItems = Array.prototype.slice.call(document.querySelectorAll('.vj-item'));
 
+    /* fractions of the winding path's length at which the curve reaches
+       each university's badge anchor (lead-in, mid-sweep, final node) */
+    var VJ_T = [0.08, 0.5, 0.9];
+    var vjLen = 0;
+
+    /* Rebuild the winding path in REAL pixel coordinates (viewBox ==
+       rail size, no stretching) so dash math is exact everywhere.
+       Anchors: (15%,14%) → (85%,50%) → (15%,86%), matching the CSS. */
+    function vjBuild() {
+      if (!vjRail || REDUCED) return;
+      var W = vjRail.clientWidth, H = vjRail.clientHeight;
+      if (!W || !H) return;
+      var svg = document.getElementById('vjSvg');
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      var xl = 0.15 * W, xr = 0.85 * W;
+      var d = 'M' + xl + ',' + 0.04 * H
+        + ' C' + xl + ',' + 0.08 * H + ' ' + xl + ',' + 0.11 * H + ' ' + xl + ',' + 0.14 * H
+        + ' C' + xl + ',' + 0.30 * H + ' ' + xr + ',' + 0.34 * H + ' ' + xr + ',' + 0.50 * H
+        + ' C' + xr + ',' + 0.66 * H + ' ' + xl + ',' + 0.70 * H + ' ' + xl + ',' + 0.86 * H
+        + ' C' + xl + ',' + 0.89 * H + ' ' + xl + ',' + 0.92 * H + ' ' + xl + ',' + 0.96 * H;
+      document.getElementById('vjGhost').setAttribute('d', d);
+      vjDraw.setAttribute('d', d);
+      vjLen = vjDraw.getTotalLength();
+      vjDraw.style.strokeDasharray = vjLen;
+    }
+
     function vjourneyUpdate() {
-      if (!vjRail) return;
+      if (!vjRail || !vjLen) return;
       var r = vjRail.getBoundingClientRect();
       var p = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - r.top) / r.height));
-      vjDraw.style.strokeDashoffset = 1 - p;
+      vjDraw.style.strokeDashoffset = vjLen * (1 - p);
       for (var i = 0; i < vjItems.length; i++) {
-        /* fraction of the rail at which this node's badge sits */
-        var f = (vjItems[i].offsetTop + 32) / vjRail.offsetHeight;
-        vjItems[i].classList.toggle('on', p >= f);
+        vjItems[i].classList.toggle('on', p >= VJ_T[i]);
       }
+    }
+
+    /* ==========================================================
+       6b. EXPERIENCE TIMELINE — same mechanic, straight rail:
+       the line draws downward and entries light up as it reaches
+       their badges.
+       ========================================================== */
+    var xtlEl    = document.getElementById('xtl');
+    var xtlDraw  = document.getElementById('xtlDraw');
+    var xtlItems = Array.prototype.slice.call(document.querySelectorAll('.xtl-item'));
+    var xtlLen = 0;
+
+    function xtlBuild() {
+      if (!xtlEl || REDUCED) return;
+      var H = xtlEl.clientHeight;
+      if (!H) return;
+      var svg = document.getElementById('xtlSvg');
+      svg.setAttribute('viewBox', '0 0 2 ' + H);
+      xtlEl.querySelectorAll('.xtl-svg path').forEach(function (pth) {
+        pth.setAttribute('d', 'M1,0 L1,' + H);
+      });
+      xtlLen = H;
+      xtlDraw.style.strokeDasharray = xtlLen;
+    }
+
+    function xtlUpdate() {
+      if (!xtlEl || !xtlLen) return;
+      var r = xtlEl.getBoundingClientRect();
+      var p = Math.min(1, Math.max(0, (window.innerHeight * 0.85 - r.top) / r.height));
+      xtlDraw.style.strokeDashoffset = xtlLen * (1 - p);
+      for (var i = 0; i < xtlItems.length; i++) {
+        var f = (xtlItems[i].offsetTop + 44) / xtlEl.offsetHeight;
+        xtlItems[i].classList.toggle('on', p >= f);
+      }
+    }
+
+    /* ==========================================================
+       6c. THESIS DATA-REVEAL — the background chart draws over
+       1.8s while the three stats count up in sync with it.
+       ========================================================== */
+    var tLine = document.getElementById('tLine');
+    var tViz  = document.getElementById('thesisViz');
+    var tNums = Array.prototype.slice.call(document.querySelectorAll('.tnum'));
+
+    function setStatsFinal() {
+      tNums.forEach(function (n) {
+        n.textContent = parseFloat(n.getAttribute('data-target'))
+          .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
+      });
+    }
+
+    if (REDUCED) {
+      setStatsFinal();               /* chart stays fully drawn (no dasharray) */
+    } else if (tLine && tViz) {
+      var tLen = tLine.getTotalLength();
+      tLine.style.strokeDasharray  = tLen;
+      tLine.style.strokeDashoffset = tLen;   /* hidden until triggered */
+
+      new IntersectionObserver(function (entries, obs) {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        var t0 = performance.now();
+        (function tick(now) {
+          var tt = Math.min(1, (now - t0) / 1800);
+          var e  = 1 - Math.pow(1 - tt, 3);          /* ease-out cubic */
+          tLine.style.strokeDashoffset = tLen * (1 - e);
+          tNums.forEach(function (n) {
+            n.textContent = (parseFloat(n.getAttribute('data-target')) * e)
+              .toFixed(parseInt(n.getAttribute('data-decimals'), 10));
+          });
+          if (tt < 1) requestAnimationFrame(tick); else setStatsFinal();
+        })(t0);
+      }, { threshold: 0.35 }).observe(tViz);
     }
 
     /* ==========================================================
@@ -1553,6 +1813,7 @@
           heroBgUpdate(scY);
           parallaxUpdate();
           vjourneyUpdate();
+          xtlUpdate();
           showUpdate();
         }
       }
@@ -1563,7 +1824,7 @@
     }
 
     /* Re-measure everything that depends on layout. Throttled resize. */
-    function measureAll() { showMeasure(); scrollDirty = true; fxUpdate(); }
+    function measureAll() { vjBuild(); xtlBuild(); showMeasure(); scrollDirty = true; fxUpdate(); }
     var resizeTimer = null;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
@@ -1606,8 +1867,8 @@
 
       var scene  = new THREE.Scene();
       var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
-      camera.position.set(0, 4.8, 6.2);
-      camera.lookAt(0, 0.2, 0);
+      camera.position.set(0, 6.2, 6.6);
+      camera.lookAt(0, 0, -0.2);
 
       scene.add(new THREE.HemisphereLight(0xFAFAF7, 0x0E2A29, 1.0));
       var sun = new THREE.DirectionalLight(0xFFFFFF, 0.75);
@@ -1617,35 +1878,61 @@
       var group = new THREE.Group();
       scene.add(group);
 
-      /* gentle pseudo-noise height field — shared by terrain + markers */
-      function terrainH(x, z) {
-        return 0.22 * Math.sin(x * 0.9 + 1.2) * Math.cos(z * 1.1)
-             + 0.14 * Math.sin(x * 2.1) * Math.sin(z * 1.7 + 0.5)
-             + 0.08 * Math.cos(x * 3.3 + z * 2.6);
+      /* --- stylised EUROPE: hand-simplified coastlines, extruded flat-
+         shaded landmasses in teals resting on a pale sea plate. It has
+         to read as a map at a glance — not abstract terrain. --- */
+      var S = 0.75;                                  /* map scale for the panel */
+      var LAND_DEPTH = 0.32;
+      var disposables = [];
+
+      function landMesh(pts, color) {
+        var shape = new THREE.Shape();
+        shape.moveTo(pts[0][0] * S, pts[0][1] * S);
+        for (var i = 1; i < pts.length; i++) shape.lineTo(pts[i][0] * S, pts[i][1] * S);
+        shape.closePath();
+        var g = new THREE.ExtrudeGeometry(shape, {
+          depth: LAND_DEPTH, bevelEnabled: true, bevelThickness: 0.06,
+          bevelSize: 0.05, bevelSegments: 2, curveSegments: 4
+        });
+        g.rotateX(-Math.PI / 2);                     /* lay flat: north = away */
+        var mat = new THREE.MeshStandardMaterial({ color: color, flatShading: true, roughness: 0.95, metalness: 0 });
+        disposables.push(g, mat);
+        return new THREE.Mesh(g, mat);
       }
 
-      /* terrain: displaced plane, non-indexed so flat shading shows facets
-         (portrait-ish proportions to suit the 4:5 panel) */
-      var geo = new THREE.PlaneGeometry(7.4, 8.4, 26, 30);
-      geo.rotateX(-Math.PI / 2);
-      var pos = geo.attributes.position;
-      for (var i = 0; i < pos.count; i++) {
-        pos.setY(i, terrainH(pos.getX(i), pos.getZ(i)));
-      }
-      geo = geo.toNonIndexed();
-      geo.computeVertexNormals();
-      var terrain = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-        color: 0x1B4D4B, flatShading: true, roughness: 0.95, metalness: 0
-      }));
-      group.add(terrain);
+      /* coastline polygons (x = east, y = north), deliberately low-poly */
+      var MAINLAND = [[-3.3,-0.7],[-3.5,-1.6],[-2.9,-2.4],[-1.9,-2.3],[-1.3,-1.5],[-0.9,-0.9],
+        [-0.4,-1.0],[-0.1,-1.7],[0.15,-2.35],[0.4,-2.1],[0.75,-2.4],[0.65,-1.5],[1.0,-0.9],
+        [1.35,-1.7],[1.75,-2.45],[2.15,-1.8],[2.55,-1.15],[3.1,-0.4],[3.3,0.9],[2.4,1.35],
+        [1.55,1.15],[0.95,1.5],[0.65,1.15],[-0.05,1.05],[-0.9,0.85],[-1.75,0.75],[-1.55,0.05],[-2.3,-0.3]];
+      var SCANDINAVIA = [[1.05,1.75],[0.8,2.5],[1.05,3.15],[1.7,3.3],[2.25,2.6],[2.0,1.9],[1.45,1.7]];
+      var BRITAIN = [[-1.55,1.35],[-1.95,1.95],[-1.6,2.5],[-1.15,2.05],[-1.2,1.5]];
+      var IRELAND = [[-2.35,1.7],[-2.6,2.1],[-2.25,2.35],[-2.0,2.0]];
 
-      /* markers — pulsing terracotta points */
-      var SPOTS = [[-2.4, -2.6], [-1.5, 0.9], [-0.6, -1.6], [0.4, 2.4], [0.9, -0.4],
-                   [1.8, -2.3], [2.3, 1.3], [-0.3, -0.1], [1.4, 3.0]];
-      var markerGeo = new THREE.SphereGeometry(0.09, 16, 16);
+      group.add(landMesh(MAINLAND, 0x1B4D4B));
+      group.add(landMesh(SCANDINAVIA, 0x256058));
+      group.add(landMesh(BRITAIN, 0x256058));
+      group.add(landMesh(IRELAND, 0x256058));
+
+      /* pale sea plate beneath the land */
+      var seaGeo = new THREE.PlaneGeometry(7.4, 8.6);
+      seaGeo.rotateX(-Math.PI / 2);
+      var seaMat = new THREE.MeshStandardMaterial({ color: 0xDCE7E3, roughness: 1, metalness: 0 });
+      disposables.push(seaGeo, seaMat);
+      var sea = new THREE.Mesh(seaGeo, seaMat);
+      sea.position.y = -0.07;
+      group.add(sea);
+
+      /* markers — pulsing terracotta points at city-ish spots on land */
+      var SPOTS = [[-3.1,-1.9],[-2.2,-1.4],[0.15,-1.45],[-1.0,0.35],[-0.05,0.9],
+                   [0.7,0.85],[1.1,0.05],[1.75,-2.2],[1.5,2.4]];
+      var markerGeo = new THREE.SphereGeometry(0.085, 16, 16);
+      disposables.push(markerGeo);
       var markers = SPOTS.map(function (s, idx) {
-        var m = new THREE.Mesh(markerGeo, new THREE.MeshBasicMaterial({ color: 0xC7623F }));
-        m.position.set(s[0], terrainH(s[0], s[1]) + 0.14, s[1]);
+        var mat = new THREE.MeshBasicMaterial({ color: 0xC7623F });
+        disposables.push(mat);
+        var m = new THREE.Mesh(markerGeo, mat);
+        m.position.set(s[0] * S, LAND_DEPTH + 0.13, -s[1] * S);
         m.userData = { idx: idx, s: 1 };            /* s = current scale (lerped) */
         group.add(m);
         return m;
@@ -1654,7 +1941,6 @@
       var raycaster = new THREE.Raycaster();
       var pointer = { x: 0, y: 0, active: false };  /* NDC coords over the canvas */
       var hovered = -1;                              /* marker index or -1 */
-      var autoY = 0;                                 /* auto-rotation angle */
       var vec = new THREE.Vector3();
       var showVisible = false;
 
@@ -1695,11 +1981,13 @@
         }
 
         if (!REDUCED) {
-          autoY += 0.0016;
+          /* a map shouldn't spin 360° — it sways gently instead, and
+             tilts a few degrees toward the cursor while interactive */
+          var sway = 0.16 * Math.sin(now * 0.00025);
           var tiltOK = interactive() && FINE && !isMobile();
           var nx = tiltOK ? (mx / window.innerWidth) * 2 - 1 : 0;
           var ny = tiltOK ? (my / window.innerHeight) * 2 - 1 : 0;
-          group.rotation.y = autoY + nx * 0.10;
+          group.rotation.y = sway + nx * 0.10;
           group.rotation.x = ny * 0.06;
         }
 
@@ -1754,10 +2042,7 @@
       /* proper teardown: unhook from the loop, free GPU resources */
       window.addEventListener('pagehide', function () {
         noceTick = null;
-        markerGeo.dispose();
-        terrain.geometry.dispose();
-        terrain.material.dispose();
-        markers.forEach(function (m) { m.material.dispose(); });
+        disposables.forEach(function (d) { d.dispose(); });
         renderer.dispose();
       }, { once: true });
     })();
