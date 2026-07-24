@@ -425,23 +425,40 @@
     .about-grid {
       display: grid;
       grid-template-columns: 35fr 65fr;
-      gap: clamp(2rem, 5vw, 5rem);
+      gap: clamp(2.5rem, 6vw, 6rem);
       align-items: start;
-      margin-bottom: clamp(3rem, 6vw, 5rem);
+      margin-bottom: clamp(4rem, 8vw, 7rem);
     }
-    .about-left .eyebrow { display: block; margin-bottom: 1.4rem; }
+    .about-left .eyebrow { display: block; margin-bottom: 1.2rem; }
     .about-headline {
       font-family: var(--serif);
-      font-size: clamp(1.55rem, 2.4vw, 2.2rem);
-      line-height: 1.2;
-      color: var(--ink);
-      font-weight: 400;
+      font-size: clamp(1.9rem, 2.9vw, 2.7rem);
+      line-height: 1.14;
+      color: var(--teal);
+      font-weight: 500;
+      letter-spacing: -0.015em;
       margin: 0;
     }
-    .about-right p { color: var(--mut); margin-bottom: 1.6rem; line-height: var(--lh-body); }
+    .about-headline .accent { color: var(--terra); font-style: italic; }
+    /* short terracotta rule anchors the left column */
+    .about-left::after {
+      content: '';
+      display: block;
+      width: 44px; height: 3px;
+      background: var(--terra);
+      border-radius: 2px;
+      margin-top: 1.6rem;
+    }
+    .about-right p { color: var(--mut); margin-bottom: 1.6rem; line-height: var(--lh-body); max-width: var(--measure); }
     .about-right p:last-child { margin-bottom: 0; }
+    /* editorial lead: the opening paragraph carries more weight */
+    .about-right p:first-child {
+      font-size: var(--fs-lead);
+      line-height: 1.55;
+      color: var(--ink);
+    }
     @media (max-width: 680px) {
-      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.2rem; }
     }
 
     /* ============================================================
@@ -736,7 +753,8 @@
       gap: 2.4rem;
     }
     .show-head { text-align: center; }
-    .show-head .eyebrow { margin-bottom: 0.6rem; }
+    .show-head .eyebrow { margin-bottom: 0.9rem; }
+    .show-head .section-title { margin: 0 auto; max-width: none; }
 
     /* the rail slides horizontally; the active slide lands dead centre */
     .show-viewport { width: 100%; overflow: hidden; }
@@ -762,6 +780,7 @@
       border: 1px solid var(--line);
       overflow: hidden;
       pointer-events: none;          /* JS grants it to the active slide */
+      box-shadow: 0 14px 36px -26px rgba(20,20,20,0.28);
       transition: box-shadow 0.5s var(--ease);
       will-change: transform, opacity;
     }
@@ -776,19 +795,62 @@
     }
     .panel-vol .panel-img.pop { animation: volPop 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* ---- Newsletter: magazine cover ---- */
-    .nl-cover   { position: absolute; inset: 0; background: #fff; display: flex; flex-direction: column; }
-    .nl-head    { background: var(--teal); padding: 1.1rem 1.3rem 1rem; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem; }
-    .nl-mast    { font-family: var(--serif); font-size: 1.6rem; color: var(--bg); line-height: 1; letter-spacing: -0.02em; }
-    .nl-sub     { font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
-    .nl-issuetag { font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.55); white-space: nowrap; align-self: flex-start; margin-top: 0.2rem; }
-    .nl-photo   { flex: 1; overflow: hidden; min-height: 0; }
-    .nl-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-    .nl-body    { padding: 1rem 1.3rem 0.85rem; border-top: 3px solid var(--terra); flex-shrink: 0; }
-    .nl-kicker  { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--terra); margin-bottom: 0.4rem; }
-    .nl-headline { font-family: var(--serif); font-size: 1.35rem; line-height: 1.1; color: var(--ink); margin-bottom: 0.4rem; }
-    .nl-deck    { font-size: 0.72rem; color: var(--mut); line-height: 1.4; font-style: italic; margin-bottom: 0.7rem; }
-    .nl-byline  { font-size: 0.58rem; letter-spacing: 0.08em; color: var(--mut); text-transform: uppercase; }
+    /* ---- Newsletter: minimal editorial cover ----
+       No photo (source scan is low-res); the cover art is an oversized
+       serif quotation mark — the visual pun for "The Interview Issue". */
+    .nl-cover {
+      position: absolute; inset: 0;
+      background: linear-gradient(178deg, #FCFBF7 0%, #F2EFE6 100%);
+      display: flex; flex-direction: column;
+      padding: 1.6rem 1.5rem 1.3rem;
+    }
+    .nl-community {
+      font-size: 0.58rem; font-weight: 600;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--terra); margin-bottom: 0.55rem;
+    }
+    .nl-mast {
+      font-family: var(--serif);
+      font-size: 2.3rem; font-weight: 500;
+      color: var(--teal); line-height: 0.95;
+      letter-spacing: -0.01em;
+    }
+    .nl-edition {
+      font-size: 0.58rem; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--mut);
+      margin-top: 0.8rem; padding-top: 0.7rem;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between;
+    }
+    .nl-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+    .nl-quote {
+      font-family: var(--serif); font-style: italic; font-weight: 400;
+      font-size: 4.6rem; line-height: 0.9;
+      color: var(--terra);
+      margin-bottom: 0.3rem;
+      user-select: none;
+    }
+    .nl-kicker {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--mut); margin-bottom: 0.5rem;
+    }
+    .nl-headline {
+      font-family: var(--serif);
+      font-size: 2rem; line-height: 1.05;
+      color: var(--ink); letter-spacing: -0.015em;
+    }
+    .nl-headline em { font-style: italic; color: var(--teal); }
+    .nl-foot { border-top: 1px solid var(--line); padding-top: 0.85rem; flex-shrink: 0; }
+    .nl-teaser { font-size: 0.72rem; color: var(--mut); line-height: 1.5; display: flex; gap: 0.55rem; align-items: baseline; }
+    .nl-teaser + .nl-teaser { margin-top: 0.3rem; }
+    .nl-teaser i { font-style: normal; font-size: 0.58rem; color: var(--terra); font-weight: 600; }
+    .nl-byline {
+      margin-top: 0.85rem;
+      font-size: 0.56rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--teal);
+    }
 
     /* ---- Noce: mobile app mockup ---- */
     .noce-app { position: absolute; inset: 0; background: #F6F0E8; }
@@ -1072,7 +1134,7 @@
       <div class="about-grid">
         <div class="about-left stg">
           <span class="eyebrow" data-i18n="about.eyebrow">About</span>
-          <p class="about-headline">Italian student,<br>builder &amp; economist<br>incoming at RSM Rotterdam.</p>
+          <p class="about-headline">Italian student,<br>builder &amp; economist<br>incoming at <span class="accent">RSM Rotterdam</span>.</p>
         </div>
         <div class="about-right">
           <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
@@ -1248,6 +1310,7 @@
     <div class="show-sticky" id="showSticky">
       <div class="show-head">
         <span class="eyebrow" data-i18n="show.eyebrow">Selected Projects</span>
+        <h2 class="section-title" data-i18n="show.title">Three projects, built out of curiosity.</h2>
       </div>
 
       <div class="show-viewport">
@@ -1342,21 +1405,22 @@
             </div>
           </div>
 
-          <!-- 2 · Honours Newsletter — magazine cover -->
+          <!-- 2 · Honours Newsletter — minimal editorial cover -->
           <div class="panel panel-news">
             <div class="nl-cover">
-              <div class="nl-head">
-                <div>
-                  <div class="nl-mast">Honours</div>
-                  <div class="nl-sub">UU Honours Community</div>
-                </div>
-                <div class="nl-issuetag">Issue 07<br>Spring 2024</div>
+              <div class="nl-masthead">
+                <div class="nl-community">UU Honours Community</div>
+                <div class="nl-mast">Honours</div>
+                <div class="nl-edition"><span>Spring Edition</span><span>Issue 07</span></div>
               </div>
-              <div class="nl-photo"><img src="images/newsletter-cover.jpg" alt="Honours Programme newsletter cover"></div>
-              <div class="nl-body">
+              <div class="nl-mid">
+                <div class="nl-quote" aria-hidden="true">&ldquo;</div>
                 <div class="nl-kicker">Cover Story</div>
-                <div class="nl-headline">The Interview<br>Issue</div>
-                <div class="nl-deck">"The question we kept asking all year."</div>
+                <div class="nl-headline">The <em>Interview</em> Issue</div>
+              </div>
+              <div class="nl-foot">
+                <div class="nl-teaser"><i>01</i><span>The tutor who became a startup</span></div>
+                <div class="nl-teaser"><i>02</i><span>What your thesis really teaches you</span></div>
                 <div class="nl-byline">Editorial Lead · Antonio Di Domenico</div>
               </div>
             </div>
@@ -1470,6 +1534,7 @@
         'thesis.chartcap': 'Illustrative cost-of-debt trend · 2002–2024',
 
         'show.eyebrow': 'Selected Projects',
+        'show.title': 'Three projects, built out of curiosity.',
         'sp1.title': 'Noce',
         'sp1.cap': 'Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.',
         'sp2.title': 'Honours Newsletter',
@@ -1503,7 +1568,7 @@
         'edu.eyebrow': '[IT: translate]', 'edu.uu': '[IT: translate]', 'edu.puc': '[IT: translate]', 'edu.rsm': '[IT: translate]', 'edu.uuthesis': '[IT: translate]',
         'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
         'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]', 'thesis.chartcap': '[IT: translate]',
-        'show.eyebrow': '[IT: translate]',
+        'show.eyebrow': '[IT: translate]', 'show.title': '[IT: translate]',
         'sp1.title': 'Noce', 'sp1.cap': '[IT: translate]',
         'sp2.title': '[IT: translate]', 'sp2.cap': '[IT: translate]',
         'sp3.title': '[IT: translate]', 'sp3.cap': '[IT: translate]',
@@ -1525,7 +1590,7 @@
         'edu.eyebrow': '[NL: translate]', 'edu.uu': '[NL: translate]', 'edu.puc': '[NL: translate]', 'edu.rsm': '[NL: translate]', 'edu.uuthesis': '[NL: translate]',
         'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
         'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]', 'thesis.chartcap': '[NL: translate]',
-        'show.eyebrow': '[NL: translate]',
+        'show.eyebrow': '[NL: translate]', 'show.title': '[NL: translate]',
         'sp1.title': 'Noce', 'sp1.cap': '[NL: translate]',
         'sp2.title': '[NL: translate]', 'sp2.cap': '[NL: translate]',
         'sp3.title': '[NL: translate]', 'sp3.cap': '[NL: translate]',
