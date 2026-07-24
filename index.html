@@ -716,7 +716,7 @@
       color: var(--terra);
       transform: rotate(var(--ang, 0deg)) scaleX(var(--flip, 1));
     }
-    #planeTrav .trav-rot { width: 170px; height: 106px; margin: -53px 0 0 -85px; }
+    #planeTrav .trav-rot { width: 185px; height: 116px; margin: -58px 0 0 -92.5px; }
     #bikeTrav  .trav-rot { width: 118px; height: 118px; margin: -59px 0 0 -59px; }
     .trav-veh {
       position: absolute; inset: 0;
@@ -730,6 +730,10 @@
     .trav-veh .veh-line  { fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
     .trav-veh .veh-thin  { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
     .trav-veh .veh-wheel { fill: var(--bg); stroke: currentColor; stroke-width: 3.6; }
+    /* Engine nacelles: a thick round-capped stroke with a thinner cream
+       stroke laid over it gives an outlined capsule from two lines. */
+    .trav-veh .veh-pod-o { fill: none; stroke: currentColor; stroke-width: 13; stroke-linecap: round; }
+    .trav-veh .veh-pod-i { fill: none; stroke: var(--bg);    stroke-width: 6.6; stroke-linecap: round; }
 
     /* the seat sits in VEHICLE coordinates; the photo inside counter-
        rotates by the same angle so my face always reads upright */
@@ -745,9 +749,9 @@
       box-shadow: 0 2px 8px rgba(20,20,20,0.18);
       transform: scaleX(var(--flip, 1)) rotate(calc(-1 * var(--ang, 0deg)));
     }
-    /* plane: cabin window is circle r20 at (72,50) of a 160-wide box,
-       so at 170px (k=1.0625) that is centre (76.5, 53.1) radius 21.25 */
-    #planeTrav .trav-seat { left: 56.5px; top: 33.1px; width: 40px; height: 40px; }
+    /* plane: cabin window is circle r16 at (86,52) of a 160-wide box,
+       so at 185px (k=1.15625) that is centre (99.4, 60.1) radius 18.5 */
+    #planeTrav .trav-seat { left: 81.9px; top: 42.6px; width: 35px; height: 35px; }
     /* bike: face is the rider's head, above the shoulders */
     #bikeTrav  .trav-seat { left: 33px; top: 6px;  width: 50px; height: 50px; }
 
@@ -1198,11 +1202,11 @@
       .vj-name { font-size: 1.1rem; }
       .vj-course { font-size: 0.82rem; }
       /* Vehicles scale down; seats recomputed from the same geometry.
-         Plane at 96px wide (k=0.6): window centre (43.2, 30) r12.
+         Plane at 110px wide (k=0.6875): window centre (59.1, 35.8) r11.
          Bike at 64px (k=0.64): head centre (31.4, 16.6) r13.4. */
-      #planeTrav .trav-rot { width: 96px; height: 60px; margin: -30px 0 0 -48px; }
+      #planeTrav .trav-rot { width: 110px; height: 69px; margin: -34.5px 0 0 -55px; }
       #bikeTrav  .trav-rot { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
-      #planeTrav .trav-seat { left: 32.2px; top: 19px; width: 22px; height: 22px; }
+      #planeTrav .trav-seat { left: 49.1px; top: 25.8px; width: 20px; height: 20px; }
       #bikeTrav  .trav-seat { left: 18px;   top: 4px;  width: 26px; height: 26px; }
 
       /* experience timeline tightens */
@@ -1337,18 +1341,26 @@
                my face shows through as the window / the rider's head -->
           <div class="traveler" id="planeTrav" aria-hidden="true">
             <span class="trav-rot">
-              <!-- Aeroplane in plan view, nose right — the view you get
-                   on a flight map, which is what the path underneath it
-                   is. Swept wings and tailplanes are drawn first so the
-                   fuselage covers their roots; the cabin window is last
-                   and the photo lands exactly on it. -->
+              <!-- Three-quarter airliner, nose right. Far wing, fin and
+                   tailplane go down first so the fuselage covers their
+                   roots; the near wing and its two nacelles sit on top.
+                   The cabin window is last and the photo lands on it. -->
               <svg class="trav-veh" viewBox="0 0 160 100">
-                <path class="veh-body" d="M112,29 L64,3 L44,8 L92,32 Z"/>
-                <path class="veh-body" d="M112,71 L64,97 L44,92 L92,68 Z"/>
-                <path class="veh-body" d="M36,32 L14,16 L4,20 L26,34 Z"/>
-                <path class="veh-body" d="M36,68 L14,84 L4,80 L26,66 Z"/>
-                <path class="veh-body" d="M40,25 L96,27 C122,30 144,38 156,50 C144,62 122,70 96,73 L40,75 C21,75 10,65 10,50 C10,35 21,25 40,25 Z"/>
-                <circle class="veh-body" cx="72" cy="50" r="20"/>
+                <path class="veh-body" d="M108,32 L86,4 L68,7 L94,34 Z"/>
+                <path class="veh-body" d="M36,28 L24,2 L38,2 L54,27 Z"/>
+                <path class="veh-body" d="M26,24 L5,20 L8,29 Z"/>
+                <path class="veh-body" d="M152,52 C151,41 142,33 126,31 L52,31 C36,31 24,27 10,18 C17,33 25,51 35,63 C41,70 47,73 57,73 L126,73 C142,71 151,63 152,52 Z"/>
+                <path class="veh-body" d="M116,68 L60,92 L88,98 L132,70 Z"/>
+                <path class="veh-pod-o" d="M93,81 L109,74"/>
+                <path class="veh-pod-i" d="M94,80.5 L108,74.5"/>
+                <path class="veh-pod-o" d="M74,89 L90,82"/>
+                <path class="veh-pod-i" d="M75,88.5 L89,82.5"/>
+                <path class="veh-solid" d="M132,42 C138,43 142,46 143,50 C139,51 134,50 131,48 Z"/>
+                <circle class="veh-solid" cx="113" cy="47" r="2.4"/>
+                <circle class="veh-solid" cx="123" cy="48" r="2.4"/>
+                <circle class="veh-solid" cx="60" cy="45" r="2.4"/>
+                <circle class="veh-solid" cx="50" cy="44" r="2.4"/>
+                <circle class="veh-body" cx="86" cy="52" r="16"/>
               </svg>
               <span class="trav-seat"><img class="trav-face" src="images/face.jpg" alt=""></span>
             </span>
