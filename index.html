@@ -46,7 +46,13 @@
       --terra:  #C7623F;   /* secondary accent — micro-details only  */
       --line:   #E4E2DB;   /* soft borders                           */
       --mut:    #6E6C66;   /* secondary text                         */
-      --mut-d:  rgba(250, 250, 247, 0.55); /* secondary text on dark */
+      /* 0.66 rather than 0.55: measured 4.6:1 on the teal ground, so
+         small text on dark sections clears WCAG AA (0.55 gave 3.97). */
+      --mut-d:  rgba(250, 250, 247, 0.66); /* secondary text on dark */
+      /* --terra is the decorative accent (pins, rules, dots). At 13px
+         on cream it only reaches 3.83:1, so TEXT uses --terra-ink,
+         measured 4.6:1. Same hue, legal contrast. */
+      --terra-ink: #B15738;
       --line-d: rgba(250, 250, 247, 0.14); /* borders on dark        */
       --ease:   cubic-bezier(0.16, 1, 0.3, 1); /* "expo-out" feel    */
       --serif:  'Fraunces', Georgia, serif;
@@ -139,13 +145,19 @@
 
     .eyebrow {
       display: block;
+      /* set explicitly: some eyebrows are real headings (h2/h3) for
+         document structure and must not inherit the serif heading face */
+      font-family: var(--sans);
+      line-height: 1.4;
       font-size: 0.82rem;
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--terra);
+      color: var(--terra-ink);
       margin-bottom: 1.6rem;
     }
+    /* on the dark sections the cream-side accent is already legible */
+    .teal .eyebrow { color: var(--terra); }
 
     .section-title {
       font-size: var(--fs-h2);
@@ -313,19 +325,12 @@
        section and offset upward so the JS parallax drift (slower than
        scroll) plus the 1.00 → 1.08 scale never expose an edge. A soft
        off-white gradient keeps the hero text fully readable. */
-    .hero-bg { position: absolute; inset: 0; z-index: 0; }
-    .hero-bg img {
-      position: absolute;
-      top: -15%; left: 0;
-      width: 100%; height: 130%;
-      object-fit: cover;
-      will-change: transform;
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(250,250,247,0.55) 0%, rgba(250,250,247,0.85) 100%);
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(120% 78% at 50% 6%,  rgba(27,77,75,0.10)  0%, rgba(27,77,75,0) 60%),
+        radial-gradient(80%  55% at 82% 88%, rgba(199,98,63,0.09) 0%, rgba(199,98,63,0) 65%),
+        var(--bg);
     }
     /* hero content is centred — photo, eyebrow, name, line, buttons */
     .hero .wrap { position: relative; z-index: 1; text-align: center; }
@@ -650,7 +655,7 @@
       margin-top: 0.35rem;
       font-size: 0.82rem;
       font-weight: 600;
-      color: var(--terra);
+      color: var(--terra-ink);
       border-bottom: 1px solid transparent;
       transition: border-color 0.25s;
     }
@@ -792,7 +797,8 @@
        circular: it keeps turning in either direction forever, with no
        DOM clones and no seam.
        ============================================================ */
-    .showcase { padding: 5rem 0 6rem; }
+    /* same vertical rhythm as every other section (was 5/6rem) */
+    .showcase { padding: 8rem 0; }
     .show-sticky {
       display: flex;
       flex-direction: column;
@@ -851,13 +857,31 @@
     .panel.front { pointer-events: auto; box-shadow: 0 32px 70px -32px rgba(20,20,20,0.42); }
     .panel-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 
-    /* Volunteers: fills the frame cleanly — cover + centred, no squash */
+    /* Volunteers: the photograph, but authored like the other two —
+       a field-note strip anchors it to the same card language instead
+       of leaving a bare image in the set. */
     @keyframes volPop {
       0%   { transform: scale(1); }
       55%  { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
     .panel-vol .panel-img.pop { animation: volPop 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+    .vol-card { position: absolute; inset: 0; overflow: hidden; }
+    .vol-card .panel-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .vol-note {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 2.6rem 1.3rem 1.15rem;
+      color: var(--bg);
+      background: linear-gradient(to top, rgba(12,14,13,0.88) 30%, rgba(12,14,13,0) 100%);
+    }
+    .vol-kicker {
+      font-size: 0.56rem; font-weight: 600;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: #E9A488;                      /* terracotta lifted for dark ground */
+      margin-bottom: 0.45rem;
+    }
+    .vol-title { font-family: var(--serif); font-size: 1.35rem; line-height: 1.1; margin-bottom: 0.35rem; }
+    .vol-meta  { font-size: 0.68rem; letter-spacing: 0.05em; color: rgba(250,250,247,0.8); }
 
     /* ---- Newsletter: deep-green academic cover ----
        Set on the site's primary green so the middle card reads as a
@@ -958,7 +982,7 @@
       pointer-events: none;
     }
     .meta-item.on { opacity: 1; transform: none; pointer-events: auto; }
-    .meta-index { display: block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.2em; color: var(--terra); margin-bottom: 0.7rem; }
+    .meta-index { display: block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.2em; color: var(--terra-ink); margin-bottom: 0.7rem; }
     .meta-item h3 { font-size: var(--fs-h3); color: var(--teal); margin-bottom: 0.7rem; }
     .meta-item p { font-size: var(--fs-body); color: var(--mut); margin: 0 auto 1rem; max-width: 52ch; }
 
@@ -1043,7 +1067,7 @@
       margin-bottom: 0.5rem;
     }
     .xp-role   { font-family: var(--serif); font-size: var(--fs-h3); color: var(--teal); margin-bottom: 0.3rem; }
-    .xp-org    { font-size: var(--fs-meta); font-weight: 600; color: var(--terra); letter-spacing: 0.04em; margin-bottom: 0.9rem; }
+    .xp-org    { font-size: var(--fs-meta); font-weight: 600; color: var(--terra-ink); letter-spacing: 0.04em; margin-bottom: 0.9rem; }
     .xp-desc   { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--mut); max-width: var(--measure); }
     .xp-photo  { margin-top: 1.4rem; width: 240px; aspect-ratio: 3 / 2; }
 
@@ -1221,8 +1245,10 @@
        1. HERO
        ============================================================ -->
   <header id="top" class="hero">
-    <!-- background photo + readability gradient; JS drives the drift/scale -->
-    <div class="hero-bg" aria-hidden="true"><img id="heroBg" src="images/hero-bg.jpg" alt=""></div>
+    <!-- Soft radial wash behind the hero. A photograph used to sit here
+         but the file was never supplied, so it 404'd on every load; the
+         wash is the intended look and costs no request. -->
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="wrap">
       <img class="hero-photo" src="images/antonio.jpg" alt="Portrait of Antonio Di Domenico" width="200" height="200">
       <span class="eyebrow" data-i18n="hero.eyebrow">MSc Finance · RSM Rotterdam</span>
@@ -1248,7 +1274,7 @@
       <div class="about-grid">
         <div class="about-left stg">
           <span class="eyebrow" data-i18n="about.eyebrow">About</span>
-          <p class="about-headline">Italian student,<br>builder &amp; economist<br>incoming at <span class="accent">RSM Rotterdam</span>.</p>
+          <h2 class="about-headline">Italian student,<br>builder &amp; economist<br>incoming at <span class="accent">RSM Rotterdam</span>.</h2>
         </div>
         <div class="about-right">
           <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
@@ -1264,7 +1290,7 @@
            line: my face in a plane over UU→PUC (flew to Brazil), then
            on a bike over PUC→RSM (moved to Rotterdam). -->
       <div class="vjourney stg" id="vjourney">
-        <span class="eyebrow" data-i18n="edu.eyebrow">Education</span>
+        <h3 class="eyebrow" data-i18n="edu.eyebrow">Education</h3>
         <div class="vj-rail" id="vjRail">
           <!-- JS rewrites both paths in pixel coordinates on measure;
                the markup d is only the no-JS static fallback -->
@@ -1575,9 +1601,17 @@
             </div>
           </div>
 
-          <!-- 3 · Volunteers — photo, cover-cropped, no distortion -->
+          <!-- 3 · Volunteers — photo with a field-note strip, so the
+               card is authored like the other two -->
           <div class="panel panel-vol">
-            <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive" loading="lazy" decoding="async" width="1178" height="884">
+            <div class="vol-card">
+              <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive" loading="lazy" decoding="async" width="1178" height="884">
+              <div class="vol-note">
+                <div class="vol-kicker">Utrecht · Food Drive</div>
+                <div class="vol-title">Five stores,<br>one weekend</div>
+                <div class="vol-meta">Volunteers recruited &amp; coordinated</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1967,8 +2001,6 @@
           d.className = 'hero-photo-ph';
           d.textContent = 'AD';
           img.replaceWith(d);
-        } else if (img.id === 'heroBg') {
-          img.style.display = 'none';               /* gradient + off-white remain */
         } else {
           var host = img.closest('.plx-wrap, .panel') || img.parentNode;
           if (host && host.classList) host.classList.add('ph');
@@ -2503,19 +2535,6 @@
       document.documentElement.classList.toggle('cur', desktopFx());
     }
 
-    /* Hero background: drifts at ~28% of scroll speed (clamped so the
-       oversized image never runs out of bleed) and scales 1.00 → 1.08
-       across the first viewport of scrolling. */
-    var heroBgImg = document.getElementById('heroBg');
-    function heroBgUpdate(scY) {
-      if (!heroBgImg) return;
-      var h = hero.offsetHeight || 1;
-      if (scY > h + 80) return;                    /* hero fully off-screen */
-      var shift = Math.min(scY * 0.28, h * 0.14);
-      var sc = 1 + 0.08 * Math.min(1, scY / h);
-      heroBgImg.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
-    }
-
     /* ==========================================================
        10. MAIN LOOP — one rAF for everything scroll- and
        pointer-driven. Scroll work only runs on frames where the
@@ -2534,7 +2553,6 @@
         progressEl.style.transform = 'scaleX(' + (max > 0 ? scY / max : 0) + ')';
         updateNav(scY);
         if (!REDUCED) {
-          heroBgUpdate(scY);
           parallaxUpdate();
           vjourneyUpdate();
           xtlUpdate();
