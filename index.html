@@ -631,6 +631,16 @@
        of floating in it */
     .vj-logo.logo-fill { padding: 0; object-fit: cover; }
     .vj-badge-txt { position: relative; z-index: 0; }
+    /* Drawn badge — used where the entry has no single brand mark
+       (the warehouse role covers two employers, both already shown
+       as logo tiles under the description). */
+    .vj-icon {
+      position: relative; z-index: 1;
+      width: 30px; height: 30px;
+      color: var(--teal);
+      transition: color 0.5s;
+    }
+    .xtl-item.on .vj-icon { color: var(--terra); }
     .vj-name { font-family: var(--serif); font-size: var(--fs-h3); line-height: 1.15; color: var(--teal); }
     .vj-name a { border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color 0.25s, border-color 0.25s; }
     .vj-name a:hover { color: var(--teal); border-color: var(--teal); }
@@ -811,7 +821,14 @@
       height: calc(var(--slide-w) * 1.25);   /* 4:5 panels */
       transform-style: preserve-3d;
       margin: 0 auto;
+      /* the whole ring is draggable: grab it and push it sideways */
+      cursor: grab;
+      touch-action: pan-y;          /* vertical scroll stays with the page */
+      user-select: none;
+      -webkit-user-select: none;
     }
+    .show-track.dragging { cursor: grabbing; }
+    .show-track img { -webkit-user-drag: none; user-drag: none; }
 
     .panel {
       position: absolute;
@@ -842,61 +859,87 @@
     }
     .panel-vol .panel-img.pop { animation: volPop 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* ---- Newsletter: minimal editorial cover ----
-       No photo (source scan is low-res); the cover art is an oversized
-       serif quotation mark — the visual pun for "The Interview Issue". */
+    /* ---- Newsletter: deep-green academic cover ----
+       Set on the site's primary green so the middle card reads as a
+       printed journal between the cream map and the photograph. The
+       only ornament is a large cropped ring, like a debossed seal. */
     .nl-cover {
       position: absolute; inset: 0;
-      background: linear-gradient(178deg, #FCFBF7 0%, #F2EFE6 100%);
+      background: var(--teal);
       display: flex; flex-direction: column;
-      padding: 1.6rem 1.5rem 1.3rem;
+      padding: 1.5rem 1.4rem 1.25rem;
+      overflow: hidden;
     }
+    .nl-cover::after {                 /* the seal */
+      content: '';
+      position: absolute;
+      right: -30%; bottom: -22%;
+      width: 78%; aspect-ratio: 1;
+      border: 1px solid rgba(250,250,247,0.16);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .nl-top { position: relative; z-index: 1; flex-shrink: 0; }
     .nl-community {
-      font-size: 0.58rem; font-weight: 600;
-      letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--terra); margin-bottom: 0.55rem;
+      font-size: 0.56rem; font-weight: 600;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--terra);
+      margin-bottom: 0.7rem;
     }
     .nl-mast {
       font-family: var(--serif);
-      font-size: 2.3rem; font-weight: 500;
-      color: var(--teal); line-height: 0.95;
-      letter-spacing: -0.01em;
+      font-size: 2.15rem; font-weight: 500;
+      color: var(--bg); line-height: 0.95;
+      letter-spacing: -0.015em;
     }
     .nl-edition {
-      font-size: 0.58rem; letter-spacing: 0.24em; text-transform: uppercase;
-      color: var(--mut);
-      margin-top: 0.8rem; padding-top: 0.7rem;
-      border-top: 1px solid var(--line);
-      display: flex; justify-content: space-between;
+      font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(250,250,247,0.5);
+      margin-top: 0.75rem; padding-top: 0.65rem;
+      border-top: 1px solid rgba(250,250,247,0.2);
+      display: flex; justify-content: space-between; gap: 0.5rem;
     }
-    .nl-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
-    .nl-quote {
-      font-family: var(--serif); font-style: italic; font-weight: 400;
-      font-size: 4.6rem; line-height: 0.9;
-      color: var(--terra);
-      margin-bottom: 0.3rem;
-      user-select: none;
+
+    .nl-mid {
+      position: relative; z-index: 1;
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column; justify-content: center;
     }
     .nl-kicker {
-      font-size: 0.6rem; font-weight: 600;
+      font-size: 0.56rem; font-weight: 600;
       letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--mut); margin-bottom: 0.5rem;
+      color: var(--terra); margin-bottom: 0.6rem;
     }
     .nl-headline {
       font-family: var(--serif);
-      font-size: 2rem; line-height: 1.05;
-      color: var(--ink); letter-spacing: -0.015em;
+      font-size: 2.05rem; line-height: 1.06;
+      color: var(--bg); letter-spacing: -0.02em;
     }
-    .nl-headline em { font-style: italic; color: var(--teal); }
-    .nl-foot { border-top: 1px solid var(--line); padding-top: 0.85rem; flex-shrink: 0; }
-    .nl-teaser { font-size: 0.72rem; color: var(--mut); line-height: 1.5; display: flex; gap: 0.55rem; align-items: baseline; }
-    .nl-teaser + .nl-teaser { margin-top: 0.3rem; }
-    .nl-teaser i { font-style: normal; font-size: 0.58rem; color: var(--terra); font-weight: 600; }
+    .nl-headline em { font-style: italic; }
+    .nl-rule {
+      width: 40px; height: 2px;
+      background: var(--terra);
+      margin-top: 0.9rem;
+    }
+
+    .nl-foot {
+      position: relative; z-index: 1;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(250,250,247,0.2);
+      padding-top: 0.8rem;
+    }
+    .nl-teaser {
+      font-size: 0.7rem; line-height: 1.45;
+      color: rgba(250,250,247,0.72);
+      display: flex; gap: 0.5rem; align-items: baseline;
+    }
+    .nl-teaser + .nl-teaser { margin-top: 0.28rem; }
+    .nl-teaser i { font-style: normal; font-size: 0.55rem; color: var(--terra); font-weight: 600; }
     .nl-byline {
-      margin-top: 0.85rem;
-      font-size: 0.56rem; font-weight: 600;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--teal);
+      margin-top: 0.8rem;
+      font-size: 0.55rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(250,250,247,0.55);
     }
 
     /* ---- Noce: mobile app mockup ---- */
@@ -1352,7 +1395,18 @@
 
         <!-- 3. Picnic & Jumbo -->
         <div class="xtl-item">
-          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-picnic.png" alt="Picnic" loading="lazy" decoding="async" width="447" height="447"><span class="vj-badge-txt">PJ</span></div>
+          <!-- drawn crate icon: both employer logos already appear as
+               tiles under the description, so no single brand here -->
+          <div class="vj-badge" aria-hidden="true">
+            <svg class="vj-icon" viewBox="0 0 48 48" fill="none"
+                 stroke="currentColor" stroke-width="2.1"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 18 L24 11 L40 18 L40 37 L24 44 L8 37 Z"/>
+              <path d="M8 18 L24 25 L40 18"/>
+              <path d="M24 25 L24 44"/>
+              <path d="M16 14.5 L32 21.5"/>
+            </svg>
+          </div>
           <div>
             <div class="xp-period">Feb 2024 – Present</div>
             <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
@@ -1394,55 +1448,76 @@
                   <filter id="fs" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.14)"/></filter>
                   <filter id="fc" x="-10%" y="-50%" width="120%" height="200%"><feDropShadow dx="0" dy="-3" stdDeviation="6" flood-color="rgba(0,0,0,0.08)"/></filter>
                 </defs>
-                <!-- Map base -->
-                <rect width="320" height="400" fill="#F6F0E8"/>
-                <!-- Streets -->
-                <g stroke="#E8DDD0" stroke-width="9" fill="none">
-                  <line x1="0" y1="112" x2="320" y2="112"/>
-                  <line x1="0" y1="202" x2="320" y2="202"/>
-                  <line x1="0" y1="292" x2="320" y2="292"/>
-                  <line x1="100" y1="62" x2="100" y2="350"/>
-                  <line x1="200" y1="62" x2="200" y2="350"/>
+                <!-- Terrain base: a valley, not a city grid -->
+                <rect width="320" height="400" fill="#F1EDE2"/>
+
+                <!-- Woodland masses -->
+                <path d="M0,96 C40,86 76,104 104,96 C132,88 150,100 168,112 C150,140 120,150 88,146 C52,142 20,130 0,140 Z" fill="#D5E0C4"/>
+                <path d="M214,88 C248,80 292,92 320,84 L320,150 C288,158 250,150 224,136 C206,126 202,100 214,88 Z" fill="#D5E0C4"/>
+                <path d="M0,236 C34,228 62,244 84,258 C66,286 32,296 0,290 Z" fill="#D5E0C4"/>
+                <path d="M232,250 C266,240 302,254 320,248 L320,306 L228,306 C218,288 218,262 232,250 Z" fill="#D5E0C4"/>
+
+                <!-- Tree stipple -->
+                <g fill="#B9CBA2" opacity="0.75">
+                  <circle cx="38"  cy="112" r="7"/><circle cx="66" cy="124" r="5.5"/>
+                  <circle cx="96"  cy="110" r="6.5"/><circle cx="128" cy="122" r="5"/>
+                  <circle cx="246" cy="108" r="7"/><circle cx="278" cy="118" r="5.5"/>
+                  <circle cx="300" cy="100" r="5"/>
+                  <circle cx="30"  cy="262" r="6.5"/><circle cx="58" cy="274" r="5"/>
+                  <circle cx="258" cy="272" r="6.5"/><circle cx="292" cy="264" r="5"/>
                 </g>
-                <!-- Blocks -->
-                <rect x="5"   y="62"  width="86" height="41" rx="4" fill="#ECE4D8"/>
-                <rect x="5"   y="121" width="86" height="72" rx="4" fill="#ECE4D8"/>
-                <rect x="109" y="62"  width="82" height="41" rx="4" fill="#ECE4D8"/>
-                <rect x="109" y="121" width="82" height="72" rx="4" fill="#ECE4D8"/>
-                <rect x="209" y="62"  width="106" height="41" rx="4" fill="#ECE4D8"/>
-                <rect x="209" y="121" width="106" height="72" rx="4" fill="#ECE4D8"/>
-                <!-- Park -->
-                <rect x="5"   y="211" width="86" height="72" rx="4" fill="#C8D9B8"/>
-                <!-- Tree marks in park -->
-                <circle cx="30"  cy="235" r="10" fill="#B4CC9C" opacity="0.7"/>
-                <circle cx="56"  cy="248" r="12" fill="#B4CC9C" opacity="0.7"/>
-                <circle cx="76"  cy="228" r="8"  fill="#B4CC9C" opacity="0.7"/>
-                <rect x="109" y="211" width="82" height="38" rx="4" fill="#ECE4D8"/>
-                <rect x="109" y="257" width="82" height="26" rx="4" fill="#ECE4D8"/>
-                <rect x="209" y="211" width="106" height="72" rx="4" fill="#ECE4D8"/>
-                <!-- Canal -->
-                <path d="M5,258 C25,252 55,262 80,256 C90,253 96,249 100,252" fill="none" stroke="#B0CCE0" stroke-width="8" stroke-linecap="round"/>
-                <!-- Pins -->
-                <circle cx="150" cy="168" r="18" fill="rgba(199,98,63,0.16)"/>
-                <circle cx="150" cy="168" r="11" fill="#C7623F" filter="url(#fs)"/>
-                <circle cx="150" cy="168" r="4.5" fill="white"/>
-                <circle cx="52"  cy="150" r="9"  fill="rgba(199,98,63,0.16)"/>
-                <circle cx="52"  cy="150" r="6"  fill="#C7623F"/>
-                <circle cx="52"  cy="150" r="2.5" fill="white"/>
-                <circle cx="254" cy="155" r="9"  fill="rgba(199,98,63,0.16)"/>
-                <circle cx="254" cy="155" r="6"  fill="#C7623F"/>
-                <circle cx="254" cy="155" r="2.5" fill="white"/>
-                <circle cx="52"  cy="238" r="9"  fill="rgba(199,98,63,0.16)"/>
-                <circle cx="52"  cy="238" r="6"  fill="#C7623F"/>
-                <circle cx="52"  cy="238" r="2.5" fill="white"/>
-                <circle cx="256" cy="248" r="9"  fill="rgba(199,98,63,0.16)"/>
-                <circle cx="256" cy="248" r="6"  fill="#C7623F"/>
-                <circle cx="256" cy="248" r="2.5" fill="white"/>
-                <!-- Tooltip on active pin -->
-                <rect x="166" y="151" width="106" height="34" rx="7" fill="white" filter="url(#fs)"/>
-                <polygon points="166,162 162,168 166,174" fill="white"/>
-                <text x="219" y="164" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414">Bar Mirco</text>
-                <text x="219" y="177" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F">Local pick · 180 m</text>
+
+                <!-- Contour lines: this is a hillside -->
+                <g fill="none" stroke="#DFD5C2" stroke-width="1.2">
+                  <path d="M18,196 C68,178 118,182 158,200 C198,218 250,220 302,204"/>
+                  <path d="M12,216 C64,198 120,202 162,222 C204,242 254,242 308,226"/>
+                  <path d="M22,178 C70,162 116,166 152,182"/>
+                </g>
+
+                <!-- The stream, running down the valley -->
+                <path d="M-6,150 C36,166 60,188 84,206 C110,226 128,252 122,286 C118,312 128,340 148,356"
+                      fill="none" stroke="#AFCBDD" stroke-width="9" stroke-linecap="round"/>
+                <path d="M-6,150 C36,166 60,188 84,206 C110,226 128,252 122,286 C118,312 128,340 148,356"
+                      fill="none" stroke="#C6DCEA" stroke-width="4" stroke-linecap="round"/>
+
+                <!-- Footpath to the spring: dashed, unmarked -->
+                <path d="M256,330 C222,314 196,300 176,282 C160,268 152,250 156,232"
+                      fill="none" stroke="#C2AE90" stroke-width="2.4"
+                      stroke-linecap="round" stroke-dasharray="7 7"/>
+
+                <!-- Steam curls rising off the spring -->
+                <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9">
+                  <path d="M140,150 C134,142 146,136 140,128"/>
+                  <path d="M156,146 C150,136 162,130 156,120"/>
+                  <path d="M172,152 C166,144 178,138 172,130"/>
+                </g>
+
+                <!-- The spring itself: warm pool, active pin -->
+                <ellipse cx="156" cy="186" rx="30" ry="20" fill="rgba(199,98,63,0.13)"/>
+                <ellipse cx="156" cy="186" rx="19" ry="12" fill="#E2C4A8"/>
+                <ellipse cx="156" cy="186" rx="12" ry="7"  fill="#C7623F" opacity="0.35"/>
+                <circle  cx="156" cy="186" r="10" fill="#C7623F" filter="url(#fs)"/>
+                <circle  cx="156" cy="186" r="4"  fill="white"/>
+
+                <!-- Other local finds -->
+                <circle cx="58"  cy="168" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="58"  cy="168" r="6" fill="#C7623F"/>
+                <circle cx="58"  cy="168" r="2.5" fill="white"/>
+                <circle cx="262" cy="170" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="262" cy="170" r="6" fill="#C7623F"/>
+                <circle cx="262" cy="170" r="2.5" fill="white"/>
+                <circle cx="70"  cy="276" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="70"  cy="276" r="6" fill="#C7623F"/>
+                <circle cx="70"  cy="276" r="2.5" fill="white"/>
+                <circle cx="264" cy="266" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="264" cy="266" r="6" fill="#C7623F"/>
+                <circle cx="264" cy="266" r="2.5" fill="white"/>
+
+                <!-- Tooltip on the spring -->
+                <rect x="172" y="169" width="118" height="34" rx="7" fill="white" filter="url(#fs)"/>
+                <polygon points="172,180 168,186 172,192" fill="white"/>
+                <text x="231" y="182" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414">Sorgente Calda</text>
+                <text x="231" y="195" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F">Hot spring · 1.2 km</text>
                 <!-- Top overlay (status + search) -->
                 <rect width="320" height="104" fill="#F6F0E8"/>
                 <text x="18" y="28" font-size="11.5" font-weight="600" font-family="system-ui,sans-serif" fill="#1A1A1A">9:41</text>
@@ -1462,16 +1537,19 @@
                 <line x1="0" y1="306" x2="320" y2="306" stroke="#E4E2DB" stroke-width="0.8"/>
                 <rect x="138" y="314" width="44" height="4" rx="2" fill="#E4E2DB"/>
                 <rect x="16" y="325" width="56" height="56" rx="9" fill="#F6F0E8"/>
-                <!-- Place icon (abstract shapes for a café) -->
-                <rect x="27" y="337" width="34" height="26" rx="4" fill="none" stroke="#C7623F" stroke-width="1.6"/>
-                <path d="M61,342 C67,342 67,352 61,352" fill="none" stroke="#C7623F" stroke-width="1.6"/>
-                <line x1="30" y1="363" x2="60" y2="363" stroke="#C7623F" stroke-width="1.6" stroke-linecap="round"/>
-                <text x="84" y="339" font-size="12.5" font-weight="600" font-family="system-ui,sans-serif" fill="#141414">Bar Mirco</text>
-                <text x="84" y="355" font-size="10.5" font-family="system-ui,sans-serif" fill="#6E6C66">The espresso locals drink</text>
-                <rect x="84" y="362" width="66" height="19" rx="9.5" fill="#F6F0E8"/>
-                <text x="117" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">Café · Local pick</text>
-                <rect x="156" y="362" width="44" height="19" rx="9.5" fill="#F6F0E8"/>
-                <text x="178" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">180 m</text>
+                <!-- Place icon: steam rising off water -->
+                <g fill="none" stroke="#C7623F" stroke-width="1.7" stroke-linecap="round">
+                  <path d="M33,352 C29,346 37,342 33,336"/>
+                  <path d="M44,354 C40,346 48,341 44,333"/>
+                  <path d="M55,352 C51,346 59,342 55,336"/>
+                  <path d="M26,364 C31,361 35,367 40,364 C45,361 49,367 54,364 C57,362 60,364 62,365"/>
+                </g>
+                <text x="84" y="339" font-size="12.5" font-weight="600" font-family="system-ui,sans-serif" fill="#141414">Sorgente Calda</text>
+                <text x="84" y="355" font-size="10.5" font-family="system-ui,sans-serif" fill="#6E6C66">Warm water, no signposts</text>
+                <rect x="84" y="362" width="78" height="19" rx="9.5" fill="#F6F0E8"/>
+                <text x="123" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">Hot spring · Local</text>
+                <rect x="168" y="362" width="44" height="19" rx="9.5" fill="#F6F0E8"/>
+                <text x="190" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">1.2 km</text>
               </svg>
             </div>
           </div>
@@ -1479,15 +1557,15 @@
           <!-- 2 · Honours Newsletter — minimal editorial cover -->
           <div class="panel panel-news">
             <div class="nl-cover">
-              <div class="nl-masthead">
+              <div class="nl-top">
                 <div class="nl-community">UU Honours Community</div>
                 <div class="nl-mast">Honours</div>
                 <div class="nl-edition"><span>Spring Edition</span><span>Issue 07</span></div>
               </div>
               <div class="nl-mid">
-                <div class="nl-quote" aria-hidden="true">&ldquo;</div>
                 <div class="nl-kicker">Cover Story</div>
                 <div class="nl-headline">The <em>Interview</em> Issue</div>
+                <div class="nl-rule" aria-hidden="true"></div>
               </div>
               <div class="nl-foot">
                 <div class="nl-teaser"><i>01</i><span>The tutor who became a startup</span></div>
@@ -2286,21 +2364,65 @@
       });
     }
 
-    /* touch: horizontal swipe steps the ring */
+    /* Drag to turn the ring — one gesture for mouse, pen and touch.
+       The ring follows the pointer live (dragging left pulls the next
+       project in from the right, exactly like pushing a physical
+       carousel) and snaps to the nearest slot on release. */
     (function () {
       if (!showTrack) return;
-      var x0 = null, y0 = null;
-      showTrack.addEventListener('touchstart', function (e) {
-        x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
-      }, { passive: true });
-      showTrack.addEventListener('touchend', function (e) {
-        if (x0 === null) return;
-        var dx = e.changedTouches[0].clientX - x0;
-        var dy = e.changedTouches[0].clientY - y0;
-        /* only act on a clearly horizontal gesture */
-        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) showStep(dx < 0 ? 1 : -1);
-        x0 = y0 = null;
-      }, { passive: true });
+      var drag = null;   /* { id, x0, y0, s0, moved, horizontal } */
+
+      function stepPx() {
+        var w = panels[0].offsetWidth || 320;
+        return w * RING.spread;          /* px of travel per slot */
+      }
+
+      showTrack.addEventListener('pointerdown', function (e) {
+        if (show.stacked || e.button === 1 || e.button === 2) return;
+        drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY,
+                 s0: show.target, moved: false, horizontal: false };
+        showTrack.classList.add('dragging');
+      });
+
+      showTrack.addEventListener('pointermove', function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        var dx = e.clientX - drag.x0;
+        var dy = e.clientY - drag.y0;
+
+        /* Decide once whether this gesture is a horizontal drag. Until
+           it is, let the page scroll normally — never hijack a vertical
+           swipe on a phone. */
+        if (!drag.moved) {
+          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+          drag.moved = true;
+          drag.horizontal = Math.abs(dx) > Math.abs(dy);
+          if (drag.horizontal) {
+            try { showTrack.setPointerCapture(drag.id); } catch (err) {}
+          }
+        }
+        if (!drag.horizontal) return;
+
+        e.preventDefault();
+        show.target = drag.s0 - dx / stepPx();
+      });
+
+      function endDrag(e) {
+        if (!drag || (e && e.pointerId !== drag.id)) return;
+        if (drag.horizontal) show.target = Math.round(show.target);
+        try { showTrack.releasePointerCapture(drag.id); } catch (err) {}
+        showTrack.classList.remove('dragging');
+        drag = null;
+      }
+      showTrack.addEventListener('pointerup', endDrag);
+      showTrack.addEventListener('pointercancel', endDrag);
+
+      /* a real drag must not also fire the panel's click/link */
+      showTrack.addEventListener('click', function (e) {
+        if (drag && drag.moved && drag.horizontal) { e.preventDefault(); e.stopPropagation(); }
+      }, true);
+
+      /* never let the browser start its own image drag */
+      showTrack.addEventListener('dragstart', function (e) { e.preventDefault(); });
     })();
 
     /* stacked mode: volunteers pop once on scroll-into-view instead */
