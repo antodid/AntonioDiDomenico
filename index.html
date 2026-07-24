@@ -497,14 +497,23 @@
       border: 0;
       margin: 0;
     }
-    .about-body p { color: var(--mut); line-height: var(--lh-body); margin-bottom: 1.6rem; max-width: 62ch; }
-    .about-body p:last-child { margin-bottom: 0; }
-    /* the opening paragraph carries more weight */
-    .about-lead {
-      font-size: var(--fs-lead);
-      line-height: 1.55;
-      color: var(--ink) !important;
+    /* One size, one leading, one measure for all three paragraphs.
+       The opening one used to run at --fs-lead, which in a column this
+       width dropped it to ~51 characters a line while the others sat at
+       61-67 — three different rhythms stacked on top of each other. It
+       now carries emphasis through colour and weight alone, so the
+       measure stays even down the whole block. */
+    .about-body p {
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      color: var(--mut);
+      margin-bottom: 1.5em;
+      max-width: 66ch;
+      text-wrap: pretty;          /* no single-word last lines */
+      hyphens: none;
     }
+    .about-body p:last-child { margin-bottom: 0; }
+    .about-body p.about-lead { color: var(--ink); font-weight: 500; }
     @media (max-width: 720px) {
       .about-grid { grid-template-columns: 1fr; gap: 1.8rem; }
       .about-label { position: static; }
