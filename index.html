@@ -477,49 +477,37 @@
     html.js .unfold.in .stg:nth-child(8) { transition-delay: 0.70s; }
 
     /* ============================================================
-       9. ABOUT
+       9. ABOUT — one editorial column: eyebrow, short terracotta
+       rule, a lead paragraph, body copy, and the note to the
+       professor set apart as a letter-like aside.
        ============================================================ */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 45fr 55fr;
-      gap: clamp(2rem, 4vw, 4rem);
-      align-items: start;
-      margin-bottom: clamp(4rem, 8vw, 7rem);
-    }
-    .about-left .eyebrow { display: block; margin-bottom: 1.2rem; }
-    /* Sits in a narrow column, so it runs one step below the full-width
-       section titles — same face, same colour, deliberate step down. */
-    .about-headline {
-      font-family: var(--serif);
-      font-size: clamp(1.9rem, 3vw, 2.4rem);
-      line-height: 1.16;
-      color: var(--teal);
-      font-weight: 500;
-      letter-spacing: -0.015em;
-      margin: 0;
-      text-wrap: balance;
-    }
-    .about-headline .accent { color: var(--terra); font-style: italic; }
-    /* short terracotta rule anchors the left column */
-    .about-left::after {
-      content: '';
-      display: block;
+    .about-prose { max-width: 64ch; margin-bottom: clamp(4rem, 8vw, 7rem); }
+    .about-prose .eyebrow { margin-bottom: 1rem; }
+    /* short terracotta rule under the label anchors the block */
+    .about-rule {
       width: 44px; height: 3px;
       background: var(--terra);
       border-radius: 2px;
-      margin-top: 1.6rem;
+      border: 0;
+      margin: 0 0 2.2rem;
     }
-    .about-right p { color: var(--mut); margin-bottom: 1.6rem; line-height: var(--lh-body); max-width: var(--measure); }
-    .about-right p:last-child { margin-bottom: 0; }
-    /* editorial lead: the opening paragraph carries more weight */
-    .about-right p:first-child {
+    .about-prose p { color: var(--mut); line-height: var(--lh-body); margin-bottom: 1.6rem; }
+    /* the opening paragraph carries more weight */
+    .about-lead {
       font-size: var(--fs-lead);
       line-height: 1.55;
-      color: var(--ink);
+      color: var(--ink) !important;
     }
-    @media (max-width: 680px) {
-      .about-grid { grid-template-columns: 1fr; gap: 2.2rem; }
+    /* the direct word to the professor reads as a pinned note */
+    .about-note {
+      margin-top: 2.4rem;
+      padding: 1.5rem 1.7rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--terra);
+      border-radius: 0 12px 12px 0;
     }
+    .about-note p { margin: 0; }
 
     /* ============================================================
        10. IMAGES — parallax + clip-wipe reveal.
@@ -1312,15 +1300,13 @@
        ============================================================ -->
   <section id="about" class="about">
     <div class="wrap unfold">
-      <div class="about-grid">
-        <div class="about-left stg">
-          <span class="eyebrow" data-i18n="about.eyebrow">About</span>
-          <h2 class="about-headline">Italian student, builder &amp; economist incoming at <span class="accent">RSM Rotterdam</span>.</h2>
-        </div>
-        <div class="about-right">
-          <p class="stg" data-i18n="about.p1">I just completed my bachelor’s degree with honours in Economics at Utrecht University, with a minor in Law. During my undergraduate studies I realised I wanted to specialise in finance. That’s why I’ll be moving to Rotterdam in September to begin the Master’s programme in Finance and Investments at RSM.</p>
-          <p class="stg" data-i18n="about.p2">However, over the past three years I’ve often found myself working on several projects at the same time, which have allowed me to gain skills very different from those covered in my undergraduate programme. I’ll tell you more about them below!</p>
-          <p class="stg" data-i18n="about.p3">I created this website for my application to the web optimisation project at RSM because I believe it’s a more engaging way to show what I’ve already learned. So, Prof. Kostadinova, I hope you’ll appreciate this approach, which differs from a traditional cover letter, and I also hope to have the opportunity to join the team. Thank you!</p>
+      <div class="about-prose">
+        <h2 class="eyebrow stg" data-i18n="about.eyebrow">About</h2>
+        <hr class="about-rule stg" aria-hidden="true">
+        <p class="about-lead stg" data-i18n="about.p1">I just completed my bachelor’s degree with honours in Economics at Utrecht University, with a minor in Law. During my undergraduate studies I realised I wanted to specialise in finance. That’s why I’ll be moving to Rotterdam in September to begin the Master’s programme in Finance and Investments at RSM.</p>
+        <p class="stg" data-i18n="about.p2">However, over the past three years I’ve often found myself working on several projects at the same time, which have allowed me to gain skills very different from those covered in my undergraduate programme. I’ll tell you more about them below!</p>
+        <div class="about-note stg">
+          <p data-i18n="about.p3">I created this website for my application to the web optimisation project at RSM because I believe it’s a more engaging way to show what I’ve already learned. So, Prof. Kostadinova, I hope you’ll appreciate this approach, which differs from a traditional cover letter, and I also hope to have the opportunity to join the team. Thank you!</p>
         </div>
       </div>
 
