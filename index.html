@@ -668,6 +668,7 @@
     .vj-name { font-family: var(--serif); font-size: var(--fs-h3); line-height: 1.15; color: var(--teal); }
     .vj-name a { border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color 0.25s, border-color 0.25s; }
     .vj-name a:hover { color: var(--teal); border-color: var(--teal); }
+    .vj-years { font-size: var(--fs-meta); color: var(--mut); font-family: var(--sans); font-weight: 500; white-space: nowrap; }
     .vj-course { font-size: var(--fs-meta); color: var(--mut); margin-top: 0.5rem; line-height: 1.55; }
     .vj-thesis-link {
       display: inline-block;
@@ -1127,6 +1128,11 @@
       max-width: 20ch;
       margin-bottom: 3rem;
     }
+    .contact-note {
+      color: var(--mut-d);
+      max-width: 46ch;
+      margin: -1.6rem 0 2.6rem;
+    }
     .contact-links { display: flex; gap: 2.5rem; flex-wrap: wrap; }
     .contact-links a {
       font-family: var(--serif);
@@ -1288,11 +1294,9 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="wrap">
       <img class="hero-photo" src="images/antonio.jpg" alt="Portrait of Antonio Di Domenico" width="200" height="200">
-      <span class="eyebrow" data-i18n="hero.eyebrow">MSc Finance · RSM Rotterdam</span>
+      <span class="eyebrow" data-i18n="hero.eyebrow">MSc Finance &amp; Investments · RSM Rotterdam</span>
       <!-- JS splits this into per-character spans for the filmic reveal -->
       <h1 class="hero-name" id="heroName">Antonio Di Domenico</h1>
-      <!-- writes itself out once after the name finishes, then rests -->
-      <p class="hero-line" id="heroLine" data-i18n="hero.line">A portfolio, built by hand, for the work I want to do next.</p>
       <div class="hero-cta">
         <a href="#projects" class="btn btn-fill magnetic"  data-i18n="hero.cta1">See my work</a>
         <a href="#contact"  class="btn btn-ghost magnetic" data-i18n="hero.cta2">Get in touch</a>
@@ -1314,9 +1318,9 @@
           <h2 class="about-headline">Italian student, builder &amp; economist incoming at <span class="accent">RSM Rotterdam</span>.</h2>
         </div>
         <div class="about-right">
-          <p class="stg" data-i18n="about.p1">I'm Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.</p>
-          <p class="stg" data-i18n="about.p2">Since then I've followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I've built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.</p>
-          <p class="stg" data-i18n="about.p3">This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I'm in the middle of something I don't yet know how to finish.</p>
+          <p class="stg" data-i18n="about.p1">I just completed my bachelor’s degree with honours in Economics at Utrecht University, with a minor in Law. During my undergraduate studies I realised I wanted to specialise in finance. That’s why I’ll be moving to Rotterdam in September to begin the Master’s programme in Finance and Investments at RSM.</p>
+          <p class="stg" data-i18n="about.p2">However, over the past three years I’ve often found myself working on several projects at the same time, which have allowed me to gain skills very different from those covered in my undergraduate programme. I’ll tell you more about them below!</p>
+          <p class="stg" data-i18n="about.p3">I created this website for my application to the web optimisation project at RSM because I believe it’s a more engaging way to show what I’ve already learned. So, Prof. Kostadinova, I hope you’ll appreciate this approach, which differs from a traditional cover letter, and I also hope to have the opportunity to join the team. Thank you!</p>
         </div>
       </div>
 
@@ -1390,23 +1394,23 @@
           <div class="vj-item vj-i1">
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-uu.png" alt="" loading="lazy" decoding="async" width="231" height="231"><span class="vj-badge-txt">UU</span></div>
             <div>
-              <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a></div>
-              <div class="vj-course" data-i18n="edu.uu">BSc Economics &amp; Business Economics · Minor in Law · Honours Programme</div>
-              <a class="vj-thesis-link" href="#thesis" data-i18n="edu.uuthesis">Bachelor thesis · graded 9.2 ↓</a>
+              <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a> <span class="vj-years">· 2023–2026</span></div>
+              <div class="vj-course" data-i18n="edu.uu">BSc Economics and Business Economics, with a minor in Law and the Honours Programme alongside it. I finished with a 7.85 average and a thesis graded 9.2.</div>
+              <a class="vj-thesis-link" href="#thesis" data-i18n="edu.uuthesis">→ Read about the thesis below</a>
             </div>
           </div>
           <div class="vj-item vj-i2">
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-puc.png" alt="" loading="lazy" decoding="async" width="377" height="377"><span class="vj-badge-txt">PUC</span></div>
             <div>
-              <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a></div>
-              <div class="vj-course" data-i18n="edu.puc">Exchange semester · Business, Law &amp; Portuguese coursework</div>
+              <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a> <span class="vj-years">· 2025–2026</span></div>
+              <div class="vj-course" data-i18n="edu.puc">One semester in Rio de Janeiro, taking business, law and Portuguese. Almost everything was assessed through case studies and group work, which was a very different way of studying. Most of my Portuguese I learned outside the classroom anyway.</div>
             </div>
           </div>
           <div class="vj-item vj-i3 vj-final">
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-rsm.png" alt="" loading="lazy" decoding="async" width="402" height="402"><span class="vj-badge-txt">RSM</span></div>
             <div>
-              <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM · Erasmus University Rotterdam</a></div>
-              <div class="vj-course" data-i18n="edu.rsm">MSc Finance &amp; Investments · 2026–2027</div>
+              <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM · Erasmus University Rotterdam</a> <span class="vj-years">· 2026–2027</span></div>
+              <div class="vj-course" data-i18n="edu.rsm">MSc Finance and Investments. This is where I’m heading in September.</div>
             </div>
           </div>
         </div>
@@ -1424,7 +1428,7 @@
       <span class="eyebrow stg" data-i18n="thesis.eyebrow">Research</span>
       <h2 class="thesis-title stg" data-i18n="thesis.title">Do Chinese Capital Controls Raise the Cost of Debt for European Firms?</h2>
       <p class="thesis-sub stg" data-i18n="thesis.sub">Bachelor Thesis · Utrecht University · Graded 9.2 / 10</p>
-      <p class="body stg" data-i18n="thesis.p">My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I'm proudest of, not for the number but because the question was mine.</p>
+      <p class="body stg" data-i18n="thesis.p">I wanted to know whether the restrictions Beijing places on cross-border capital flows show up in what European companies pay to borrow. To find out I used twenty-two years of data on the 600 companies in the STOXX Europe 600, and most of my time went into cleaning and matching that data long before I ran anything. It’s the grade I’m proudest of, mainly because the question was mine.</p>
 
       <!-- Stats first, then the stylised chart in its own band below —
            the line used to be absolutely positioned across the whole
@@ -1462,25 +1466,47 @@
         <div class="xtl-item xtl-lead">
           <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-exprimo.png" alt="Ex Primo" loading="lazy" decoding="async" width="204" height="204"><span class="vj-badge-txt">EP</span></div>
           <div>
-            <div class="xp-period">Jun 2026 – present</div>
+            <div class="xp-period" data-i18n="exp1.period">Jun 2026 – Present</div>
             <h3 class="xp-role" data-i18n="exp1.role">Accounting Assistant</h3>
-            <div class="xp-org" data-i18n="exp1.org">Ex Primo · Communication &amp; Marketing Agency — Italy</div>
-            <p class="xp-desc" data-i18n="exp1.desc">Support client accounting for a pension fund at a communication and marketing agency, reporting to the Head of Administration.</p>
+            <div class="xp-org" data-i18n="exp1.org">Ex Primo, Italy</div>
+            <p class="xp-desc" data-i18n="exp1.desc">I support client accounting for a pension fund at a communication and marketing agency, working directly with the Head of Administration. Careful work, with deadlines that don’t move.</p>
           </div>
         </div>
 
-        <!-- 2. AthenaSummary -->
+        <!-- 2. AI Scouts — no brand mark, so the badge carries initials -->
+        <div class="xtl-item">
+          <div class="vj-badge" aria-hidden="true"><span class="vj-badge-txt">AI</span></div>
+          <div>
+            <div class="xp-period" data-i18n="exp2.period">Feb – May 2026</div>
+            <h3 class="xp-role" data-i18n="exp2.role">AI Scouts</h3>
+            <div class="xp-org" data-i18n="exp2.org">Berkeley-led programme, remote</div>
+            <p class="xp-desc" data-i18n="exp2.desc">I was one of roughly 3% of applicants accepted onto this programme. Over forty hours I learned to build AI-powered web applications with Lovable, Supabase, Bolt, GitHub, Antigravity and Claude, and I helped other participants finish their own projects.</p>
+          </div>
+        </div>
+
+        <!-- 3. Honours Programme — public relations -->
+        <div class="xtl-item">
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-uu.png" alt="Utrecht University" loading="lazy" decoding="async" width="231" height="231"><span class="vj-badge-txt">UU</span></div>
+          <div>
+            <div class="xp-period" data-i18n="exp3.period">Feb 2024 – Jul 2025</div>
+            <h3 class="xp-role" data-i18n="exp3.role">Head of Public Relations</h3>
+            <div class="xp-org" data-i18n="exp3.org">Utrecht University Honours Programme</div>
+            <p class="xp-desc" data-i18n="exp3.desc">I led a small editorial team across faculties, publishing the monthly Honours newsletter and running the community’s LinkedIn page. Two years of getting an issue out every month, on time.</p>
+          </div>
+        </div>
+
+        <!-- 4. AthenaSummary -->
         <div class="xtl-item">
           <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-athena.png" alt="AthenaSummary" loading="lazy" decoding="async" width="196" height="196"><span class="vj-badge-txt">AS</span></div>
           <div>
-            <div class="xp-period">Oct 2024 – Jun 2025</div>
-            <h3 class="xp-role" data-i18n="exp2.role">Mathematics & Statistics Tutor</h3>
-            <div class="xp-org" data-i18n="exp2.org">AthenaSummary</div>
-            <p class="xp-desc" data-i18n="exp2.desc">Taught small-group tutorials to first-year Economics students and built the course material from scratch — slides, worked examples and exam practice.</p>
+            <div class="xp-period" data-i18n="exp4.period">Oct 2024 – Jun 2025</div>
+            <h3 class="xp-role" data-i18n="exp4.role">Mathematics and Statistics Tutor</h3>
+            <div class="xp-org" data-i18n="exp4.org">AthenaSummary</div>
+            <p class="xp-desc" data-i18n="exp4.desc">I taught small groups of first-year Economics students, between five and twenty at a time, and wrote all the material myself: slides, worked examples and practice exams.</p>
           </div>
         </div>
 
-        <!-- 3. Picnic & Jumbo -->
+        <!-- 5. Picnic & Jumbo -->
         <div class="xtl-item">
           <!-- drawn crate icon: both employer logos already appear as
                tiles under the description, so no single brand here -->
@@ -1495,10 +1521,10 @@
             </svg>
           </div>
           <div>
-            <div class="xp-period">Feb 2024 – Present</div>
-            <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
-            <div class="xp-org" data-i18n="exp3.org">Picnic & Jumbo</div>
-            <p class="xp-desc" data-i18n="exp3.desc">Order preparation and fulfilment for two of the largest grocery operators in the Netherlands, held alongside a full-time degree.</p>
+            <div class="xp-period" data-i18n="exp5.period">Feb 2024 – Present</div>
+            <h3 class="xp-role" data-i18n="exp5.role">Warehouse Operations</h3>
+            <div class="xp-org" data-i18n="exp5.org">Picnic &amp; Jumbo</div>
+            <p class="xp-desc" data-i18n="exp5.desc">Order preparation and fulfilment for two of the largest grocery operators in the Netherlands, kept up part-time alongside a full-time degree.</p>
             <!-- both employers shown, since this entry covers two -->
             <div class="xp-logos" aria-hidden="true">
               <img src="images/logo-picnic.png" alt="Picnic" loading="lazy" decoding="async" width="447" height="447">
@@ -1679,21 +1705,21 @@
 
       <div class="show-meta" id="showMeta" aria-live="polite">
         <div class="meta-item">
-          <span class="meta-index">01 / 03</span>
+          <span class="meta-index">01 / 03 · <span data-i18n="sp1.kicker">Map app</span></span>
           <h3 data-i18n="sp1.title">Noce</h3>
-          <p data-i18n="sp1.cap">Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.</p>
+          <p data-i18n="sp1.cap">A map of what maps miss: hot springs, unmarked paths, the places you only hear about from someone local. I built it during AI Scouts and named it after my grandmother.</p>
           <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span></div>
         </div>
         <div class="meta-item">
-          <span class="meta-index">02 / 03</span>
+          <span class="meta-index">02 / 03 · <span data-i18n="sp2.kicker">Editorial</span></span>
           <h3 data-i18n="sp2.title">Honours Newsletter</h3>
-          <p data-i18n="sp2.cap">Led the editorial team and LinkedIn of the Utrecht Honours Programme for two years.</p>
+          <p data-i18n="sp2.cap">Two years leading the editorial team and the LinkedIn page of the Utrecht Honours Programme. Writing, editing, and making sure it actually went out each month.</p>
           <div class="chips"><span class="chip">Canva</span><span class="chip">LinkedIn</span></div>
         </div>
         <div class="meta-item">
-          <span class="meta-index">03 / 03</span>
+          <span class="meta-index">03 / 03 · <span data-i18n="sp3.kicker">Community</span></span>
           <h3 data-i18n="sp3.title">Volunteers</h3>
-          <p data-i18n="sp3.cap">Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.</p>
+          <p data-i18n="sp3.cap">I’m one of the organisers of the Utrecht chapter, where we ran the city’s first food drive for the local food bank: five Jumbo stores over one weekend, materials in Dutch and English, and a lot of student volunteers. I worked on the partnership with the regional manager and on recruiting the team.</p>
           <div class="chips"><span class="chip">EN / NL</span><span class="chip">Canva</span></div>
         </div>
       </div>
@@ -1720,7 +1746,8 @@
   <section id="contact" class="teal">
     <div class="wrap unfold">
       <span class="eyebrow stg" data-i18n="contact.eyebrow">Contact</span>
-      <h2 class="contact-title stg" data-i18n="contact.title">Always open to interesting projects and conversations.</h2>
+      <h2 class="contact-title stg" data-i18n="contact.title">Looking for me? You can find me here!</h2>
+      <p class="contact-note stg" data-i18n="contact.note">I’m in Utrecht until the end of August, and in Rotterdam from September. Sixteen hours a week are free.</p>
       <div class="contact-links stg">
         <a class="magnetic" href="mailto:antoniodidomenico.work@gmail.com"><span data-i18n="contact.email">Email</span> <span class="arrow">↗</span></a>
         <a class="magnetic" href="https://www.linkedin.com/in/adidomenico0/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
@@ -1758,50 +1785,54 @@
       en: {
         'nav.about': 'About', 'nav.experience': 'Experience', 'nav.projects': 'Projects', 'nav.contact': 'Contact',
 
-        'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
-        'hero.line': 'A portfolio, built by hand, for the work I want to do next.',
+        'hero.eyebrow': 'MSc Finance &amp; Investments · RSM Rotterdam',
         'hero.cta1': 'See my work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'About',
-        'about.p1': 'I’m Antonio, an Italian student who came to the Netherlands at eighteen to study economics without ever having taken an economics class before. That gap turned out to be the interesting part — I had to build the foundation from scratch, and I found I liked it.',
-        'about.p2': 'Since then I’ve followed my curiosity more than any plan. I spent a semester in Rio de Janeiro, learned Portuguese in bars and on the back of motorbikes rather than in classrooms, and came back more comfortable with not knowing what comes next. I’ve built a map app, run a student newsletter, tutored statistics, and organised a food drive — not because they fit a strategy, but because each one let me make or fix something real.',
-        'about.p3': 'This September I start an MSc in Finance at RSM Rotterdam. What connects everything I do is the same instinct: I learn fastest when I’m in the middle of something I don’t yet know how to finish.',
+        'about.p1': 'I just completed my bachelor’s degree with honours in Economics at Utrecht University, with a minor in Law. During my undergraduate studies I realised I wanted to specialise in finance. That’s why I’ll be moving to Rotterdam in September to begin the Master’s programme in Finance and Investments at RSM.',
+        'about.p2': 'However, over the past three years I’ve often found myself working on several projects at the same time, which have allowed me to gain skills very different from those covered in my undergraduate programme. I’ll tell you more about them below!',
+        'about.p3': 'I created this website for my application to the web optimisation project at RSM because I believe it’s a more engaging way to show what I’ve already learned. So, Prof. Kostadinova, I hope you’ll appreciate this approach, which differs from a traditional cover letter, and I also hope to have the opportunity to join the team. Thank you!',
+
         'edu.eyebrow': 'Education',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uu': 'BSc Economics &amp; Business Economics · Minor in Law · Honours Programme',
-        'edu.puc': 'Exchange semester · Business, Law &amp; Portuguese coursework',
-        'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
-        'edu.uuthesis': 'Bachelor thesis · graded 9.2 ↓',
+        'edu.uu': 'BSc Economics and Business Economics, with a minor in Law and the Honours Programme alongside it. I finished with a 7.85 average and a thesis graded 9.2.',
+        'edu.uuthesis': '→ Read about the thesis below',
+        'edu.puc': 'One semester in Rio de Janeiro, taking business, law and Portuguese. Almost everything was assessed through case studies and group work, which was a very different way of studying. Most of my Portuguese I learned outside the classroom anyway.',
+        'edu.rsm': 'MSc Finance and Investments. This is where I’m heading in September.',
+
         'thesis.eyebrow': 'Research',
         'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
         'thesis.sub': 'Bachelor Thesis · Utrecht University · Graded 9.2 / 10',
-        'thesis.p': 'My thesis examines whether Chinese capital controls — the restrictions Beijing places on cross-border capital flows — make it more expensive for European companies to borrow. I tested this on panel data of 600 STOXX Europe 600 firms across 22 years. The result was a 9.2 — the grade I’m proudest of, not for the number but because the question was mine.',
+        'thesis.p': 'I wanted to know whether the restrictions Beijing places on cross-border capital flows show up in what European companies pay to borrow. To find out I used twenty-two years of data on the 600 companies in the STOXX Europe 600, and most of my time went into cleaning and matching that data long before I ran anything. It’s the grade I’m proudest of, mainly because the question was mine.',
         'thesis.s1': 'STOXX Europe 600 firms',
         'thesis.s2': 'years of panel data',
         'thesis.s3': 'final grade',
-       
-
-        'show.eyebrow': 'Selected Projects',
-        'show.title': 'Three projects, built out of curiosity.',
-        'sp1.title': 'Noce',
-        'sp1.cap': 'Noce — a map of what maps miss. Built during AI Scouts, named after my grandmother.',
-        'sp2.title': 'Honours Newsletter',
-        'sp2.cap': 'Led the editorial team and LinkedIn of the Utrecht Honours Programme for two years.',
-        'sp3.title': 'Volunteers',
-        'sp3.cap': 'Launched the first Utrecht food drive — five Jumbo stores, bilingual EN/NL materials, volunteers recruited and coordinated.',
-
 
         'exp.eyebrow': 'Experience',
         'exp.title': 'Work, study, and everything in between.',
-        'exp1.role': 'Accounting Assistant', 'exp1.org': 'Ex Primo · Communication &amp; Marketing Agency — Italy',
-        'exp1.desc': 'Support client accounting for a pension fund at a communication and marketing agency, reporting to the Head of Administration.',
-        'exp2.role': 'Mathematics &amp; Statistics Tutor', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Taught small-group tutorials to first-year Economics students and built the course material from scratch — slides, worked examples and exam practice.',
-        'exp3.role': 'Warehouse Operations', 'exp3.org': 'Picnic &amp; Jumbo',
-        'exp3.desc': 'Order preparation and fulfilment for two of the largest grocery operators in the Netherlands, held alongside a full-time degree.',
+        'exp1.period': 'Jun 2026 – Present', 'exp1.role': 'Accounting Assistant', 'exp1.org': 'Ex Primo, Italy',
+        'exp1.desc': 'I support client accounting for a pension fund at a communication and marketing agency, working directly with the Head of Administration. Careful work, with deadlines that don’t move.',
+        'exp2.period': 'Feb – May 2026', 'exp2.role': 'AI Scouts', 'exp2.org': 'Berkeley-led programme, remote',
+        'exp2.desc': 'I was one of roughly 3% of applicants accepted onto this programme. Over forty hours I learned to build AI-powered web applications with Lovable, Supabase, Bolt, GitHub, Antigravity and Claude, and I helped other participants finish their own projects.',
+        'exp3.period': 'Feb 2024 – Jul 2025', 'exp3.role': 'Head of Public Relations', 'exp3.org': 'Utrecht University Honours Programme',
+        'exp3.desc': 'I led a small editorial team across faculties, publishing the monthly Honours newsletter and running the community’s LinkedIn page. Two years of getting an issue out every month, on time.',
+        'exp4.period': 'Oct 2024 – Jun 2025', 'exp4.role': 'Mathematics and Statistics Tutor', 'exp4.org': 'AthenaSummary',
+        'exp4.desc': 'I taught small groups of first-year Economics students, between five and twenty at a time, and wrote all the material myself: slides, worked examples and practice exams.',
+        'exp5.period': 'Feb 2024 – Present', 'exp5.role': 'Warehouse Operations', 'exp5.org': 'Picnic &amp; Jumbo',
+        'exp5.desc': 'Order preparation and fulfilment for two of the largest grocery operators in the Netherlands, kept up part-time alongside a full-time degree.',
+
+        'show.eyebrow': 'Selected Projects',
+        'show.title': 'Three projects, built out of curiosity.',
+        'sp1.kicker': 'Map app', 'sp1.title': 'Noce',
+        'sp1.cap': 'A map of what maps miss: hot springs, unmarked paths, the places you only hear about from someone local. I built it during AI Scouts and named it after my grandmother.',
+        'sp2.kicker': 'Editorial', 'sp2.title': 'Honours Newsletter',
+        'sp2.cap': 'Two years leading the editorial team and the LinkedIn page of the Utrecht Honours Programme. Writing, editing, and making sure it actually went out each month.',
+        'sp3.kicker': 'Community', 'sp3.title': 'Volunteers',
+        'sp3.cap': 'I’m one of the organisers of the Utrecht chapter, where we ran the city’s first food drive for the local food bank: five Jumbo stores over one weekend, materials in Dutch and English, and a lot of student volunteers. I worked on the partnership with the regional manager and on recruiting the team.',
 
         'contact.eyebrow': 'Contact',
-        'contact.title': 'Always open to interesting projects and conversations.',
+        'contact.title': 'Looking for me? You can find me here!',
+        'contact.note': 'I’m in Utrecht until the end of August, and in Rotterdam from September. Sixteen hours a week are free.',
         'contact.email': 'Email',
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       },
@@ -1810,51 +1841,54 @@
       it: {
         'nav.about': 'Chi sono', 'nav.experience': 'Esperienza', 'nav.projects': 'Progetti', 'nav.contact': 'Contatti',
 
-        'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
-        'hero.line': 'Un portfolio, costruito a mano, per il lavoro che voglio fare adesso.',
+        'hero.eyebrow': 'MSc Finance &amp; Investments · RSM Rotterdam',
         'hero.cta1': 'Guarda i progetti', 'hero.cta2': 'Scrivimi', 'hero.scroll': 'Scorri',
 
         'about.eyebrow': 'Chi sono',
-        'about.p1': 'Sono Antonio, uno studente italiano arrivato nei Paesi Bassi a diciotto anni per studiare economia senza aver mai seguito un corso di economia prima. Quel vuoto si è rivelato la parte interessante: ho dovuto costruire le fondamenta da zero, e ho scoperto che mi piaceva.',
-        'about.p2': 'Da allora ho seguito la curiosità più che un piano. Ho passato un semestre a Rio de Janeiro, ho imparato il portoghese nei bar e sul sellino di una moto più che in aula, e sono tornato più a mio agio con il non sapere cosa viene dopo. Ho costruito un’app di mappe, curato una newsletter studentesca, fatto tutoraggio di statistica e organizzato una raccolta alimentare — non perché rientrassero in una strategia, ma perché ognuna mi ha permesso di costruire o sistemare qualcosa di concreto.',
-        'about.p3': 'A settembre inizio un MSc in Finance alla RSM di Rotterdam. Ciò che lega tutto quello che faccio è lo stesso istinto: imparo più in fretta quando sono nel mezzo di qualcosa che non so ancora come finire.',
+        'about.p1': 'Ho appena concluso la laurea triennale in Economia all’Università di Utrecht, con lode e con un minor in Diritto. Durante il percorso ho capito di volermi specializzare in finanza: per questo a settembre mi trasferisco a Rotterdam per iniziare il Master in Finance and Investments alla RSM.',
+        'about.p2': 'Negli ultimi tre anni però mi sono ritrovato spesso a portare avanti più progetti in parallelo, che mi hanno fatto acquisire competenze molto diverse da quelle del corso di laurea. Te ne parlo qui sotto!',
+        'about.p3': 'Ho creato questo sito per la mia candidatura al progetto di ottimizzazione web della RSM, perché credo sia un modo più coinvolgente di mostrare quello che ho già imparato. Quindi, Prof.ssa Kostadinova, spero apprezzerà questo approccio diverso da una lettera di presentazione tradizionale, e spero anche di avere l’occasione di entrare nel team. Grazie!',
 
         'edu.eyebrow': 'Formazione',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uu': 'BSc Economics &amp; Business Economics · Minor in Diritto · Honours Programme',
-        'edu.puc': 'Semestre di scambio · Corsi di Business, Diritto e Portoghese',
-        'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
-        'edu.uuthesis': 'Tesi triennale · voto 9,2 ↓',
+        'edu.uu': 'BSc Economics and Business Economics, con un minor in Diritto e l’Honours Programme in parallelo. Ho chiuso con una media di 7,85 e una tesi valutata 9,2.',
+        'edu.uuthesis': '→ Leggi della tesi qui sotto',
+        'edu.puc': 'Un semestre a Rio de Janeiro, tra corsi di business, diritto e portoghese. Quasi tutto veniva valutato con case study e lavori di gruppo, un modo di studiare molto diverso. Il portoghese comunque l’ho imparato soprattutto fuori dall’aula.',
+        'edu.rsm': 'MSc Finance and Investments. È qui che mi dirigo a settembre.',
 
         'thesis.eyebrow': 'Ricerca',
         'thesis.title': 'I controlli sui capitali cinesi aumentano il costo del debito per le imprese europee?',
         'thesis.sub': 'Tesi triennale · Utrecht University · Voto 9,2 / 10',
-        'thesis.p': 'La mia tesi esamina se i controlli sui capitali cinesi — le restrizioni che Pechino impone ai flussi di capitale transfrontalieri — rendano più costoso l’indebitamento per le aziende europee. Ho verificato l’ipotesi su dati panel di 600 imprese dello STOXX Europe 600 lungo 22 anni. Il risultato è stato un 9,2 — il voto di cui vado più fiero, non per il numero ma perché la domanda era mia.',
+        'thesis.p': 'Volevo capire se le restrizioni che Pechino impone ai flussi di capitale transfrontalieri si riflettano su quanto le aziende europee pagano per indebitarsi. Per scoprirlo ho usato ventidue anni di dati sulle 600 società dello STOXX Europe 600, e gran parte del tempo se n’è andata nel pulire e allineare quei dati, molto prima di far girare qualsiasi analisi. È il voto di cui vado più fiero, soprattutto perché la domanda era mia.',
         'thesis.s1': 'imprese dello STOXX Europe 600',
         'thesis.s2': 'anni di dati panel',
         'thesis.s3': 'voto finale',
 
-        'show.eyebrow': 'Progetti selezionati',
-        'show.title': 'Tre progetti, nati dalla curiosità.',
-        'sp1.title': 'Noce',
-        'sp1.cap': 'Noce — una mappa di ciò che le mappe si perdono. Costruita durante AI Scouts, porta il nome di mia nonna.',
-        'sp2.title': 'Honours Newsletter',
-        'sp2.cap': 'Ho guidato per due anni la redazione e il LinkedIn dell’Honours Programme di Utrecht.',
-        'sp3.title': 'Volontariato',
-        'sp3.cap': 'Ho lanciato la prima raccolta alimentare di Utrecht — cinque punti vendita Jumbo, materiali bilingue EN/NL, volontari reclutati e coordinati.',
-
-
         'exp.eyebrow': 'Esperienza',
         'exp.title': 'Lavoro, studio e tutto quello che sta in mezzo.',
-        'exp1.role': 'Assistente contabile', 'exp1.org': 'Ex Primo · Agenzia di comunicazione e marketing — Italia',
-        'exp1.desc': 'Supporto alla contabilità clienti per un fondo pensione presso un’agenzia di comunicazione e marketing, rispondendo al Responsabile Amministrativo.',
-        'exp2.role': 'Tutor di Matematica e Statistica', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Tutorati in piccoli gruppi per studenti di Economia del primo anno, con l’intero materiale del corso costruito da zero — slide, esempi svolti ed esercitazioni d’esame.',
-        'exp3.role': 'Operazioni di magazzino', 'exp3.org': 'Picnic &amp; Jumbo',
-        'exp3.desc': 'Preparazione ed evasione degli ordini per due dei maggiori operatori della grande distribuzione olandese, portata avanti insieme a un corso di laurea a tempo pieno.',
+        'exp1.period': 'Giu 2026 – oggi', 'exp1.role': 'Assistente contabile', 'exp1.org': 'Ex Primo, Italia',
+        'exp1.desc': 'Seguo la contabilità clienti per un fondo pensione presso un’agenzia di comunicazione e marketing, lavorando direttamente con il Responsabile Amministrativo. Lavoro di precisione, con scadenze che non si spostano.',
+        'exp2.period': 'Feb – Mag 2026', 'exp2.role': 'AI Scouts', 'exp2.org': 'Programma guidato da Berkeley, da remoto',
+        'exp2.desc': 'Sono stato uno di circa il 3% dei candidati ammessi al programma. In oltre quaranta ore ho imparato a costruire applicazioni web basate sull’IA con Lovable, Supabase, Bolt, GitHub, Antigravity e Claude, e ho aiutato altri partecipanti a portare a termine i loro progetti.',
+        'exp3.period': 'Feb 2024 – Lug 2025', 'exp3.role': 'Responsabile Relazioni Esterne', 'exp3.org': 'Honours Programme, Università di Utrecht',
+        'exp3.desc': 'Ho guidato una piccola redazione trasversale alle facoltà, pubblicando la newsletter mensile dell’Honours Programme e gestendo la pagina LinkedIn della community. Due anni a far uscire un numero ogni mese, puntuale.',
+        'exp4.period': 'Ott 2024 – Giu 2025', 'exp4.role': 'Tutor di Matematica e Statistica', 'exp4.org': 'AthenaSummary',
+        'exp4.desc': 'Ho insegnato a piccoli gruppi di studenti di Economia del primo anno, da cinque a venti per volta, e ho scritto tutto il materiale io: slide, esempi svolti e simulazioni d’esame.',
+        'exp5.period': 'Feb 2024 – oggi', 'exp5.role': 'Operazioni di magazzino', 'exp5.org': 'Picnic &amp; Jumbo',
+        'exp5.desc': 'Preparazione ed evasione degli ordini per due dei maggiori operatori della grande distribuzione olandese, portata avanti part-time insieme a un corso di laurea a tempo pieno.',
+
+        'show.eyebrow': 'Progetti selezionati',
+        'show.title': 'Tre progetti, nati dalla curiosità.',
+        'sp1.kicker': 'App di mappe', 'sp1.title': 'Noce',
+        'sp1.cap': 'Una mappa di ciò che le mappe si perdono: sorgenti termali, sentieri non segnalati, i posti di cui senti parlare solo da chi è del posto. L’ho costruita durante AI Scouts e le ho dato il nome di mia nonna.',
+        'sp2.kicker': 'Editoriale', 'sp2.title': 'Honours Newsletter',
+        'sp2.cap': 'Due anni alla guida della redazione e della pagina LinkedIn dell’Honours Programme di Utrecht. Scrivere, editare e assicurarsi che il numero uscisse davvero ogni mese.',
+        'sp3.kicker': 'Comunità', 'sp3.title': 'Volontariato',
+        'sp3.cap': 'Sono uno degli organizzatori della sezione di Utrecht, dove abbiamo realizzato la prima raccolta alimentare della città per il banco alimentare locale: cinque punti vendita Jumbo in un fine settimana, materiali in olandese e inglese, e tanti studenti volontari. Mi sono occupato della partnership con il direttore regionale e del reclutamento della squadra.',
 
         'contact.eyebrow': 'Contatti',
-        'contact.title': 'Sempre aperto a progetti e conversazioni interessanti.',
+        'contact.title': 'Mi cerchi? Mi trovi qui!',
+        'contact.note': 'Sono a Utrecht fino a fine agosto, e a Rotterdam da settembre. Ho sedici ore a settimana libere.',
         'contact.email': 'Email',
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       },
@@ -1863,51 +1897,54 @@
       nl: {
         'nav.about': 'Over mij', 'nav.experience': 'Ervaring', 'nav.projects': 'Projecten', 'nav.contact': 'Contact',
 
-        'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
-        'hero.line': 'Een portfolio, met de hand gebouwd, voor het werk dat ik hierna wil doen.',
+        'hero.eyebrow': 'MSc Finance &amp; Investments · RSM Rotterdam',
         'hero.cta1': 'Bekijk mijn werk', 'hero.cta2': 'Neem contact op', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'Over mij',
-        'about.p1': 'Ik ben Antonio, een Italiaanse student die op zijn achttiende naar Nederland kwam om economie te studeren, zonder ooit een les economie te hebben gevolgd. Juist dat gat bleek het interessante deel: ik moest het fundament vanaf nul opbouwen, en ik merkte dat ik dat leuk vond.',
-        'about.p2': 'Sindsdien heb ik meer mijn nieuwsgierigheid gevolgd dan een plan. Ik bracht een semester door in Rio de Janeiro, leerde Portugees in bars en achter op een motor in plaats van in een collegezaal, en kwam terug met meer rust bij het niet weten wat er komt. Ik bouwde een kaart-app, leidde een studentennieuwsbrief, gaf bijles statistiek en organiseerde een voedselinzameling — niet omdat ze in een strategie pasten, maar omdat ik bij elk daarvan iets echts kon maken of herstellen.',
-        'about.p3': 'In september begin ik aan een MSc Finance aan RSM Rotterdam. Wat alles wat ik doe verbindt is hetzelfde instinct: ik leer het snelst wanneer ik midden in iets zit dat ik nog niet weet af te maken.',
+        'about.p1': 'Ik heb net mijn bachelor Economie cum laude afgerond aan de Universiteit Utrecht, met een minor Rechten. Tijdens mijn bachelor merkte ik dat ik me wilde specialiseren in finance. Daarom verhuis ik in september naar Rotterdam om aan de RSM te beginnen aan de master Finance and Investments.',
+        'about.p2': 'De afgelopen drie jaar werkte ik echter vaak aan meerdere projecten tegelijk, waardoor ik vaardigheden opdeed die ver buiten mijn bachelor lagen. Hieronder vertel ik er meer over!',
+        'about.p3': 'Ik heb deze website gemaakt voor mijn sollicitatie op het weboptimalisatieproject van RSM, omdat het volgens mij een boeiendere manier is om te laten zien wat ik al geleerd heb. Prof. Kostadinova, ik hoop dat u deze aanpak waardeert — anders dan een klassieke motivatiebrief — en dat ik de kans krijg om bij het team te komen. Dank u wel!',
 
         'edu.eyebrow': 'Opleiding',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uu': 'BSc Economics &amp; Business Economics · Minor Rechten · Honours Programme',
-        'edu.puc': 'Uitwisselingssemester · Vakken Business, Recht &amp; Portugees',
-        'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
-        'edu.uuthesis': 'Bachelorscriptie · beoordeeld met 9,2 ↓',
+        'edu.uu': 'BSc Economics and Business Economics, met een minor Rechten en het Honours Programme ernaast. Ik sloot af met een gemiddelde van 7,85 en een scriptie beoordeeld met 9,2.',
+        'edu.uuthesis': '→ Lees hieronder over de scriptie',
+        'edu.puc': 'Eén semester in Rio de Janeiro, met vakken in business, recht en Portugees. Bijna alles werd getoetst met casussen en groepswerk, een heel andere manier van studeren. Mijn Portugees leerde ik toch vooral buiten het lokaal.',
+        'edu.rsm': 'MSc Finance and Investments. Hier ga ik in september naartoe.',
 
         'thesis.eyebrow': 'Onderzoek',
         'thesis.title': 'Verhogen Chinese kapitaalcontroles de kosten van schuld voor Europese bedrijven?',
         'thesis.sub': 'Bachelorscriptie · Universiteit Utrecht · Beoordeeld met 9,2 / 10',
-        'thesis.p': 'Mijn scriptie onderzoekt of Chinese kapitaalcontroles — de beperkingen die Peking oplegt aan grensoverschrijdende kapitaalstromen — het duurder maken voor Europese bedrijven om te lenen. Ik toetste dit op paneldata van 600 STOXX Europe 600-bedrijven over 22 jaar. Het resultaat was een 9,2 — het cijfer waar ik het meest trots op ben, niet om het getal maar omdat de vraag van mij was.',
+        'thesis.p': 'Ik wilde weten of de beperkingen die Peking oplegt aan grensoverschrijdende kapitaalstromen terugkomen in wat Europese bedrijven betalen om te lenen. Daarvoor gebruikte ik tweeëntwintig jaar aan data over de 600 bedrijven in de STOXX Europe 600, en het grootste deel van mijn tijd ging op aan het schoonmaken en koppelen van die data, lang voordat ik iets draaide. Het is het cijfer waar ik het meest trots op ben, vooral omdat de vraag van mij was.',
         'thesis.s1': 'STOXX Europe 600-bedrijven',
         'thesis.s2': 'jaar aan paneldata',
         'thesis.s3': 'eindcijfer',
 
-        'show.eyebrow': 'Geselecteerde projecten',
-        'show.title': 'Drie projecten, ontstaan uit nieuwsgierigheid.',
-        'sp1.title': 'Noce',
-        'sp1.cap': 'Noce — een kaart van wat kaarten missen. Gebouwd tijdens AI Scouts, vernoemd naar mijn oma.',
-        'sp2.title': 'Honours Newsletter',
-        'sp2.cap': 'Twee jaar lang de redactie en LinkedIn van het Utrecht Honours Programme geleid.',
-        'sp3.title': 'Vrijwilligers',
-        'sp3.cap': 'De eerste Utrechtse voedselinzameling opgezet — vijf Jumbo-filialen, tweetalig EN/NL materiaal, vrijwilligers geworven en gecoördineerd.',
-
-
         'exp.eyebrow': 'Ervaring',
         'exp.title': 'Werk, studie en alles daartussenin.',
-        'exp1.role': 'Assistent boekhouding', 'exp1.org': 'Ex Primo · Communicatie- en marketingbureau — Italië',
-        'exp1.desc': 'Ondersteuning van de klantenboekhouding voor een pensioenfonds bij een communicatie- en marketingbureau, rapporterend aan het Hoofd Administratie.',
-        'exp2.role': 'Tutor Wiskunde &amp; Statistiek', 'exp2.org': 'AthenaSummary',
-        'exp2.desc': 'Werkgroepen in kleine groepen voor eerstejaars economiestudenten, met het volledige cursusmateriaal vanaf nul opgebouwd — slides, uitgewerkte voorbeelden en tentamenoefeningen.',
-        'exp3.role': 'Magazijnwerkzaamheden', 'exp3.org': 'Picnic &amp; Jumbo',
-        'exp3.desc': 'Orderverzameling en -afhandeling voor twee van de grootste supermarktketens van Nederland, gecombineerd met een voltijdstudie.',
+        'exp1.period': 'Jun 2026 – heden', 'exp1.role': 'Assistent boekhouding', 'exp1.org': 'Ex Primo, Italië',
+        'exp1.desc': 'Ik ondersteun de klantenboekhouding voor een pensioenfonds bij een communicatie- en marketingbureau, en werk direct samen met het Hoofd Administratie. Nauwkeurig werk, met deadlines die niet opschuiven.',
+        'exp2.period': 'Feb – mei 2026', 'exp2.role': 'AI Scouts', 'exp2.org': 'Programma onder leiding van Berkeley, op afstand',
+        'exp2.desc': 'Ik was een van de circa 3% van de aanmelders die werd toegelaten. In ruim veertig uur leerde ik AI-gedreven webapplicaties bouwen met Lovable, Supabase, Bolt, GitHub, Antigravity en Claude, en hielp ik andere deelnemers hun eigen project af te maken.',
+        'exp3.period': 'Feb 2024 – jul 2025', 'exp3.role': 'Hoofd Public Relations', 'exp3.org': 'Honours Programme, Universiteit Utrecht',
+        'exp3.desc': 'Ik gaf leiding aan een kleine redactie over faculteiten heen, bracht de maandelijkse Honours-nieuwsbrief uit en beheerde de LinkedIn-pagina van de community. Twee jaar lang elke maand een editie, op tijd.',
+        'exp4.period': 'Okt 2024 – jun 2025', 'exp4.role': 'Docent Wiskunde en Statistiek', 'exp4.org': 'AthenaSummary',
+        'exp4.desc': 'Ik gaf les aan kleine groepen eerstejaars economiestudenten, vijf tot twintig tegelijk, en schreef al het materiaal zelf: slides, uitgewerkte voorbeelden en oefententamens.',
+        'exp5.period': 'Feb 2024 – heden', 'exp5.role': 'Magazijnwerkzaamheden', 'exp5.org': 'Picnic &amp; Jumbo',
+        'exp5.desc': 'Orderverzameling en -afhandeling voor twee van de grootste supermarktketens van Nederland, parttime volgehouden naast een voltijdstudie.',
+
+        'show.eyebrow': 'Geselecteerde projecten',
+        'show.title': 'Drie projecten, ontstaan uit nieuwsgierigheid.',
+        'sp1.kicker': 'Kaart-app', 'sp1.title': 'Noce',
+        'sp1.cap': 'Een kaart van wat kaarten missen: warmwaterbronnen, onbewegwijzerde paden, de plekken waarover je alleen van iemand ter plaatse hoort. Ik bouwde hem tijdens AI Scouts en vernoemde hem naar mijn oma.',
+        'sp2.kicker': 'Redactie', 'sp2.title': 'Honours Newsletter',
+        'sp2.cap': 'Twee jaar leiding over de redactie en de LinkedIn-pagina van het Utrecht Honours Programme. Schrijven, redigeren en zorgen dat het elke maand ook echt uitkwam.',
+        'sp3.kicker': 'Gemeenschap', 'sp3.title': 'Vrijwilligers',
+        'sp3.cap': 'Ik ben een van de organisatoren van de Utrechtse afdeling, waar we de eerste voedselinzameling van de stad voor de lokale voedselbank hebben opgezet: vijf Jumbo-filialen in één weekend, materiaal in het Nederlands en Engels, en veel studentvrijwilligers. Ik werkte aan de samenwerking met de regiomanager en aan het werven van het team.',
 
         'contact.eyebrow': 'Contact',
-        'contact.title': 'Altijd open voor interessante projecten en gesprekken.',
+        'contact.title': 'Op zoek naar mij? Hier vind je me!',
+        'contact.note': 'Ik ben tot eind augustus in Utrecht en vanaf september in Rotterdam. Zestien uur per week zijn vrij.',
         'contact.email': 'E-mail',
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       }
