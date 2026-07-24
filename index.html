@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Antonio Di Domenico — Portfolio</title>
   <meta name="description" content="Antonio Di Domenico — MSc Finance & Investments candidate at RSM Rotterdam. Curious about the places where economic thinking, technology and communication meet.">
+  <meta name="author" content="Antonio Di Domenico">
+  <meta name="theme-color" content="#1B4D4B">
+
+  <!-- Social preview: what a recruiter sees when the link is pasted
+       into LinkedIn, Slack or WhatsApp. -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Antonio Di Domenico — Portfolio">
+  <meta property="og:description" content="MSc Finance & Investments candidate at RSM Rotterdam. Economics, technology and communication — built by hand.">
+  <meta property="og:image"       content="images/antonio.jpg">
+  <meta property="og:locale"      content="en_GB">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Antonio Di Domenico — Portfolio">
+  <meta name="twitter:description" content="MSc Finance & Investments candidate at RSM Rotterdam.">
+  <meta name="twitter:image"       content="images/antonio.jpg">
 
   <!-- ============================================================
        EXTERNAL DEPENDENCY — Google Fonts only (Fraunces / Inter).
@@ -90,6 +106,26 @@
     button { font: inherit; background: none; border: none; cursor: pointer; color: inherit; }
 
     ::selection { background: var(--teal); color: var(--bg); }
+
+    /* Keyboard focus must stay obvious even where the custom cursor
+       hides the native one — :focus-visible keeps it off mouse clicks. */
+    :focus-visible {
+      outline: 2px solid var(--terra);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+    .teal :focus-visible { outline-color: var(--bg); }
+
+    /* Skip link — first tab stop, visually hidden until focused */
+    .skip {
+      position: absolute; left: 1rem; top: -4rem;
+      z-index: 200;
+      background: var(--teal); color: var(--bg);
+      padding: 0.7rem 1.2rem; border-radius: 0 0 8px 8px;
+      font-size: 0.9rem; font-weight: 500;
+      transition: top 0.25s var(--ease);
+    }
+    .skip:focus { top: 0; }
 
     /* When the custom cursor is active (desktop, fine pointer, motion OK)
        the native cursor is hidden everywhere. */
@@ -735,14 +771,16 @@
     .tlabel { font-size: var(--fs-meta); color: var(--mut-d); letter-spacing: 0.04em; line-height: 1.4; display: block; }
 
     /* ============================================================
-       15. PROJECTS — ROTATING PANEL SHOWCASE
-       #projects is a tall scroll runway; .show-sticky pins for its
-       whole length. Three identical 4:5 panels sit on a wheel that
-       turns around a shared horizontal axis behind the front slot;
-       JS maps scroll progress onto the wheel angle (expo-out easing
-       into each dwell) and writes every transform. Panels away from
-       the front fade and blur slightly for depth. With .stacked
-       (mobile / reduced motion) it degrades to plain vertical cards.
+       15. PROJECTS — 3D CIRCULAR CAROUSEL (coverflow)
+       All three panels are absolutely centred on top of each other;
+       JS gives each a signed circular offset in [-1.5, 1.5] and writes
+       a translateX + rotateY + translateZ + scale from it. The active
+       panel sits flat and sharp dead centre, the neighbours turn away
+       on the Y axis, sink back in Z, blur and dim — so they only ever
+       PEEK past the centre card rather than showing in full.
+       Because the offset is computed modulo 3, the ring is genuinely
+       circular: it keeps turning in either direction forever, with no
+       DOM clones and no seam.
        ============================================================ */
     .showcase { padding: 5rem 0 6rem; }
     .show-sticky {
@@ -756,35 +794,44 @@
     .show-head .eyebrow { margin-bottom: 0.9rem; }
     .show-head .section-title { margin: 0 auto; max-width: none; }
 
-    /* the rail slides horizontally; the active slide lands dead centre */
-    .show-viewport { width: 100%; overflow: hidden; }
-    .show-track {
-      display: flex;
-      align-items: center;
-      gap: var(--slide-gap);
-      will-change: transform;
-    }
     :root {
-      --slide-gap: 3rem;
       /* capped by width AND viewport height so the caption always fits */
       --slide-w: min(400px, 78vw, calc((100vh - 330px) * 0.8));
     }
 
-    .panel {
+    /* the stage: perspective makes the Y-rotation read as a real ring */
+    .show-viewport {
+      width: 100%;
+      overflow: hidden;
+      perspective: 1500px;
+      perspective-origin: 50% 50%;
+    }
+    .show-track {
       position: relative;
-      flex: 0 0 auto;
+      height: calc(var(--slide-w) * 1.25);   /* 4:5 panels */
+      transform-style: preserve-3d;
+      margin: 0 auto;
+    }
+
+    .panel {
+      position: absolute;
+      top: 50%; left: 50%;
       width: var(--slide-w);
       aspect-ratio: 4 / 5;
+      margin: 0;
       border-radius: 16px;
       background: #fff;
       border: 1px solid var(--line);
       overflow: hidden;
       pointer-events: none;          /* JS grants it to the active slide */
-      box-shadow: 0 14px 36px -26px rgba(20,20,20,0.28);
+      box-shadow: 0 18px 44px -28px rgba(20,20,20,0.30);
       transition: box-shadow 0.5s var(--ease);
-      will-change: transform, opacity;
+      will-change: transform, opacity, filter;
+      backface-visibility: hidden;
+      /* JS writes the full transform; this is the no-JS resting state */
+      transform: translate(-50%, -50%);
     }
-    .panel.front { pointer-events: auto; box-shadow: 0 26px 60px -30px rgba(20,20,20,0.35); }
+    .panel.front { pointer-events: auto; box-shadow: 0 32px 70px -32px rgba(20,20,20,0.42); }
     .panel-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 
     /* Volunteers: fills the frame cleanly — cover + centred, no squash */
@@ -885,17 +932,34 @@
     .show-arrow:hover { background: var(--teal); border-color: var(--teal); color: var(--bg); }
     .show-arrow[disabled] { opacity: 0.3; pointer-events: none; }
     .show-arrow svg { width: 17px; height: 17px; }
-    .show-dots { display: flex; gap: 0.5rem; }
-    .show-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: background 0.35s, transform 0.35s; cursor: pointer; }
-    .show-dots i.on { background: var(--terra); transform: scale(1.35); }
+    .show-dots { display: flex; gap: 0.15rem; }
+    /* the hit area is a comfortable 22px square; only the inner 7px
+       dot is painted, so the control stays visually minimal */
+    .show-dots button {
+      width: 22px; height: 22px;
+      display: grid; place-items: center;
+      cursor: pointer; background: none; border: 0; padding: 0;
+    }
+    .show-dots button::before {
+      content: '';
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--line);
+      transition: background 0.35s, transform 0.35s;
+    }
+    .show-dots button.on::before { background: var(--terra); transform: scale(1.35); }
+    .show-dots button:hover::before { background: var(--mut); }
 
     /* Stacked fallback (mobile / reduced motion): plain vertical cards,
        each meta re-parented beneath its own card. */
     .showcase.stacked { height: auto; padding: 6rem 0; }
     .showcase.stacked .show-sticky { position: static; height: auto; overflow: visible; display: block; }
     .showcase.stacked .show-head { margin-bottom: 3rem; }
-    .showcase.stacked .show-viewport { overflow: visible; }
+    .showcase.stacked .show-viewport { overflow: visible; perspective: none; }
     .showcase.stacked .show-track {
+      position: static;
+      height: auto;
+      transform-style: flat;
+      display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.6rem;
@@ -903,9 +967,11 @@
       padding: 0 1.5rem;
     }
     .showcase.stacked .panel {
+      position: static;
       width: min(420px, 100%);
       transform: none !important;
       opacity: 1 !important;
+      filter: none !important;
       pointer-events: auto;
     }
     .showcase.stacked .show-meta,
@@ -940,12 +1006,15 @@
 
     /* company lockup — used where one entry covers two employers
        (Picnic & Jumbo), so both marks are shown properly */
-    .xp-logos { display: flex; align-items: center; gap: 1.4rem; margin-top: 1.2rem; }
+    /* Both marks are rendered as equal square tiles so neither brand
+       dominates — Picnic ships as a red square, Jumbo as a white one. */
+    .xp-logos { display: flex; align-items: center; gap: 0.7rem; margin-top: 1.3rem; }
     .xp-logos img {
-      height: 26px;
-      width: auto;
+      width: 44px; height: 44px;
       object-fit: contain;
-      opacity: 0.9;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
     }
 
     /* ============================================================
@@ -1072,6 +1141,8 @@
   </style>
 </head>
 <body>
+  <a href="#about" class="skip">Skip to content</a>
+
   <!-- Scroll progress line + custom cursor (both driven by JS) -->
   <div id="progress" aria-hidden="true"></div>
   <div id="cursor" aria-hidden="true"></div>
@@ -1190,7 +1261,7 @@
           </div>
 
           <div class="vj-item vj-i1">
-            <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-uu.png" alt=""><span class="vj-badge-txt">UU</span></div>
+            <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-uu.png" alt="" loading="lazy" decoding="async" width="231" height="231"><span class="vj-badge-txt">UU</span></div>
             <div>
               <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a></div>
               <div class="vj-course" data-i18n="edu.uu">BSc Economics &amp; Business Economics · Minor in Law · Honours Programme</div>
@@ -1198,14 +1269,14 @@
             </div>
           </div>
           <div class="vj-item vj-i2">
-            <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-puc.png" alt=""><span class="vj-badge-txt">PUC</span></div>
+            <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-puc.png" alt="" loading="lazy" decoding="async" width="377" height="377"><span class="vj-badge-txt">PUC</span></div>
             <div>
               <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a></div>
               <div class="vj-course" data-i18n="edu.puc">Exchange semester · Business, Law &amp; Portuguese coursework</div>
             </div>
           </div>
           <div class="vj-item vj-i3 vj-final">
-            <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-rsm.png" alt=""><span class="vj-badge-txt">RSM</span></div>
+            <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-rsm.png" alt="" loading="lazy" decoding="async" width="402" height="402"><span class="vj-badge-txt">RSM</span></div>
             <div>
               <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM · Erasmus University Rotterdam</a></div>
               <div class="vj-course" data-i18n="edu.rsm">MSc Finance &amp; Investments · 2026–2027</div>
@@ -1259,7 +1330,7 @@
 
         <!-- 1. Ex Primo -->
         <div class="xtl-item xtl-lead">
-          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-exprimo.png" alt="Ex Primo"><span class="vj-badge-txt">EP</span></div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-exprimo.png" alt="Ex Primo" loading="lazy" decoding="async" width="204" height="204"><span class="vj-badge-txt">EP</span></div>
           <div>
             <div class="xp-period">Jun 2026 – present</div>
             <h3 class="xp-role" data-i18n="exp1.role">Accounting Assistant</h3>
@@ -1270,7 +1341,7 @@
 
         <!-- 2. AthenaSummary -->
         <div class="xtl-item">
-          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-athena.png" alt="AthenaSummary"><span class="vj-badge-txt">AS</span></div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-athena.png" alt="AthenaSummary" loading="lazy" decoding="async" width="196" height="196"><span class="vj-badge-txt">AS</span></div>
           <div>
             <div class="xp-period">Oct 2024 – Jun 2025</div>
             <h3 class="xp-role" data-i18n="exp2.role">Mathematics & Statistics Tutor</h3>
@@ -1281,7 +1352,7 @@
 
         <!-- 3. Picnic & Jumbo -->
         <div class="xtl-item">
-          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-picnic.png" alt="Picnic"><span class="vj-badge-txt">PJ</span></div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-picnic.png" alt="Picnic" loading="lazy" decoding="async" width="447" height="447"><span class="vj-badge-txt">PJ</span></div>
           <div>
             <div class="xp-period">Feb 2024 – Present</div>
             <h3 class="xp-role" data-i18n="exp3.role">Warehouse Operations</h3>
@@ -1289,8 +1360,8 @@
             <p class="xp-desc" data-i18n="exp3.desc">Order preparation and fulfilment for two leading Dutch grocery operators; sustained part-time employment alongside a full-time degree.</p>
             <!-- both employers shown, since this entry covers two -->
             <div class="xp-logos" aria-hidden="true">
-              <img src="images/logo-picnic.png" alt="Picnic">
-              <img src="images/logo-jumbo.png" alt="Jumbo">
+              <img src="images/logo-picnic.png" alt="Picnic" loading="lazy" decoding="async" width="447" height="447">
+              <img src="images/logo-jumbo-tile.png" alt="Jumbo" loading="lazy" decoding="async" width="447" height="447">
             </div>
           </div>
         </div>
@@ -1428,12 +1499,12 @@
 
           <!-- 3 · Volunteers — photo, cover-cropped, no distortion -->
           <div class="panel panel-vol">
-            <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive">
+            <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive" loading="lazy" decoding="async" width="1178" height="884">
           </div>
         </div>
       </div>
 
-      <div class="show-meta" id="showMeta">
+      <div class="show-meta" id="showMeta" aria-live="polite">
         <div class="meta-item">
           <span class="meta-index">01 / 03</span>
           <h3 data-i18n="sp1.title">Noce</h3>
@@ -1458,7 +1529,11 @@
         <button class="show-arrow" id="showPrev" aria-label="Previous project">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 L8 12 L15 19"/></svg>
         </button>
-        <div class="show-dots" id="showDots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+        <div class="show-dots" id="showDots" role="tablist" aria-label="Choose project">
+          <button class="on" role="tab" aria-selected="true"  aria-label="Noce"></button>
+          <button          role="tab" aria-selected="false" aria-label="Honours Newsletter"></button>
+          <button          role="tab" aria-selected="false" aria-label="Volunteers"></button>
+        </div>
         <button class="show-arrow" id="showNext" aria-label="Next project">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5 L16 12 L9 19"/></svg>
         </button>
@@ -1499,13 +1574,12 @@
     function desktopFx() { return FINE && !REDUCED && !isMobile(); }
 
     /* ==========================================================
-       1. TRANSLATIONS
-       Full English; IT/NL are placeholders to be filled by a human
-       translator — they are intentionally NOT machine-translated.
+       1. TRANSLATIONS — full EN / IT / NL.
        Values are injected with innerHTML (all values are authored
        in this file, never user input), so simple inline markup like
        <strong> is allowed.
-       Tool names and proper nouns stay English in all languages.
+       Degree names, tool names and proper nouns stay English in all
+       three languages, the way they are actually written on a CV.
        ========================================================== */
     var translations = {
       en: {
@@ -1559,48 +1633,112 @@
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       },
 
-      /* ------- ITALIAN — replace every value with a real translation ------- */
+      /* ------- ITALIAN ------- */
       it: {
-        'nav.about': '[IT: translate]', 'nav.experience': '[IT: translate]', 'nav.projects': '[IT: translate]', 'nav.contact': '[IT: translate]',
-        'hero.eyebrow': '[IT: translate]', 'hero.line': '[IT: translate]',
-        'hero.cta1': '[IT: translate]', 'hero.cta2': '[IT: translate]', 'hero.scroll': '[IT: translate]',
-        'about.eyebrow': '[IT: translate]', 'about.p1': '[IT: translate]', 'about.p2': '[IT: translate]', 'about.p3': '[IT: translate]',
-        'edu.eyebrow': '[IT: translate]', 'edu.uu': '[IT: translate]', 'edu.puc': '[IT: translate]', 'edu.rsm': '[IT: translate]', 'edu.uuthesis': '[IT: translate]',
-        'thesis.eyebrow': '[IT: translate]', 'thesis.title': '[IT: translate]', 'thesis.sub': '[IT: translate]', 'thesis.p': '[IT: translate]',
-        'thesis.s1': '[IT: translate]', 'thesis.s2': '[IT: translate]', 'thesis.s3': '[IT: translate]', 'thesis.chartcap': '[IT: translate]',
-        'show.eyebrow': '[IT: translate]', 'show.title': '[IT: translate]',
-        'sp1.title': 'Noce', 'sp1.cap': '[IT: translate]',
-        'sp2.title': '[IT: translate]', 'sp2.cap': '[IT: translate]',
-        'sp3.title': '[IT: translate]', 'sp3.cap': '[IT: translate]',
-        'noce.tag': '[IT: translate]',
-        'exp.eyebrow': '[IT: translate]', 'exp.title': '[IT: translate]',
-        'exp1.role': '[IT: translate]', 'exp1.org': '[IT: translate]', 'exp1.desc': '[IT: translate]',
-        'exp2.role': '[IT: translate]', 'exp2.org': '[IT: translate]', 'exp2.desc': '[IT: translate]',
-        'exp3.role': '[IT: translate]', 'exp3.org': '[IT: translate]', 'exp3.desc': '[IT: translate]',
-        'contact.eyebrow': '[IT: translate]', 'contact.title': '[IT: translate]', 'contact.email': '[IT: translate]',
-        'footer.text': '[IT: translate]'
+        'nav.about': 'Chi sono', 'nav.experience': 'Esperienza', 'nav.projects': 'Progetti', 'nav.contact': 'Contatti',
+
+        'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
+        'hero.line': 'Un portfolio, costruito a mano, per il lavoro che voglio fare adesso.',
+        'hero.cta1': 'Guarda i progetti', 'hero.cta2': 'Scrivimi', 'hero.scroll': 'Scorri',
+
+        'about.eyebrow': 'Chi sono',
+        'about.p1': 'Sono Antonio, uno studente italiano arrivato nei Paesi Bassi a diciotto anni per studiare economia senza aver mai seguito un corso di economia prima. Quel vuoto si è rivelato la parte interessante: ho dovuto costruire le fondamenta da zero, e ho scoperto che mi piaceva.',
+        'about.p2': 'Da allora ho seguito la curiosità più che un piano. Ho passato un semestre a Rio de Janeiro, ho imparato il portoghese nei bar e sul sellino di una moto più che in aula, e sono tornato più a mio agio con il non sapere cosa viene dopo. Ho costruito un’app di mappe, curato una newsletter studentesca, fatto tutoraggio di statistica e organizzato una raccolta alimentare — non perché rientrassero in una strategia, ma perché ognuna mi ha permesso di costruire o sistemare qualcosa di concreto.',
+        'about.p3': 'A settembre inizio un MSc in Finance alla RSM di Rotterdam. Ciò che lega tutto quello che faccio è lo stesso istinto: imparo più in fretta quando sono nel mezzo di qualcosa che non so ancora come finire.',
+
+        'edu.eyebrow': 'Formazione',
+        'edu.uu': 'BSc Economics &amp; Business Economics · Minor in Diritto · Honours Programme',
+        'edu.puc': 'Semestre di scambio · Corsi di Business, Diritto e Portoghese',
+        'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
+        'edu.uuthesis': 'Tesi triennale · voto 9,2 ↓',
+
+        'thesis.eyebrow': 'Ricerca',
+        'thesis.title': 'I controlli sui capitali cinesi aumentano il costo del debito per le imprese europee?',
+        'thesis.sub': 'Tesi triennale · Utrecht University · Voto 9,2 / 10',
+        'thesis.p': 'La mia tesi esamina se i controlli sui capitali cinesi — le restrizioni che Pechino impone ai flussi di capitale transfrontalieri — rendano più costoso l’indebitamento per le aziende europee. Ho verificato l’ipotesi su dati panel di 600 imprese dello STOXX Europe 600 lungo 22 anni. Il risultato è stato un 9,2 — il voto di cui vado più fiero, non per il numero ma perché la domanda era mia.',
+        'thesis.s1': 'imprese dello STOXX Europe 600',
+        'thesis.s2': 'anni di dati panel',
+        'thesis.s3': 'voto finale',
+        'thesis.chartcap': 'Andamento illustrativo del costo del debito · 2002–2024',
+
+        'show.eyebrow': 'Progetti selezionati',
+        'show.title': 'Tre progetti, nati dalla curiosità.',
+        'sp1.title': 'Noce',
+        'sp1.cap': 'Noce — una mappa di ciò che le mappe si perdono. Costruita durante AI Scouts, porta il nome di mia nonna.',
+        'sp2.title': 'Honours Newsletter',
+        'sp2.cap': 'Ho guidato per due anni la redazione e il LinkedIn dell’Honours Programme di Utrecht.',
+        'sp3.title': 'Volontariato',
+        'sp3.cap': 'Ho lanciato la prima raccolta alimentare di Utrecht — cinque punti vendita Jumbo, materiali bilingue EN/NL, volontari reclutati e coordinati.',
+
+        'noce.tag': 'Posti che conoscono solo i local',
+
+        'exp.eyebrow': 'Esperienza',
+        'exp.title': 'Lavoro, studio e tutto quello che sta in mezzo.',
+        'exp1.role': 'Assistente contabile', 'exp1.org': 'Ex Primo · Agenzia di comunicazione e marketing — Italia',
+        'exp1.desc': 'Supporto alla contabilità clienti per un fondo pensione presso un’agenzia di comunicazione e marketing, rispondendo al Responsabile Amministrativo.',
+        'exp2.role': 'Tutor di Matematica e Statistica', 'exp2.org': 'AthenaSummary',
+        'exp2.desc': 'Ho costruito da zero l’intero materiale del corso online — slide, esempi svolti ed esercizi di statistica.',
+        'exp3.role': 'Operazioni di magazzino', 'exp3.org': 'Picnic &amp; Jumbo',
+        'exp3.desc': 'Lavoro pratico e costante accanto agli studi.',
+
+        'contact.eyebrow': 'Contatti',
+        'contact.title': 'Sempre aperto a progetti e conversazioni interessanti.',
+        'contact.email': 'Email',
+        'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       },
 
-      /* ------- DUTCH — replace every value with a real translation ------- */
+      /* ------- DUTCH ------- */
       nl: {
-        'nav.about': '[NL: translate]', 'nav.experience': '[NL: translate]', 'nav.projects': '[NL: translate]', 'nav.contact': '[NL: translate]',
-        'hero.eyebrow': '[NL: translate]', 'hero.line': '[NL: translate]',
-        'hero.cta1': '[NL: translate]', 'hero.cta2': '[NL: translate]', 'hero.scroll': '[NL: translate]',
-        'about.eyebrow': '[NL: translate]', 'about.p1': '[NL: translate]', 'about.p2': '[NL: translate]', 'about.p3': '[NL: translate]',
-        'edu.eyebrow': '[NL: translate]', 'edu.uu': '[NL: translate]', 'edu.puc': '[NL: translate]', 'edu.rsm': '[NL: translate]', 'edu.uuthesis': '[NL: translate]',
-        'thesis.eyebrow': '[NL: translate]', 'thesis.title': '[NL: translate]', 'thesis.sub': '[NL: translate]', 'thesis.p': '[NL: translate]',
-        'thesis.s1': '[NL: translate]', 'thesis.s2': '[NL: translate]', 'thesis.s3': '[NL: translate]', 'thesis.chartcap': '[NL: translate]',
-        'show.eyebrow': '[NL: translate]', 'show.title': '[NL: translate]',
-        'sp1.title': 'Noce', 'sp1.cap': '[NL: translate]',
-        'sp2.title': '[NL: translate]', 'sp2.cap': '[NL: translate]',
-        'sp3.title': '[NL: translate]', 'sp3.cap': '[NL: translate]',
-        'noce.tag': '[NL: translate]',
-        'exp.eyebrow': '[NL: translate]', 'exp.title': '[NL: translate]',
-        'exp1.role': '[NL: translate]', 'exp1.org': '[NL: translate]', 'exp1.desc': '[NL: translate]',
-        'exp2.role': '[NL: translate]', 'exp2.org': '[NL: translate]', 'exp2.desc': '[NL: translate]',
-        'exp3.role': '[NL: translate]', 'exp3.org': '[NL: translate]', 'exp3.desc': '[NL: translate]',
-        'contact.eyebrow': '[NL: translate]', 'contact.title': '[NL: translate]', 'contact.email': '[NL: translate]',
-        'footer.text': '[NL: translate]'
+        'nav.about': 'Over mij', 'nav.experience': 'Ervaring', 'nav.projects': 'Projecten', 'nav.contact': 'Contact',
+
+        'hero.eyebrow': 'MSc Finance · RSM Rotterdam',
+        'hero.line': 'Een portfolio, met de hand gebouwd, voor het werk dat ik hierna wil doen.',
+        'hero.cta1': 'Bekijk mijn werk', 'hero.cta2': 'Neem contact op', 'hero.scroll': 'Scroll',
+
+        'about.eyebrow': 'Over mij',
+        'about.p1': 'Ik ben Antonio, een Italiaanse student die op zijn achttiende naar Nederland kwam om economie te studeren, zonder ooit een les economie te hebben gevolgd. Juist dat gat bleek het interessante deel: ik moest het fundament vanaf nul opbouwen, en ik merkte dat ik dat leuk vond.',
+        'about.p2': 'Sindsdien heb ik meer mijn nieuwsgierigheid gevolgd dan een plan. Ik bracht een semester door in Rio de Janeiro, leerde Portugees in bars en achter op een motor in plaats van in een collegezaal, en kwam terug met meer rust bij het niet weten wat er komt. Ik bouwde een kaart-app, leidde een studentennieuwsbrief, gaf bijles statistiek en organiseerde een voedselinzameling — niet omdat ze in een strategie pasten, maar omdat ik bij elk daarvan iets echts kon maken of herstellen.',
+        'about.p3': 'In september begin ik aan een MSc Finance aan RSM Rotterdam. Wat alles wat ik doe verbindt is hetzelfde instinct: ik leer het snelst wanneer ik midden in iets zit dat ik nog niet weet af te maken.',
+
+        'edu.eyebrow': 'Opleiding',
+        'edu.uu': 'BSc Economics &amp; Business Economics · Minor Rechten · Honours Programme',
+        'edu.puc': 'Uitwisselingssemester · Vakken Business, Recht &amp; Portugees',
+        'edu.rsm': 'MSc Finance &amp; Investments · 2026–2027',
+        'edu.uuthesis': 'Bachelorscriptie · beoordeeld met 9,2 ↓',
+
+        'thesis.eyebrow': 'Onderzoek',
+        'thesis.title': 'Verhogen Chinese kapitaalcontroles de kosten van schuld voor Europese bedrijven?',
+        'thesis.sub': 'Bachelorscriptie · Universiteit Utrecht · Beoordeeld met 9,2 / 10',
+        'thesis.p': 'Mijn scriptie onderzoekt of Chinese kapitaalcontroles — de beperkingen die Peking oplegt aan grensoverschrijdende kapitaalstromen — het duurder maken voor Europese bedrijven om te lenen. Ik toetste dit op paneldata van 600 STOXX Europe 600-bedrijven over 22 jaar. Het resultaat was een 9,2 — het cijfer waar ik het meest trots op ben, niet om het getal maar omdat de vraag van mij was.',
+        'thesis.s1': 'STOXX Europe 600-bedrijven',
+        'thesis.s2': 'jaar aan paneldata',
+        'thesis.s3': 'eindcijfer',
+        'thesis.chartcap': 'Illustratieve trend kosten van schuld · 2002–2024',
+
+        'show.eyebrow': 'Geselecteerde projecten',
+        'show.title': 'Drie projecten, ontstaan uit nieuwsgierigheid.',
+        'sp1.title': 'Noce',
+        'sp1.cap': 'Noce — een kaart van wat kaarten missen. Gebouwd tijdens AI Scouts, vernoemd naar mijn oma.',
+        'sp2.title': 'Honours Newsletter',
+        'sp2.cap': 'Twee jaar lang de redactie en LinkedIn van het Utrecht Honours Programme geleid.',
+        'sp3.title': 'Vrijwilligers',
+        'sp3.cap': 'De eerste Utrechtse voedselinzameling opgezet — vijf Jumbo-filialen, tweetalig EN/NL materiaal, vrijwilligers geworven en gecoördineerd.',
+
+        'noce.tag': 'Plekken die alleen locals kennen',
+
+        'exp.eyebrow': 'Ervaring',
+        'exp.title': 'Werk, studie en alles daartussenin.',
+        'exp1.role': 'Assistent boekhouding', 'exp1.org': 'Ex Primo · Communicatie- en marketingbureau — Italië',
+        'exp1.desc': 'Ondersteuning van de klantenboekhouding voor een pensioenfonds bij een communicatie- en marketingbureau, rapporterend aan het Hoofd Administratie.',
+        'exp2.role': 'Tutor Wiskunde &amp; Statistiek', 'exp2.org': 'AthenaSummary',
+        'exp2.desc': 'Het volledige online cursusmateriaal vanaf nul opgebouwd — slides, uitgewerkte voorbeelden en statistiekopgaven.',
+        'exp3.role': 'Magazijnwerkzaamheden', 'exp3.org': 'Picnic &amp; Jumbo',
+        'exp3.desc': 'Vast, praktisch werk naast mijn studie.',
+
+        'contact.eyebrow': 'Contact',
+        'contact.title': 'Altijd open voor interessante projecten en gesprekken.',
+        'contact.email': 'E-mail',
+        'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       }
     };
 
@@ -1987,17 +2125,18 @@
     }
 
     /* ==========================================================
-       7. PROJECTS SHOWCASE — pinned rotating panels.
-       Scroll progress maps to a wheel position (0..2) through a
-       piecewise dwell/transition curve with expo-out easing, so
-       each panel decelerates crisply into a dwell where it rests
-       PERFECTLY flat. The rendered position lerps toward the
-       target every frame (inside the one shared main loop) and
-       snaps when close — the settled state is exactly 0°: sharp,
-       no wobble. Panels away from front fade + blur for depth;
-       only the front panel receives pointer events.
-       In .stacked mode (mobile / reduced motion) the panels are
-       static cards and each meta block moves beneath its panel.
+       7. PROJECTS SHOWCASE — 3D circular carousel.
+       The three panels are stacked on the same centre point. Each
+       frame every panel gets a SIGNED CIRCULAR OFFSET d in
+       [-1.5, 1.5] — the shortest way round a 3-slot ring — and that
+       single number drives its whole transform: sideways travel,
+       Y-rotation, depth, scale, blur and dimming. d == 0 is the
+       active card: flat, sharp, dead centre. Its neighbours turn
+       away and sink back, so they only PEEK past the centre card.
+       Because d is computed modulo 3 the ring never ends: it keeps
+       turning in either direction with no clones and no seam.
+       In .stacked mode (mobile / reduced motion) the panels become
+       plain vertical cards and each meta block moves beneath one.
        ========================================================== */
     var showEl    = document.getElementById('projects');
     var showTrack = document.getElementById('showTrack');
@@ -2005,43 +2144,31 @@
     var metaBox   = document.getElementById('showMeta');
     var metaItems = Array.prototype.slice.call(document.querySelectorAll('.meta-item'));
     var volImg    = document.getElementById('volImg');
-    var showDots  = Array.prototype.slice.call(document.querySelectorAll('#showDots i'));
+    var showDots  = Array.prototype.slice.call(document.querySelectorAll('#showDots button'));
     var showPrev  = document.getElementById('showPrev');
     var showNext  = document.getElementById('showNext');
 
+    var N = panels.length || 3;
     var show = { s: 0, target: 0, active: -1, stacked: false, modeSet: false, volFront: false };
-    var SHOW_DWELL = 0.18;                      /* scroll fraction resting on a slide */
-    var SHOW_TRANS = (1 - 3 * SHOW_DWELL) / 2;  /* scroll fraction per transition */
-    var showClones = [];                         /* [clone-of-last, clone-of-first] */
 
-    function showBuildClones() {
-      if (showClones.length || !showTrack || show.stacked) return;
-      var cPre = panels[2].cloneNode(true);    /* peek left of slide 0 */
-      var cPost = panels[0].cloneNode(true);   /* peek right of slide 2 */
-      [cPre, cPost].forEach(function (c) {
-        c.setAttribute('aria-hidden', 'true');
-        c.style.pointerEvents = 'none';
-        c.classList.add('panel-clone');
-      });
-      showTrack.insertBefore(cPre, showTrack.firstChild);
-      showTrack.appendChild(cPost);
-      showClones = [cPre, cPost];
-    }
+    /* ring geometry — tuned so a neighbour shows ~34% of itself */
+    var RING = {
+      spread: 0.62,   /* sideways travel, in panel widths     */
+      rot:    38,     /* deg of Y-rotation per step away      */
+      depth:  150,    /* px pushed back in Z per step away    */
+      scale:  0.14,   /* size lost per step away              */
+      blur:   3.2,    /* px of blur per step away             */
+      fade:   0.45    /* opacity lost per step away           */
+    };
 
-    function showRemoveClones() {
-      showClones.forEach(function (c) { if (c.parentNode) c.parentNode.removeChild(c); });
-      showClones = [];
-    }
-
-    function expoOut(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-
-    function showTarget(p) {                    /* progress 0..1 → slide position 0..2 */
-      var d = SHOW_DWELL, t = SHOW_TRANS;
-      if (p <= d) return 0;
-      if (p <= d + t) return expoOut((p - d) / t);
-      if (p <= 2 * d + t) return 1;
-      if (p <= 2 * d + 2 * t) return 1 + expoOut((p - 2 * d - t) / t);
-      return 2;
+    /* shortest signed distance from panel i to position s around the
+       ring: wraps into [-N/2, N/2) so panel 0 is 1 step from panel 2,
+       not 2 steps. This is what makes the rotation truly circular. */
+    function ringDelta(i, s) {
+      var d = (i - s) % N;
+      if (d >  N / 2) d -= N;
+      if (d < -N / 2) d += N;
+      return d;
     }
 
     function volPop() {                         /* volunteers photo scale-up */
@@ -2060,89 +2187,121 @@
       showEl.classList.toggle('stacked', st);
       var i;
       if (st) {
-        showRemoveClones();
-        for (i = 0; i < 3; i++) panels[i].insertAdjacentElement('afterend', metaItems[i]);
-        for (i = 0; i < 3; i++) {
+        for (i = 0; i < N; i++) panels[i].insertAdjacentElement('afterend', metaItems[i]);
+        for (i = 0; i < N; i++) {
           metaItems[i].classList.add('on');
-          panels[i].style.transform = ''; panels[i].style.opacity = '';
+          panels[i].style.transform = '';
+          panels[i].style.opacity = '';
+          panels[i].style.filter = '';
+          panels[i].style.zIndex = '';
           panels[i].classList.add('front');
         }
-        if (showTrack) showTrack.style.transform = '';
       } else {
-        for (i = 0; i < 3; i++) metaBox.appendChild(metaItems[i]);
-        for (i = 0; i < 3; i++) metaItems[i].classList.toggle('on', i === Math.max(0, show.active));
-        showBuildClones();
+        for (i = 0; i < N; i++) metaBox.appendChild(metaItems[i]);
+        for (i = 0; i < N; i++) metaItems[i].classList.toggle('on', i === Math.max(0, show.active));
       }
     }
 
     function showMeasure() { showApplyMode(); }
 
-    /* scroll no longer drives the carousel (auto-advance replaced it) */
+    /* scroll does not drive the carousel — navigation is manual only */
     function showUpdate() {}
 
-    /* every frame: ease the rail sideways so the active slide is centred */
+    /* every frame: turn the ring toward its target and write the
+       transform of all three panels from their circular offset. */
     function showFrame() {
       if (!showEl || show.stacked || !showTrack) return;
+
       var diff = show.target - show.s;
-      if (Math.abs(diff) < 0.0006) {
+      if (Math.abs(diff) < 0.0005) {
         show.s = show.target;
-        /* teleport seamlessly after animating through a clone */
-        if (show.s >= 3)  { show.s = 0; show.target = 0; }
-        if (show.s <= -1) { show.s = 2; show.target = 2; }
+        /* fold both position and target back into [0, N) together, so
+           the ring can spin forever without the numbers drifting */
+        var w0 = ((show.s % N) + N) % N;
+        show.s = w0; show.target = w0;
       } else {
-        show.s += diff * 0.14;
+        show.s += diff * 0.12;
       }
 
       var w = panels[0].offsetWidth;
       if (!w) return;
-      var cs = getComputedStyle(showTrack);
-      var gap = parseFloat(cs.columnGap || cs.gap) || 0;
-      var step = w + gap;
-      var viewportW = showTrack.parentNode.clientWidth;
-      var offset = showClones.length ? 1 : 0;
-      var x = viewportW / 2 - ((show.s + offset) * step + w / 2);
-      showTrack.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
 
-      var items = showTrack.children;
-      for (var i = 0; i < items.length; i++) {
-        var d = Math.min(Math.abs(i - (show.s + offset)), 1);
-        items[i].style.transform = 'scale(' + (1 - d * 0.13).toFixed(4) + ')';
-        items[i].style.opacity   = (1 - d * 0.55).toFixed(3);
+      for (var i = 0; i < N; i++) {
+        var d  = ringDelta(i, show.s);       /* signed, [-1.5, 1.5]  */
+        var ad = Math.abs(d);
+        var p  = panels[i];
+
+        p.style.transform =
+          'translate(-50%, -50%)' +
+          ' translateX(' + (d * RING.spread * w).toFixed(1) + 'px)' +
+          ' translateZ(' + (-ad * RING.depth).toFixed(1) + 'px)' +
+          ' rotateY(' + (-d * RING.rot).toFixed(2) + 'deg)' +
+          ' scale(' + (1 - ad * RING.scale).toFixed(4) + ')';
+        p.style.filter  = ad > 0.01 ? 'blur(' + (ad * RING.blur).toFixed(2) + 'px)' : 'none';
+        p.style.opacity = Math.max(0, 1 - ad * RING.fade).toFixed(3);
+        p.style.zIndex  = String(100 - Math.round(ad * 20));
+
+        var front = ad < 0.12;
+        p.classList.toggle('front', front);
+        p.setAttribute('aria-hidden', front ? 'false' : 'true');
+        if (i === 2) { if (front && !show.volFront) volPop(); show.volFront = front; }
       }
 
-      for (var j = 0; j < 3; j++) {
-        var front = Math.abs(j - show.s) < 0.12;
-        panels[j].classList.toggle('front', front);
-        if (j === 2) { if (front && !show.volFront) volPop(); show.volFront = front; }
-      }
-
-      /* normalize to 0-2 (handles -1 and 3 during wrap animation) */
-      var a = ((Math.round(show.s) % 3) + 3) % 3;
+      var a = ((Math.round(show.s) % N) + N) % N;
       if (a !== show.active) {
         show.active = a;
-        for (var m = 0; m < 3; m++) {
+        for (var m = 0; m < N; m++) {
           metaItems[m].classList.toggle('on', m === a);
-          if (showDots[m]) showDots[m].classList.toggle('on', m === a);
+          if (showDots[m]) {
+            showDots[m].classList.toggle('on', m === a);
+            showDots[m].setAttribute('aria-selected', m === a ? 'true' : 'false');
+          }
         }
       }
     }
 
-    /* set target; k may be -1 or 3 to animate through the wrap clone */
+    /* Step the ring. Always travels the SHORT way round, so going
+       "next" from the last slide rolls forward onto the first. */
+    function showStep(dir) {
+      if (!showEl || show.stacked) return;
+      show.target = Math.round(show.target) + dir;
+    }
     function showGoTo(k) {
       if (!showEl || show.stacked) return;
-      show.target = k;
+      show.target = show.target + ringDelta(k, show.target);
     }
 
     /* navigation is purely manual — no autoplay, no setInterval */
-    if (showPrev) showPrev.addEventListener('click', function () {
-      showGoTo(Math.round(show.s) <= 0 ? -1 : Math.round(show.s) - 1);
-    });
-    if (showNext) showNext.addEventListener('click', function () {
-      showGoTo(Math.round(show.s) >= 2 ? 3 : Math.round(show.s) + 1);
-    });
+    if (showPrev) showPrev.addEventListener('click', function () { showStep(-1); });
+    if (showNext) showNext.addEventListener('click', function () { showStep(1); });
     showDots.forEach(function (dot, idx) {
       dot.addEventListener('click', function () { showGoTo(idx); });
     });
+
+    /* keyboard: arrows step the ring when the carousel has focus */
+    if (showEl) {
+      showEl.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft')  { showStep(-1); e.preventDefault(); }
+        if (e.key === 'ArrowRight') { showStep(1);  e.preventDefault(); }
+      });
+    }
+
+    /* touch: horizontal swipe steps the ring */
+    (function () {
+      if (!showTrack) return;
+      var x0 = null, y0 = null;
+      showTrack.addEventListener('touchstart', function (e) {
+        x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+      }, { passive: true });
+      showTrack.addEventListener('touchend', function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0;
+        var dy = e.changedTouches[0].clientY - y0;
+        /* only act on a clearly horizontal gesture */
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) showStep(dx < 0 ? 1 : -1);
+        x0 = y0 = null;
+      }, { passive: true });
+    })();
 
     /* stacked mode: volunteers pop once on scroll-into-view instead */
     if (!REDUCED && panels.length === 3) {
