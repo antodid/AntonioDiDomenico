@@ -959,18 +959,21 @@
       font-size: 0.56rem; font-weight: 600;
       letter-spacing: 0.24em; text-transform: uppercase;
       color: #E9A488;                      /* terracotta lifted for dark ground */
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.3rem;
     }
-    .vol-title { font-family: var(--serif); font-size: 1.35rem; line-height: 1.1; margin-bottom: 0.35rem; }
-    .vol-meta  { font-size: 0.68rem; letter-spacing: 0.05em; color: rgba(250,250,247,0.8); }
+    .vol-meta  { font-family: var(--serif); font-size: 1.15rem; line-height: 1.25; color: var(--bg); }
 
     /* ---- Newsletter: deep-green academic cover ----
        Set on the site's primary green so the middle card reads as a
        printed journal between the cream map and the photograph. The
        only ornament is a large cropped ring, like a debossed seal. */
     .nl-cover {
+      /* the real newsletter's own palette, not the site's */
+      --nl-navy:   #17375B;
+      --nl-accent: #FFCE00;
+      --nl-paper:  #FFFFFF;
       position: absolute; inset: 0;
-      background: var(--teal);
+      background: var(--nl-navy);
       display: flex; flex-direction: column;
       padding: 1.5rem 1.4rem 1.25rem;
       overflow: hidden;
@@ -980,7 +983,7 @@
       position: absolute;
       right: -30%; bottom: -22%;
       width: 78%; aspect-ratio: 1;
-      border: 1px solid rgba(250,250,247,0.16);
+      border: 1px solid rgba(255,255,255,0.14);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -988,20 +991,20 @@
     .nl-community {
       font-size: 0.56rem; font-weight: 600;
       letter-spacing: 0.28em; text-transform: uppercase;
-      color: var(--terra);
+      color: var(--nl-accent);
       margin-bottom: 0.7rem;
     }
     .nl-mast {
-      font-family: var(--serif);
-      font-size: 2.15rem; font-weight: 500;
-      color: var(--bg); line-height: 0.95;
+      font-family: var(--sans);
+      font-size: 2rem; font-weight: 600;
+      color: var(--nl-paper); line-height: 0.95;
       letter-spacing: -0.015em;
     }
     .nl-edition {
       font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: rgba(250,250,247,0.5);
+      color: rgba(255,255,255,0.6);
       margin-top: 0.75rem; padding-top: 0.65rem;
-      border-top: 1px solid rgba(250,250,247,0.2);
+      border-top: 1px solid rgba(255,255,255,0.22);
       display: flex; justify-content: space-between; gap: 0.5rem;
     }
 
@@ -1013,38 +1016,39 @@
     .nl-kicker {
       font-size: 0.56rem; font-weight: 600;
       letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--terra); margin-bottom: 0.6rem;
+      color: var(--nl-accent); margin-bottom: 0.6rem;
     }
     .nl-headline {
-      font-family: var(--serif);
-      font-size: 2.05rem; line-height: 1.06;
-      color: var(--bg); letter-spacing: -0.02em;
+      font-family: var(--sans);
+      font-size: 1.9rem; font-weight: 600; line-height: 1.08;
+      color: var(--nl-paper); letter-spacing: -0.01em;
     }
-    .nl-headline em { font-style: italic; }
+    .nl-headline em { font-style: normal; color: var(--nl-accent); }
+    /* the yellow block the real newsletter uses as its accent */
     .nl-rule {
-      width: 40px; height: 2px;
-      background: var(--terra);
+      width: 34px; height: 34px;
+      background: var(--nl-accent);
       margin-top: 0.9rem;
     }
 
     .nl-foot {
       position: relative; z-index: 1;
       flex-shrink: 0;
-      border-top: 1px solid rgba(250,250,247,0.2);
+      border-top: 1px solid rgba(255,255,255,0.22);
       padding-top: 0.8rem;
     }
     .nl-teaser {
       font-size: 0.7rem; line-height: 1.45;
-      color: rgba(250,250,247,0.72);
+      color: rgba(255,255,255,0.8);
       display: flex; gap: 0.5rem; align-items: baseline;
     }
     .nl-teaser + .nl-teaser { margin-top: 0.28rem; }
-    .nl-teaser i { font-style: normal; font-size: 0.55rem; color: var(--terra); font-weight: 600; }
+    .nl-teaser i { font-style: normal; font-size: 0.55rem; color: var(--nl-accent); font-weight: 600; }
     .nl-byline {
       margin-top: 0.8rem;
       font-size: 0.55rem; font-weight: 600;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: rgba(250,250,247,0.55);
+      color: rgba(255,255,255,0.65);
     }
 
     /* ---- Noce: mobile app mockup ---- */
@@ -1172,12 +1176,7 @@
       font-size: var(--fs-h2);
       color: var(--bg);
       max-width: 20ch;
-      margin-bottom: var(--sp-2);
-    }
-    .contact-note {
-      color: var(--mut-d);
-      max-width: var(--measure);
-      margin: 0 0 var(--sp-5);
+      margin-bottom: var(--sp-5);
     }
     .contact-links { display: flex; gap: var(--sp-4); flex-wrap: wrap; }
     .contact-links a {
@@ -1622,7 +1621,7 @@
         <div class="show-track" id="showTrack">
           <!-- 1 · Noce — mobile app mockup -->
           <div class="panel panel-noce">
-            <div class="noce-app" aria-hidden="true">
+            <div class="noce-app">
               <svg viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <filter id="fs" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.14)"/></filter>
@@ -1696,8 +1695,8 @@
                 <!-- Tooltip on the spring -->
                 <rect x="172" y="169" width="118" height="34" rx="7" fill="white" filter="url(#fs)"/>
                 <polygon points="172,180 168,186 172,192" fill="white"/>
-                <text x="231" y="182" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414">Sorgente Calda</text>
-                <text x="231" y="195" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F">Hot spring · 1.2 km</text>
+                <text x="231" y="182" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414" data-i18n="noce.place">Sorgente Calda</text>
+                <text x="231" y="195" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F" data-i18n="noce.tip">Hot spring · 1.2 km</text>
                 <!-- Top overlay (status + search) -->
                 <rect width="320" height="104" fill="#F6F0E8"/>
                 <text x="18" y="28" font-size="11.5" font-weight="600" font-family="system-ui,sans-serif" fill="#1A1A1A">9:41</text>
@@ -1724,12 +1723,12 @@
                   <path d="M55,352 C51,346 59,342 55,336"/>
                   <path d="M26,364 C31,361 35,367 40,364 C45,361 49,367 54,364 C57,362 60,364 62,365"/>
                 </g>
-                <text x="84" y="339" font-size="12.5" font-weight="600" font-family="system-ui,sans-serif" fill="#141414">Sorgente Calda</text>
-                <text x="84" y="355" font-size="10.5" font-family="system-ui,sans-serif" fill="#6E6C66">Warm water, no signposts</text>
+                <text x="84" y="339" font-size="12.5" font-weight="600" font-family="system-ui,sans-serif" fill="#141414" data-i18n="noce.place">Sorgente Calda</text>
+                <text x="84" y="355" font-size="10.5" font-family="system-ui,sans-serif" fill="#6E6C66" data-i18n="noce.sub">Warm water, no signposts</text>
                 <rect x="84" y="362" width="78" height="19" rx="9.5" fill="#F6F0E8"/>
-                <text x="123" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">Hot spring · Local</text>
+                <text x="123" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B" data-i18n="noce.chip">Hot spring · Local</text>
                 <rect x="168" y="362" width="44" height="19" rx="9.5" fill="#F6F0E8"/>
-                <text x="190" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B">1.2 km</text>
+                <text x="190" y="375" font-size="9" text-anchor="middle" font-family="system-ui,sans-serif" fill="#1B4D4B" data-i18n="noce.dist">1.2 km</text>
               </svg>
             </div>
           </div>
@@ -1761,9 +1760,8 @@
             <div class="vol-card">
               <img class="panel-img" id="volImg" src="images/volunteers.jpg" alt="Student volunteers at the Jumbo food drive" loading="lazy" decoding="async" width="1178" height="884">
               <div class="vol-note">
-                <div class="vol-kicker">Utrecht · Food Drive</div>
-                <div class="vol-title">Five stores,<br>one weekend</div>
-                <div class="vol-meta">Volunteers recruited &amp; coordinated</div>
+                <div class="vol-kicker" data-i18n="vol.kicker">Utrecht · Food Drive</div>
+                <div class="vol-meta" data-i18n="vol.meta">Volunteers recruited &amp; coordinated</div>
               </div>
             </div>
           </div>
@@ -1772,21 +1770,21 @@
 
       <div class="show-meta" id="showMeta" aria-live="polite">
         <div class="meta-item">
-          <span class="meta-index">01 / 03 · <span data-i18n="sp1.kicker">Map app</span></span>
+          <span class="meta-index"><span data-i18n="sp1.kicker">Map app</span></span>
           <h3 data-i18n="sp1.title">Noce</h3>
-          <p data-i18n="sp1.cap">A map of what maps miss: hot springs, unmarked paths, the places you only hear about from someone local. I built it during AI Scouts and named it after my grandmother.</p>
+          <p data-i18n="sp1.cap">Noce was built as a community map, where small areas or hidden gems can be valued through the eyes of locals. It was developed for the AI Scouts Academy and it uses AI to create social points, protect against fake news, censor inappropriate images and create personalised paths.</p>
           <div class="chips"><span class="chip">Lovable</span><span class="chip">Supabase</span><span class="chip">Antigravity</span><span class="chip">Google Maps API</span></div>
         </div>
         <div class="meta-item">
-          <span class="meta-index">02 / 03 · <span data-i18n="sp2.kicker">Editorial</span></span>
+          <span class="meta-index"><span data-i18n="sp2.kicker">Editorial</span></span>
           <h3 data-i18n="sp2.title">Honours Newsletter</h3>
           <p data-i18n="sp2.cap">Two years leading the editorial team and the LinkedIn page of the Utrecht Honours Programme. Writing, editing, and making sure it actually went out each month.</p>
           <div class="chips"><span class="chip">Canva</span><span class="chip">LinkedIn</span></div>
         </div>
         <div class="meta-item">
-          <span class="meta-index">03 / 03 · <span data-i18n="sp3.kicker">Community</span></span>
+          <span class="meta-index"><span data-i18n="sp3.kicker">Community</span></span>
           <h3 data-i18n="sp3.title">Volunteers</h3>
-          <p data-i18n="sp3.cap">I help organise the Utrecht chapter. We ran the city’s first food drive for the local food bank — five Jumbo stores in one weekend, with a student team I helped recruit.</p>
+          <p data-i18n="sp3.cap">I help organise the Utrecht chapter. We ran the city’s first food drive for the local food bank. Five Jumbo stores in one weekend, with a student team I helped recruit.</p>
           <div class="chips"><span class="chip">EN / NL</span><span class="chip">Canva</span></div>
         </div>
       </div>
@@ -1814,7 +1812,6 @@
     <div class="wrap unfold">
       <span class="eyebrow stg" data-i18n="contact.eyebrow">Contact</span>
       <h2 class="contact-title stg" data-i18n="contact.title">Looking for me? You can find me here!</h2>
-      <p class="contact-note stg" data-i18n="contact.note">I’m in Utrecht until the end of August, and in Rotterdam from September. Sixteen hours a week are free.</p>
       <div class="contact-links stg">
         <a class="magnetic" href="mailto:antoniodidomenico.work@gmail.com"><span data-i18n="contact.email">Email</span> <span class="arrow">↗</span></a>
         <a class="magnetic" href="https://www.linkedin.com/in/adidomenico0/" target="_blank" rel="noopener">LinkedIn <span class="arrow">↗</span></a>
@@ -1891,16 +1888,22 @@
 
         'show.eyebrow': 'Selected Projects',
         'show.title': 'Three projects, built out of curiosity.',
+        'noce.place': 'Sorgente Calda',
+        'noce.tip': 'Hot spring · 1.2 km',
+        'noce.sub': 'Warm water, no signposts',
+        'noce.chip': 'Hot spring · Local',
+        'noce.dist': '1.2 km',
+        'vol.kicker': 'Utrecht · Food Drive',
+        'vol.meta': 'Volunteers recruited &amp; coordinated',
         'sp1.kicker': 'Map app', 'sp1.title': 'Noce',
-        'sp1.cap': 'A map of what maps miss: hot springs, unmarked paths, the places you only hear about from someone local. I built it during AI Scouts and named it after my grandmother.',
+        'sp1.cap': 'Noce was built as a community map, where small areas or hidden gems can be valued through the eyes of locals. It was developed for the AI Scouts Academy and it uses AI to create social points, protect against fake news, censor inappropriate images and create personalised paths.',
         'sp2.kicker': 'Editorial', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Two years leading the editorial team and the LinkedIn page of the Utrecht Honours Programme. Writing, editing, and making sure it actually went out each month.',
         'sp3.kicker': 'Community', 'sp3.title': 'Volunteers',
-        'sp3.cap': 'I help organise the Utrecht chapter. We ran the city’s first food drive for the local food bank — five Jumbo stores in one weekend, with a student team I helped recruit.',
+        'sp3.cap': 'I help organise the Utrecht chapter. We ran the city’s first food drive for the local food bank. Five Jumbo stores in one weekend, with a student team I helped recruit.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Looking for me? You can find me here!',
-        'contact.note': 'I’m in Utrecht until the end of August, and in Rotterdam from September. Sixteen hours a week are free.',
         'contact.email': 'Email',
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       },
@@ -1948,16 +1951,22 @@
 
         'show.eyebrow': 'Progetti selezionati',
         'show.title': 'Tre progetti, nati dalla curiosità.',
+        'noce.place': 'Sorgente Calda',
+        'noce.tip': 'Sorgente termale · 1,2 km',
+        'noce.sub': 'Acqua calda, nessun cartello',
+        'noce.chip': 'Termale · Locale',
+        'noce.dist': '1,2 km',
+        'vol.kicker': 'Utrecht · Raccolta alimentare',
+        'vol.meta': 'Volontari reclutati e coordinati',
         'sp1.kicker': 'App di mappe', 'sp1.title': 'Noce',
-        'sp1.cap': 'Una mappa di ciò che le mappe si perdono: sorgenti termali, sentieri non segnalati, i posti di cui senti parlare solo da chi è del posto. L’ho costruita durante AI Scouts e le ho dato il nome di mia nonna.',
+        'sp1.cap': 'Noce nasce come mappa di comunità, dove piccole zone o gemme nascoste possono essere valorizzate attraverso gli occhi di chi ci vive. È stata sviluppata per la AI Scouts Academy e usa l’IA per creare punti social, proteggere dalle fake news, censurare immagini inappropriate e creare percorsi personalizzati.',
         'sp2.kicker': 'Editoriale', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Due anni alla guida della redazione e della pagina LinkedIn dell’Honours Programme di Utrecht. Scrivere, editare e assicurarsi che il numero uscisse davvero ogni mese.',
         'sp3.kicker': 'Comunità', 'sp3.title': 'Volontariato',
-        'sp3.cap': 'Sono tra gli organizzatori della sezione di Utrecht. Abbiamo fatto la prima raccolta alimentare della città per il banco alimentare — cinque punti vendita Jumbo in un weekend, con studenti che ho aiutato a reclutare.',
+        'sp3.cap': 'Sono tra gli organizzatori della sezione di Utrecht. Abbiamo fatto la prima raccolta alimentare della città per il banco alimentare. Cinque punti vendita Jumbo in un weekend, con studenti che ho aiutato a reclutare.',
 
         'contact.eyebrow': 'Contatti',
         'contact.title': 'Mi cerchi? Mi trovi qui!',
-        'contact.note': 'Sono a Utrecht fino a fine agosto, e a Rotterdam da settembre. Ho sedici ore a settimana libere.',
         'contact.email': 'Email',
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       },
@@ -2005,16 +2014,22 @@
 
         'show.eyebrow': 'Geselecteerde projecten',
         'show.title': 'Drie projecten, ontstaan uit nieuwsgierigheid.',
+        'noce.place': 'Sorgente Calda',
+        'noce.tip': 'Warmwaterbron · 1,2 km',
+        'noce.sub': 'Warm water, geen bordjes',
+        'noce.chip': 'Bron · Lokaal',
+        'noce.dist': '1,2 km',
+        'vol.kicker': 'Utrecht · Voedselinzameling',
+        'vol.meta': 'Vrijwilligers geworven en gecoördineerd',
         'sp1.kicker': 'Kaart-app', 'sp1.title': 'Noce',
-        'sp1.cap': 'Een kaart van wat kaarten missen: warmwaterbronnen, onbewegwijzerde paden, de plekken waarover je alleen van iemand ter plaatse hoort. Ik bouwde hem tijdens AI Scouts en vernoemde hem naar mijn oma.',
+        'sp1.cap': 'Noce is gebouwd als een gemeenschapskaart, waar kleine gebieden of verborgen pareltjes gewaardeerd kunnen worden door de ogen van locals. De app is ontwikkeld voor de AI Scouts Academy en gebruikt AI om sociale punten aan te maken, te beschermen tegen nepnieuws, ongepaste beelden te censureren en gepersonaliseerde routes te maken.',
         'sp2.kicker': 'Redactie', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Twee jaar leiding over de redactie en de LinkedIn-pagina van het Utrecht Honours Programme. Schrijven, redigeren en zorgen dat het elke maand ook echt uitkwam.',
         'sp3.kicker': 'Gemeenschap', 'sp3.title': 'Vrijwilligers',
-        'sp3.cap': 'Ik ben mede-organisator van de Utrechtse afdeling. We hielden de eerste voedselinzameling van de stad voor de voedselbank — vijf Jumbo-filialen in één weekend, met een studententeam dat ik mee heb geworven.',
+        'sp3.cap': 'Ik ben mede-organisator van de Utrechtse afdeling. We hielden de eerste voedselinzameling van de stad voor de voedselbank. Vijf Jumbo-filialen in één weekend, met een studententeam dat ik mee heb geworven.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Op zoek naar mij? Hier vind je me!',
-        'contact.note': 'Ik ben tot eind augustus in Utrecht en vanaf september in Rotterdam. Zestien uur per week zijn vrij.',
         'contact.email': 'E-mail',
         'footer.text': '© 2026 Antonio Di Domenico · Utrecht / Rotterdam'
       }
