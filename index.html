@@ -107,9 +107,18 @@
       font-weight: 500;
       line-height: var(--lh-head);
       text-wrap: balance;         /* no widowed last word on headings */
-      /* Fraunces variable optical sizing: let big headings use the
-         display cut automatically. */
-      font-optical-sizing: auto;
+      /* Fraunces' automatic optical sizing pushed 56-96px headings into
+         the opsz-144 display cut, whose exaggerated hooks and ball
+         terminals read as broken glyphs (the J of "Janeiro", the f of
+         "for"). Pin a moderate text-to-deck cut instead: same family,
+         same warmth, conventional letterforms. */
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 30;
+    }
+    /* serif display text that is not an h-element gets the same cut */
+    .vj-name, .tnum, .contact-links a, .vol-meta, .nav-brand {
+      font-optical-sizing: none;
+      font-variation-settings: 'opsz' 30;
     }
     h2 { font-size: var(--fs-h2); }
     h3 { font-size: var(--fs-h3); }
