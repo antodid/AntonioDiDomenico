@@ -1637,76 +1637,77 @@
                   <filter id="fs" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.14)"/></filter>
                   <filter id="fc" x="-10%" y="-50%" width="120%" height="200%"><feDropShadow dx="0" dy="-3" stdDeviation="6" flood-color="rgba(0,0,0,0.08)"/></filter>
                 </defs>
-                <!-- Terrain base: a valley, not a city grid -->
-                <rect width="320" height="400" fill="#F1EDE2"/>
+                <!-- Map base. Earlier this was drawn as smooth organic
+                     blobs with circles inside them on a warm pink ground,
+                     which read as anatomy rather than terrain. Everything
+                     is now parcels, roads and a river: shapes a map app
+                     would actually produce. -->
+                <rect width="320" height="400" fill="#F0EEE8"/>
 
-                <!-- Woodland masses -->
-                <path d="M0,96 C40,86 76,104 104,96 C132,88 150,100 168,112 C150,140 120,150 88,146 C52,142 20,130 0,140 Z" fill="#D5E0C4"/>
-                <path d="M214,88 C248,80 292,92 320,84 L320,150 C288,158 250,150 224,136 C206,126 202,100 214,88 Z" fill="#D5E0C4"/>
-                <path d="M0,236 C34,228 62,244 84,258 C66,286 32,296 0,290 Z" fill="#D5E0C4"/>
-                <path d="M232,250 C266,240 302,254 320,248 L320,306 L228,306 C218,288 218,262 232,250 Z" fill="#D5E0C4"/>
+                <!-- green parcels: rectangular land, not lobes -->
+                <rect x="-10" y="92"  width="106" height="92" rx="5" fill="#CFDEC4"/>
+                <rect x="200" y="92"  width="140" height="62" rx="5" fill="#CFDEC4"/>
+                <rect x="-10" y="240" width="88"  height="86" rx="5" fill="#CFDEC4"/>
+                <rect x="216" y="240" width="124" height="86" rx="5" fill="#CFDEC4"/>
 
-                <!-- Tree stipple -->
-                <g fill="#B9CBA2" opacity="0.75">
-                  <circle cx="38"  cy="112" r="7"/><circle cx="66" cy="124" r="5.5"/>
-                  <circle cx="96"  cy="110" r="6.5"/><circle cx="128" cy="122" r="5"/>
-                  <circle cx="246" cy="108" r="7"/><circle cx="278" cy="118" r="5.5"/>
-                  <circle cx="300" cy="100" r="5"/>
-                  <circle cx="30"  cy="262" r="6.5"/><circle cx="58" cy="274" r="5"/>
-                  <circle cx="258" cy="272" r="6.5"/><circle cx="292" cy="264" r="5"/>
+                <!-- built parcels -->
+                <rect x="130" y="92"  width="52" height="92" rx="4" fill="#E7E3DA"/>
+                <rect x="130" y="240" width="66" height="86" rx="4" fill="#E7E3DA"/>
+                <rect x="200" y="166" width="140" height="22" rx="4" fill="#E7E3DA"/>
+
+                <!-- river -->
+                <path d="M-8,126 C28,150 42,178 38,206 C34,232 52,258 78,278 C96,290 106,302 108,320"
+                      fill="none" stroke="#BCD6E6" stroke-width="13" stroke-linecap="round"/>
+
+                <!-- roads: casing under white surface -->
+                <g stroke="#E2DED4" stroke-width="15" fill="none" stroke-linecap="round">
+                  <path d="M-10,198 L330,210"/>
+                  <path d="M112,86 L120,336"/>
+                  <path d="M206,86 L216,336"/>
+                </g>
+                <g stroke="#FFFFFF" stroke-width="11" fill="none" stroke-linecap="round">
+                  <path d="M-10,198 L330,210"/>
+                  <path d="M112,86 L120,336"/>
+                </g>
+                <path d="M206,86 L216,336" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+
+                <!-- unmarked footpath up to the spring -->
+                <path d="M152,304 C164,276 158,244 164,208"
+                      fill="none" stroke="#C6B79B" stroke-width="2.4"
+                      stroke-linecap="round" stroke-dasharray="6 7"/>
+
+                <!-- steam off the spring -->
+                <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.95">
+                  <path d="M150,150 C144,142 156,136 150,128"/>
+                  <path d="M166,146 C160,136 172,130 166,120"/>
+                  <path d="M182,152 C176,144 188,138 182,130"/>
                 </g>
 
-                <!-- Contour lines: this is a hillside -->
-                <g fill="none" stroke="#DFD5C2" stroke-width="1.2">
-                  <path d="M18,196 C68,178 118,182 158,200 C198,218 250,220 302,204"/>
-                  <path d="M12,216 C64,198 120,202 162,222 C204,242 254,242 308,226"/>
-                  <path d="M22,178 C70,162 116,166 152,182"/>
-                </g>
+                <!-- the spring itself -->
+                <ellipse cx="166" cy="182" rx="26" ry="17" fill="rgba(199,98,63,0.13)"/>
+                <ellipse cx="166" cy="182" rx="16" ry="10" fill="#E2C4A8"/>
+                <circle  cx="166" cy="182" r="10" fill="#C7623F" filter="url(#fs)"/>
+                <circle  cx="166" cy="182" r="4"  fill="white"/>
 
-                <!-- The stream, running down the valley -->
-                <path d="M-6,150 C36,166 60,188 84,206 C110,226 128,252 122,286 C118,312 128,340 148,356"
-                      fill="none" stroke="#AFCBDD" stroke-width="9" stroke-linecap="round"/>
-                <path d="M-6,150 C36,166 60,188 84,206 C110,226 128,252 122,286 C118,312 128,340 148,356"
-                      fill="none" stroke="#C6DCEA" stroke-width="4" stroke-linecap="round"/>
+                <!-- other local finds -->
+                <circle cx="58"  cy="146" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="58"  cy="146" r="6" fill="#C7623F"/>
+                <circle cx="58"  cy="146" r="2.5" fill="white"/>
+                <circle cx="264" cy="132" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="264" cy="132" r="6" fill="#C7623F"/>
+                <circle cx="264" cy="132" r="2.5" fill="white"/>
+                <circle cx="62"  cy="276" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="62"  cy="276" r="6" fill="#C7623F"/>
+                <circle cx="62"  cy="276" r="2.5" fill="white"/>
+                <circle cx="268" cy="278" r="9" fill="rgba(199,98,63,0.16)"/>
+                <circle cx="268" cy="278" r="6" fill="#C7623F"/>
+                <circle cx="268" cy="278" r="2.5" fill="white"/>
 
-                <!-- Footpath to the spring: dashed, unmarked -->
-                <path d="M256,330 C222,314 196,300 176,282 C160,268 152,250 156,232"
-                      fill="none" stroke="#C2AE90" stroke-width="2.4"
-                      stroke-linecap="round" stroke-dasharray="7 7"/>
-
-                <!-- Steam curls rising off the spring -->
-                <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.9">
-                  <path d="M140,150 C134,142 146,136 140,128"/>
-                  <path d="M156,146 C150,136 162,130 156,120"/>
-                  <path d="M172,152 C166,144 178,138 172,130"/>
-                </g>
-
-                <!-- The spring itself: warm pool, active pin -->
-                <ellipse cx="156" cy="186" rx="30" ry="20" fill="rgba(199,98,63,0.13)"/>
-                <ellipse cx="156" cy="186" rx="19" ry="12" fill="#E2C4A8"/>
-                <ellipse cx="156" cy="186" rx="12" ry="7"  fill="#C7623F" opacity="0.35"/>
-                <circle  cx="156" cy="186" r="10" fill="#C7623F" filter="url(#fs)"/>
-                <circle  cx="156" cy="186" r="4"  fill="white"/>
-
-                <!-- Other local finds -->
-                <circle cx="58"  cy="168" r="9" fill="rgba(199,98,63,0.16)"/>
-                <circle cx="58"  cy="168" r="6" fill="#C7623F"/>
-                <circle cx="58"  cy="168" r="2.5" fill="white"/>
-                <circle cx="262" cy="170" r="9" fill="rgba(199,98,63,0.16)"/>
-                <circle cx="262" cy="170" r="6" fill="#C7623F"/>
-                <circle cx="262" cy="170" r="2.5" fill="white"/>
-                <circle cx="70"  cy="276" r="9" fill="rgba(199,98,63,0.16)"/>
-                <circle cx="70"  cy="276" r="6" fill="#C7623F"/>
-                <circle cx="70"  cy="276" r="2.5" fill="white"/>
-                <circle cx="264" cy="266" r="9" fill="rgba(199,98,63,0.16)"/>
-                <circle cx="264" cy="266" r="6" fill="#C7623F"/>
-                <circle cx="264" cy="266" r="2.5" fill="white"/>
-
-                <!-- Tooltip on the spring -->
-                <rect x="172" y="169" width="118" height="34" rx="7" fill="white" filter="url(#fs)"/>
-                <polygon points="172,180 168,186 172,192" fill="white"/>
-                <text x="231" y="182" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414" data-i18n="noce.place">Sorgente Calda</text>
-                <text x="231" y="195" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F" data-i18n="noce.tip">Hot spring · 1.2 km</text>
+                <!-- tooltip on the spring -->
+                <rect x="182" y="165" width="122" height="34" rx="7" fill="white" stroke="#E4E2DB" stroke-width="0.8" filter="url(#fs)"/>
+                <polygon points="182,176 178,182 182,188" fill="white"/>
+                <text x="243" y="178" text-anchor="middle" font-size="10.5" font-family="system-ui,sans-serif" font-weight="600" fill="#141414" data-i18n="noce.place">Sorgente Calda</text>
+                <text x="243" y="191" text-anchor="middle" font-size="9" font-family="system-ui,sans-serif" fill="#C7623F" data-i18n="noce.tip">Hot spring · 1.2 km</text>
                 <!-- Top overlay (status + search) -->
                 <rect width="320" height="104" fill="#F6F0E8"/>
                 <text x="18" y="28" font-size="11.5" font-weight="600" font-family="system-ui,sans-serif" fill="#1A1A1A">9:41</text>
@@ -1927,19 +1928,19 @@
         'about.eyebrow': 'Chi sono',
         'about.p1': 'Ho appena concluso la laurea triennale in Economia e presto mi trasferirò a Rotterdam per un master in Finanza.',
         'about.p2': 'Negli ultimi anni ho anche avuto l’occasione di partecipare a diversi progetti; qui sotto trovi quelli che mi sono piaciuti di più!',
-        'about.p3': 'Questo sito è uno di quelli, e l’ho creato per la mia candidatura al Web Optimization Project della RSM. Spero che questo approccio venga apprezzato e, Prof.ssa Kostadinova, di avere l’occasione di entrare nel team. Grazie!',
+        'about.p3': 'Questo sito è uno di quelli, e l’ho creato per la mia candidatura al Web Optimization Project della RSM. Spero che questo approccio venga apprezzato e che, Prof.ssa Kostadinova, io possa avere l’occasione di entrare nel team. Grazie!',
         'about.f1k': 'Ora', 'about.f1v': 'BSc Economia (con lode), Utrecht',
         'about.f2k': 'Settembre', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
         'about.f3k': 'Inoltre', 'about.f3v': 'Minor in Diritto · Utrecht',
 
         'edu.eyebrow': 'Formazione',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uuthesis': '→ Leggi della tesi qui sotto',
+        'edu.uuthesis': '→ La tesi è qui sotto',
 
         'thesis.eyebrow': 'Ricerca',
         'thesis.title': 'I controlli sui capitali cinesi aumentano il costo del debito per le imprese europee?',
-        'thesis.sub': 'Tesi triennale · Utrecht University · Voto 9,2 / 10',
-        'thesis.p': 'Volevo capire se le restrizioni che Pechino impone ai flussi di capitale transfrontalieri si riflettano su quanto le aziende europee pagano per indebitarsi. Per scoprirlo ho usato ventidue anni di dati sulle 600 società dello STOXX Europe 600, e gran parte del tempo se n’è andata nel pulire e allineare quei dati, molto prima di far girare qualsiasi analisi. È il voto di cui vado più fiero, soprattutto perché la domanda era mia.',
+        'thesis.sub': 'Tesi triennale · Università di Utrecht · Voto 9,2 / 10',
+        'thesis.p': 'Volevo capire se le restrizioni che Pechino impone ai flussi di capitale transfrontalieri si riflettessero su quanto le aziende europee pagano per indebitarsi. Per scoprirlo ho usato ventidue anni di dati sulle 600 società dello STOXX Europe 600, e gran parte del tempo se n’è andata a pulire e allineare quei dati, molto prima di far girare qualsiasi analisi. È il voto di cui vado più fiero, soprattutto perché la domanda era mia.',
         'thesis.s1': 'imprese dello STOXX Europe 600',
         'thesis.s2': 'anni di dati panel',
         'thesis.s3': 'voto finale',
@@ -1955,7 +1956,7 @@
         'exp4.period': 'Ott 2024 – Giu 2025', 'exp4.role': 'Tutor di Matematica e Statistica', 'exp4.org': 'AthenaSummary',
         'exp4.desc': 'Ho insegnato a piccoli gruppi di studenti di Economia del primo anno, da cinque a venti per volta, e ho scritto tutto il materiale io: slide, esempi svolti e simulazioni d’esame.',
         'exp5.period': 'Feb 2024 – oggi', 'exp5.role': 'Operazioni di magazzino', 'exp5.org': 'Picnic &amp; Jumbo',
-        'exp5.desc': 'Preparazione ed evasione degli ordini per due dei maggiori operatori della grande distribuzione olandese, portata avanti part-time insieme a un corso di laurea a tempo pieno.',
+        'exp5.desc': 'Preparazione ed evasione degli ordini per due dei maggiori operatori della grande distribuzione olandese, portate avanti part-time insieme a un corso di laurea a tempo pieno.',
 
         'show.eyebrow': 'Progetti selezionati',
         'show.title': 'Tre progetti, nati dalla curiosità.',
@@ -1967,7 +1968,7 @@
         'vol.kicker': 'Utrecht · Raccolta alimentare',
         'vol.meta': 'Volontari reclutati e coordinati',
         'sp1.kicker': 'App di mappe', 'sp1.title': 'Noce',
-        'sp1.cap': 'Noce nasce come mappa di comunità, dove piccole zone o gemme nascoste possono essere valorizzate attraverso gli occhi di chi ci vive. È stata sviluppata per la AI Scouts Academy e usa l’IA per creare punti social, proteggere dalle fake news, censurare immagini inappropriate e creare percorsi personalizzati.',
+        'sp1.cap': 'Noce nasce come mappa di comunità, dove piccole zone o gemme nascoste possono essere valorizzate attraverso gli occhi di chi ci vive. È stata sviluppata per AI Scouts Academy e usa l’IA per creare punti social, proteggere dalle fake news, censurare immagini inappropriate e creare percorsi personalizzati.',
         'sp2.kicker': 'Editoriale', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Due anni alla guida della redazione e della pagina LinkedIn dell’Honours Programme di Utrecht. Scrivere, editare e assicurarsi che il numero uscisse davvero ogni mese.',
         'sp3.kicker': 'Comunità', 'sp3.title': 'Volontariato',
@@ -1988,8 +1989,8 @@
 
         'about.eyebrow': 'Over mij',
         'about.p1': 'Ik heb net mijn bachelor Economie afgerond en verhuis binnenkort naar Rotterdam voor een master in Finance.',
-        'about.p2': 'De afgelopen jaren heb ik daarnaast aan verschillende projecten mogen werken; hieronder staan de projecten waar ik het meest plezier aan beleefde!',
-        'about.p3': 'Deze website is er daar één van, en ik maakte hem voor mijn sollicitatie op het Web Optimization Project van RSM. Ik hoop dat deze aanpak in goede aarde valt en, Prof. Kostadinova, dat ik de kans krijg om bij het team te komen. Dank u wel!',
+        'about.p2': 'De afgelopen jaren heb ik daarnaast aan verschillende projecten mogen werken; hieronder staan de projecten waar ik het meeste plezier aan beleefde!',
+        'about.p3': 'Deze website is daar één van, en ik maakte hem voor mijn sollicitatie op het Web Optimization Project van RSM. Ik hoop dat deze aanpak in goede aarde valt en, Prof. Kostadinova, dat ik de kans krijg om bij het team te komen. Dank u wel!',
         'about.f1k': 'Nu', 'about.f1v': 'BSc Economie (cum laude), Utrecht',
         'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
         'about.f3k': 'Ook', 'about.f3v': 'Minor Rechten · Utrecht',
@@ -2029,11 +2030,11 @@
         'vol.kicker': 'Utrecht · Voedselinzameling',
         'vol.meta': 'Vrijwilligers geworven en gecoördineerd',
         'sp1.kicker': 'Kaart-app', 'sp1.title': 'Noce',
-        'sp1.cap': 'Noce is gebouwd als een gemeenschapskaart, waar kleine gebieden of verborgen pareltjes gewaardeerd kunnen worden door de ogen van locals. De app is ontwikkeld voor de AI Scouts Academy en gebruikt AI om sociale punten aan te maken, te beschermen tegen nepnieuws, ongepaste beelden te censureren en gepersonaliseerde routes te maken.',
+        'sp1.cap': 'Noce is gebouwd als een gemeenschapskaart, waar kleine gebieden of verborgen pareltjes tot hun recht komen door de ogen van locals. De app is ontwikkeld voor de AI Scouts Academy en gebruikt AI om sociale punten aan te maken, tegen nepnieuws te beschermen, ongepaste beelden te censureren en gepersonaliseerde routes te maken.',
         'sp2.kicker': 'Redactie', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Twee jaar leiding over de redactie en de LinkedIn-pagina van het Utrecht Honours Programme. Schrijven, redigeren en zorgen dat het elke maand ook echt uitkwam.',
         'sp3.kicker': 'Gemeenschap', 'sp3.title': 'Vrijwilligers',
-        'sp3.cap': 'Ik ben mede-organisator van de Utrechtse afdeling. We hielden de eerste voedselinzameling van de stad voor de voedselbank. Vijf Jumbo-filialen in één weekend, met een studententeam dat ik mee heb geworven.',
+        'sp3.cap': 'Ik ben mede-organisator van de Utrechtse afdeling. We hielden de eerste voedselinzameling van de stad voor de voedselbank. Vijf Jumbo-filialen in één weekend, met een studententeam dat ik mee heb helpen werven.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Op zoek naar mij? Hier vind je me!',
