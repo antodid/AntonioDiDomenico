@@ -480,12 +480,12 @@
        ============================================================ */
     .about-grid {
       display: grid;
-      grid-template-columns: minmax(140px, 200px) 1fr;
+      grid-template-columns: minmax(200px, 260px) 1fr;
       gap: clamp(var(--sp-4), 5vw, var(--sp-6));
       align-items: start;
       margin-bottom: var(--sp-6);
     }
-    .about-label { position: sticky; top: 6.5rem; }
+    .about-label { align-self: start; }
     .about-label .eyebrow { margin-bottom: var(--sp-1); }
     .about-rule {
       width: 44px; height: 3px;
@@ -512,9 +512,19 @@
       margin: 0;
       font-size: var(--fs-meta);
       font-weight: 600;
-      color: var(--teal);
+      color: var(--ink);
       line-height: 1.4;
     }
+    /* the place sits on its own line, so the second line is a decision
+       rather than an orphan left over from a narrow column */
+    .about-facts dd span {
+      display: block;
+      font-weight: 400;
+      color: var(--mut);
+    }
+    .about-facts dd span.v { font-weight: 600; color: inherit; }
+    /* the accent marks the one fact that actually matters: where next */
+    .about-facts .is-next dd { color: var(--terra-ink); }
     /* One size, one leading, one measure for all three paragraphs.
        The opening one used to run at --fs-lead, which in a column this
        width dropped it to ~51 characters a line while the others sat at
@@ -531,36 +541,24 @@
       hyphens: none;
     }
     .about-body p:last-child { margin-bottom: 0; }
-    /* Standfirst: the copy is short enough that a step up in size
-       reads as a deck rather than as short, ragged lines. Sits on the
-       h3 token, so the five-size scale still holds. */
+    /* Standfirst: one step off body, written as a ratio rather than a
+       new token so it cannot drift into a tier of its own. 26px read as
+       a cliff against 17px body; 1.2em is a step. */
     .about-body p.about-lead {
-      font-size: var(--fs-h3);
-      line-height: 1.35;
+      font-size: 1.2em;
+      line-height: 1.45;
       font-weight: 400;
       color: var(--ink);
       margin-bottom: var(--sp-3);
     }
 
-    /* inline signpost down to the carousel */
-    .about-jump {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0.45rem;
-      font-size: var(--fs-meta);
-      font-weight: 500;
-      color: var(--terra-ink);
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.25s;
-      margin-bottom: var(--sp-3);
-    }
-    .about-jump::before { content: '\2193'; }
-    .about-jump:hover { border-bottom-color: var(--terra-ink); }
-
-    /* the direct word to the professor: set off by a rule, not a card */
+    /* The direct word to the professor. The rule sits ABOVE it, so the
+       paragraph keeps the column's single left edge — a left border
+       pushed it 26px in and gave the column two alignment lines. */
     .about-note {
-      padding-left: var(--sp-3);
-      border-left: 2px solid var(--terra);
+      margin-top: var(--sp-4);
+      padding-top: var(--sp-3);
+      border-top: 2px solid var(--terra);
     }
     .about-note p { margin: 0; color: var(--ink); }
     @media (max-width: 720px) {
@@ -1374,24 +1372,23 @@
           <dl class="about-facts">
             <div>
               <dt data-i18n="about.f1k">Now</dt>
-              <dd data-i18n="about.f1v">BSc Economics (hons), Utrecht</dd>
+              <dd><span class="v" data-i18n="about.f1v">BSc Economics</span><span data-i18n="about.f1w">Utrecht · Honours</span></dd>
             </div>
-            <div>
+            <div class="is-next">
               <dt data-i18n="about.f2k">September</dt>
-              <dd data-i18n="about.f2v">MSc Finance &amp; Investments, RSM</dd>
+              <dd><span class="v" data-i18n="about.f2v">MSc Finance &amp; Investments</span><span data-i18n="about.f2w">RSM Rotterdam</span></dd>
             </div>
             <div>
               <dt data-i18n="about.f3k">Also</dt>
-              <dd data-i18n="about.f3v">Minor in Law · Utrecht</dd>
+              <dd><span class="v" data-i18n="about.f3v">Minor in Law</span><span data-i18n="about.f3w">Utrecht</span></dd>
             </div>
           </dl>
         </aside>
         <div class="about-body">
-          <p class="about-lead stg" data-i18n="about.p1">I have just completed my bachelor’s degree in Economics and will soon be moving to Rotterdam to pursue a master’s degree in Finance.</p>
-          <p class="stg" data-i18n="about.p2">Over the past few years, I’ve also had the opportunity to participate in several projects; below are the ones I enjoyed the most!</p>
-          <a class="about-jump stg" href="#projects" data-i18n="about.jump">The projects are below</a>
+          <p class="about-lead stg" data-i18n="about.p1">I have just finished a BSc in Economics at Utrecht. In September I move to Rotterdam for the MSc in Finance and Investments at RSM.</p>
+          <p class="stg" data-i18n="about.p2">Alongside the degree I spent three years running several projects at once, work that taught me things the programme never covered. They are below.</p>
           <div class="about-note stg">
-            <p data-i18n="about.p3">This website is one of them, and I created it for my application to the Web Optimization Project at RSM. I hope this approach is well-received and, Prof. Kostadinova, that I’ll have the opportunity to join the team. Thank you!</p>
+            <p data-i18n="about.p3">Prof. Kostadinova — I built this site instead of writing a cover letter, because showing felt more honest than telling. I’d love to join the team.</p>
           </div>
         </div>
       </div>
@@ -1856,13 +1853,15 @@
         'hero.cta1': 'See my work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'About',
-        'about.p1': 'I have just completed my bachelor’s degree in Economics and will soon be moving to Rotterdam to pursue a master’s degree in Finance.',
-        'about.p2': 'Over the past few years, I’ve also had the opportunity to participate in several projects; below are the ones I enjoyed the most!',
-        'about.p3': 'This website is one of them, and I created it for my application to the Web Optimization Project at RSM. I hope this approach is well-received and, Prof. Kostadinova, that I’ll have the opportunity to join the team. Thank you!',
-        'about.jump': 'The projects are below',
-        'about.f1k': 'Now', 'about.f1v': 'BSc Economics (hons), Utrecht',
-        'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
-        'about.f3k': 'Also', 'about.f3v': 'Minor in Law · Utrecht',
+        'about.p1': 'I have just finished a BSc in Economics at Utrecht. In September I move to Rotterdam for the MSc in Finance and Investments at RSM.',
+        'about.p2': 'Alongside the degree I spent three years running several projects at once, work that taught me things the programme never covered. They are below.',
+        'about.p3': 'Prof. Kostadinova — I built this site instead of writing a cover letter, because showing felt more honest than telling. I’d love to join the team.',
+        'about.f1k': 'Now', 'about.f1v': 'BSc Economics',
+        'about.f1w': 'Utrecht · Honours',
+        'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments',
+        'about.f2w': 'RSM Rotterdam',
+        'about.f3k': 'Also', 'about.f3v': 'Minor in Law',
+        'about.f3w': 'Utrecht',
 
         'edu.eyebrow': 'Education',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
@@ -1919,13 +1918,15 @@
         'hero.cta1': 'Guarda i progetti', 'hero.cta2': 'Scrivimi', 'hero.scroll': 'Scorri',
 
         'about.eyebrow': 'Chi sono',
-        'about.p1': 'Ho appena concluso la laurea triennale in Economia e presto mi trasferirò a Rotterdam per un master in Finanza.',
-        'about.p2': 'Negli ultimi anni ho anche avuto l’occasione di partecipare a diversi progetti; qui sotto trovi quelli che mi sono piaciuti di più!',
-        'about.p3': 'Questo sito è uno di quelli, e l’ho creato per la mia candidatura al Web Optimization Project della RSM. Spero che questo approccio venga apprezzato e, Prof.ssa Kostadinova, di avere l’occasione di entrare nel team. Grazie!',
-        'about.jump': 'I progetti sono qui sotto',
-        'about.f1k': 'Ora', 'about.f1v': 'BSc Economia (con lode), Utrecht',
-        'about.f2k': 'Settembre', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
-        'about.f3k': 'Inoltre', 'about.f3v': 'Minor in Diritto · Utrecht',
+        'about.p1': 'Ho appena concluso una laurea triennale in Economia a Utrecht. A settembre mi trasferisco a Rotterdam per il master in Finance and Investments alla RSM.',
+        'about.p2': 'Accanto agli studi ho passato tre anni a portare avanti più progetti insieme, un lavoro che mi ha insegnato cose che il corso di laurea non copriva. Li trovi qui sotto.',
+        'about.p3': 'Prof.ssa Kostadinova — ho costruito questo sito invece di scrivere una lettera di presentazione, perché mostrare mi sembrava più onesto che raccontare. Mi piacerebbe molto entrare nel team.',
+        'about.f1k': 'Ora', 'about.f1v': 'BSc Economia',
+        'about.f1w': 'Utrecht · Honours',
+        'about.f2k': 'Settembre', 'about.f2v': 'MSc Finance &amp; Investments',
+        'about.f2w': 'RSM Rotterdam',
+        'about.f3k': 'Inoltre', 'about.f3v': 'Minor in Diritto',
+        'about.f3w': 'Utrecht',
 
         'edu.eyebrow': 'Formazione',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
@@ -1982,13 +1983,15 @@
         'hero.cta1': 'Bekijk mijn werk', 'hero.cta2': 'Neem contact op', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'Over mij',
-        'about.p1': 'Ik heb net mijn bachelor Economie afgerond en verhuis binnenkort naar Rotterdam voor een master in Finance.',
-        'about.p2': 'De afgelopen jaren heb ik daarnaast aan verschillende projecten mogen werken; hieronder staan de projecten waar ik het meest plezier aan beleefde!',
-        'about.p3': 'Deze website is er daar één van, en ik maakte hem voor mijn sollicitatie op het Web Optimization Project van RSM. Ik hoop dat deze aanpak in goede aarde valt en, Prof. Kostadinova, dat ik de kans krijg om bij het team te komen. Dank u wel!',
-        'about.jump': 'De projecten staan hieronder',
-        'about.f1k': 'Nu', 'about.f1v': 'BSc Economie (cum laude), Utrecht',
-        'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
-        'about.f3k': 'Ook', 'about.f3v': 'Minor Rechten · Utrecht',
+        'about.p1': 'Ik heb net een bachelor Economie in Utrecht afgerond. In september verhuis ik naar Rotterdam voor de master Finance and Investments aan de RSM.',
+        'about.p2': 'Naast de studie heb ik drie jaar lang aan meerdere projecten tegelijk gewerkt, werk dat me dingen leerde die het programma nooit behandelde. Ze staan hieronder.',
+        'about.p3': 'Prof. Kostadinova — ik heb deze site gebouwd in plaats van een motivatiebrief geschreven, omdat laten zien eerlijker voelde dan vertellen. Ik zou heel graag bij het team komen.',
+        'about.f1k': 'Nu', 'about.f1v': 'BSc Economie',
+        'about.f1w': 'Utrecht · Honours',
+        'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments',
+        'about.f2w': 'RSM Rotterdam',
+        'about.f3k': 'Ook', 'about.f3v': 'Minor Rechten',
+        'about.f3w': 'Utrecht',
 
         'edu.eyebrow': 'Opleiding',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
