@@ -77,9 +77,10 @@
       --sp-2: 1rem;     /*  16 — inside a text group           */
       --sp-3: 1.5rem;   /*  24 — between grouped items         */
       --sp-4: 2rem;     /*  32 — heading group to first item   */
-      --sp-5: 3rem;     /*  48 — title to section body         */
+      --sp-5: 2.5rem;   /*  40 — title to section body         */
       --sp-6: 4rem;     /*  64 — big internal break            */
-      --sp-8: 8rem;     /* 128 — between sections              */
+      --sp-7: 6rem;     /*  96 — section padding               */
+      --sp-8: 8rem;     /* 128 — hero only                     */
     }
 
     /* ============================================================
@@ -148,7 +149,7 @@
 
     /* Layout helpers */
     .wrap   { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
-    section { padding: 8rem 0; position: relative; }
+    section { padding: var(--sp-7) 0; position: relative; }
     /* full-colour "chapter" sections: deep teal with off-white text */
     .teal   { background: var(--teal); color: var(--bg); }
 
@@ -481,7 +482,7 @@
       grid-template-columns: minmax(140px, 200px) 1fr;
       gap: clamp(var(--sp-4), 5vw, var(--sp-6));
       align-items: start;
-      margin-bottom: clamp(var(--sp-6), 8vw, var(--sp-8));
+      margin-bottom: var(--sp-6);
     }
     .about-label { position: sticky; top: 6.5rem; }
     .about-label .eyebrow { margin-bottom: var(--sp-2); }
@@ -582,7 +583,9 @@
        hang on the curve, alternating sides; RSM is the final node
        with a terracotta glow.
        ============================================================ */
-    .vjourney { margin-top: 4.5rem; }
+    /* the gap above Education is owned solely by .about-grid's
+       margin-bottom, so it can't drift out of the scale */
+    .vjourney { margin-top: 0; }
     .vjourney .eyebrow { margin-bottom: var(--sp-2); }
     /* Desktop: a WIDE horizontal S so the plane/bike get a long, clearly
        visible journey across the page. Tall rail + curves that leave each
@@ -769,7 +772,7 @@
       grid-template-columns: 64px 1fr;
       gap: var(--sp-3);
       align-items: start;
-      padding: var(--sp-4) 0;
+      padding: var(--sp-3) 0;
       opacity: 0;
       transform: translateY(18px);
       transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
@@ -777,7 +780,7 @@
     .xtl-item.on { opacity: 1; transform: none; }
     .xtl-item .xp-period { padding-top: 0; margin-bottom: var(--sp-1); }
     /* Ex Primo — the lead entry: same scale, terracotta-ringed badge */
-    .xtl-lead { padding: var(--sp-4) 0; }
+    .xtl-lead { padding: var(--sp-3) 0; }
     .xtl-lead.on .vj-badge {
       border-color: var(--terra);
       color: var(--terra);
@@ -824,7 +827,7 @@
        DOM clones and no seam.
        ============================================================ */
     /* same vertical rhythm as every other section (was 5/6rem) */
-    .showcase { padding: 8rem 0; }
+    .showcase { padding: var(--sp-7) 0; }
     .show-sticky {
       display: flex;
       flex-direction: column;
@@ -1402,7 +1405,7 @@
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-puc.png" alt="" loading="lazy" decoding="async" width="377" height="377"><span class="vj-badge-txt">PUC</span></div>
             <div>
               <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a> <span class="vj-years">· 2025–2026</span></div>
-              <div class="vj-course" data-i18n="edu.puc">One semester in Rio de Janeiro, taking business, law and Portuguese. Almost everything was assessed through case studies and group work, which was a very different way of studying. Most of my Portuguese I learned outside the classroom anyway.</div>
+              <div class="vj-course" data-i18n="edu.puc">One semester in Rio de Janeiro: business, law and Portuguese, assessed through case studies rather than exams. Most of the Portuguese I learned outside the classroom.</div>
             </div>
           </div>
           <div class="vj-item vj-i3 vj-final">
@@ -1718,7 +1721,7 @@
         <div class="meta-item">
           <span class="meta-index">03 / 03 · <span data-i18n="sp3.kicker">Community</span></span>
           <h3 data-i18n="sp3.title">Volunteers</h3>
-          <p data-i18n="sp3.cap">I’m one of the organisers of the Utrecht chapter, where we ran the city’s first food drive for the local food bank: five Jumbo stores over one weekend, materials in Dutch and English, and a lot of student volunteers. I worked on the partnership with the regional manager and on recruiting the team.</p>
+          <p data-i18n="sp3.cap">I help organise the Utrecht chapter. We ran the city’s first food drive for the local food bank — five Jumbo stores in one weekend, with a student team I helped recruit.</p>
           <div class="chips"><span class="chip">EN / NL</span><span class="chip">Canva</span></div>
         </div>
       </div>
@@ -1796,7 +1799,7 @@
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
         'edu.uu': 'BSc Economics and Business Economics, with a minor in Law and the Honours Programme alongside it. I finished with a 7.85 average and a thesis graded 9.2.',
         'edu.uuthesis': '→ Read about the thesis below',
-        'edu.puc': 'One semester in Rio de Janeiro, taking business, law and Portuguese. Almost everything was assessed through case studies and group work, which was a very different way of studying. Most of my Portuguese I learned outside the classroom anyway.',
+        'edu.puc': 'One semester in Rio de Janeiro: business, law and Portuguese, assessed through case studies rather than exams. Most of the Portuguese I learned outside the classroom.',
         'edu.rsm': 'MSc Finance and Investments. This is where I’m heading in September.',
 
         'thesis.eyebrow': 'Research',
@@ -1827,7 +1830,7 @@
         'sp2.kicker': 'Editorial', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Two years leading the editorial team and the LinkedIn page of the Utrecht Honours Programme. Writing, editing, and making sure it actually went out each month.',
         'sp3.kicker': 'Community', 'sp3.title': 'Volunteers',
-        'sp3.cap': 'I’m one of the organisers of the Utrecht chapter, where we ran the city’s first food drive for the local food bank: five Jumbo stores over one weekend, materials in Dutch and English, and a lot of student volunteers. I worked on the partnership with the regional manager and on recruiting the team.',
+        'sp3.cap': 'I help organise the Utrecht chapter. We ran the city’s first food drive for the local food bank — five Jumbo stores in one weekend, with a student team I helped recruit.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Looking for me? You can find me here!',
@@ -1852,7 +1855,7 @@
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
         'edu.uu': 'BSc Economics and Business Economics, con un minor in Diritto e l’Honours Programme in parallelo. Ho chiuso con una media di 7,85 e una tesi valutata 9,2.',
         'edu.uuthesis': '→ Leggi della tesi qui sotto',
-        'edu.puc': 'Un semestre a Rio de Janeiro, tra corsi di business, diritto e portoghese. Quasi tutto veniva valutato con case study e lavori di gruppo, un modo di studiare molto diverso. Il portoghese comunque l’ho imparato soprattutto fuori dall’aula.',
+        'edu.puc': 'Un semestre a Rio de Janeiro: business, diritto e portoghese, valutati con case study più che con esami. Il portoghese l’ho imparato soprattutto fuori dall’aula.',
         'edu.rsm': 'MSc Finance and Investments. È qui che mi dirigo a settembre.',
 
         'thesis.eyebrow': 'Ricerca',
@@ -1883,7 +1886,7 @@
         'sp2.kicker': 'Editoriale', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Due anni alla guida della redazione e della pagina LinkedIn dell’Honours Programme di Utrecht. Scrivere, editare e assicurarsi che il numero uscisse davvero ogni mese.',
         'sp3.kicker': 'Comunità', 'sp3.title': 'Volontariato',
-        'sp3.cap': 'Sono uno degli organizzatori della sezione di Utrecht, dove abbiamo realizzato la prima raccolta alimentare della città per il banco alimentare locale: cinque punti vendita Jumbo in un fine settimana, materiali in olandese e inglese, e tanti studenti volontari. Mi sono occupato della partnership con il direttore regionale e del reclutamento della squadra.',
+        'sp3.cap': 'Sono tra gli organizzatori della sezione di Utrecht. Abbiamo fatto la prima raccolta alimentare della città per il banco alimentare — cinque punti vendita Jumbo in un weekend, con studenti che ho aiutato a reclutare.',
 
         'contact.eyebrow': 'Contatti',
         'contact.title': 'Mi cerchi? Mi trovi qui!',
@@ -1908,7 +1911,7 @@
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
         'edu.uu': 'BSc Economics and Business Economics, met een minor Rechten en het Honours Programme ernaast. Ik sloot af met een gemiddelde van 7,85 en een scriptie beoordeeld met 9,2.',
         'edu.uuthesis': '→ Lees hieronder over de scriptie',
-        'edu.puc': 'Eén semester in Rio de Janeiro, met vakken in business, recht en Portugees. Bijna alles werd getoetst met casussen en groepswerk, een heel andere manier van studeren. Mijn Portugees leerde ik toch vooral buiten het lokaal.',
+        'edu.puc': 'Eén semester in Rio de Janeiro: business, recht en Portugees, getoetst met casussen in plaats van tentamens. Mijn Portugees leerde ik vooral buiten het lokaal.',
         'edu.rsm': 'MSc Finance and Investments. Hier ga ik in september naartoe.',
 
         'thesis.eyebrow': 'Onderzoek',
@@ -1939,7 +1942,7 @@
         'sp2.kicker': 'Redactie', 'sp2.title': 'Honours Newsletter',
         'sp2.cap': 'Twee jaar leiding over de redactie en de LinkedIn-pagina van het Utrecht Honours Programme. Schrijven, redigeren en zorgen dat het elke maand ook echt uitkwam.',
         'sp3.kicker': 'Gemeenschap', 'sp3.title': 'Vrijwilligers',
-        'sp3.cap': 'Ik ben een van de organisatoren van de Utrechtse afdeling, waar we de eerste voedselinzameling van de stad voor de lokale voedselbank hebben opgezet: vijf Jumbo-filialen in één weekend, materiaal in het Nederlands en Engels, en veel studentvrijwilligers. Ik werkte aan de samenwerking met de regiomanager en aan het werven van het team.',
+        'sp3.cap': 'Ik ben mede-organisator van de Utrechtse afdeling. We hielden de eerste voedselinzameling van de stad voor de voedselbank — vijf Jumbo-filialen in één weekend, met een studententeam dat ik mee heb geworven.',
 
         'contact.eyebrow': 'Contact',
         'contact.title': 'Op zoek naar mij? Hier vind je me!',
