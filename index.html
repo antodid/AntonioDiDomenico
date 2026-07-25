@@ -64,6 +64,7 @@
       --fs-display: clamp(3.4rem, 7.5vw, 6.5rem);  /* hero name           */
       --fs-h2:      clamp(2.4rem, 4.4vw, 3.9rem);  /* section head, stats */
       --fs-h3:      clamp(1.45rem, 2vw, 2rem);     /* entry / card / link */
+      --fs-h2s:     clamp(1.7rem, 2.6vw, 2.3rem);  /* education node name */
       --fs-body:    clamp(1.05rem, 1.1vw, 1.18rem);/* all running copy    */
       --fs-meta:    clamp(0.9rem, 0.95vw, 1rem);   /* labels, dates, ui   */
       --lh-head:    1.12;                          /* all headings        */
@@ -187,7 +188,7 @@
       font-weight: 500;
       line-height: var(--lh-head);
       text-wrap: balance;
-      font-size: var(--fs-h3);
+      font-size: var(--fs-h2);
       color: var(--teal);
       max-width: 24ch;
       margin-bottom: var(--sp-5);
@@ -485,13 +486,34 @@
       margin-bottom: var(--sp-6);
     }
     .about-label { position: sticky; top: 6.5rem; }
-    .about-label .eyebrow { margin-bottom: var(--sp-2); }
+    .about-label .eyebrow { margin-bottom: var(--sp-1); }
     .about-rule {
       width: 44px; height: 3px;
       background: var(--terra);
       border-radius: 2px;
       border: 0;
+      margin: 0 0 var(--sp-3);
+    }
+    /* Key facts as a definition list: quiet label, firm value, hairline
+       between rows. Carries the CV essentials without a sentence. */
+    .about-facts { margin: 0; }
+    .about-facts > div {
+      padding: var(--sp-2) 0;
+      border-top: 1px solid var(--line);
+    }
+    .about-facts > div:last-child { border-bottom: 1px solid var(--line); }
+    .about-facts dt {
+      font-size: var(--fs-meta);
+      color: var(--mut);
+      line-height: 1.4;
+      margin-bottom: 0.15rem;
+    }
+    .about-facts dd {
       margin: 0;
+      font-size: var(--fs-meta);
+      font-weight: 600;
+      color: var(--teal);
+      line-height: 1.4;
     }
     /* One size, one leading, one measure for all three paragraphs.
        The opening one used to run at --fs-lead, which in a column this
@@ -509,7 +531,38 @@
       hyphens: none;
     }
     .about-body p:last-child { margin-bottom: 0; }
-    .about-body p.about-lead { color: var(--ink); font-weight: 500; }
+    /* Standfirst: the copy is short enough that a step up in size
+       reads as a deck rather than as short, ragged lines. Sits on the
+       h3 token, so the five-size scale still holds. */
+    .about-body p.about-lead {
+      font-size: var(--fs-h3);
+      line-height: 1.35;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: var(--sp-3);
+    }
+
+    /* inline signpost down to the carousel */
+    .about-jump {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.45rem;
+      font-size: var(--fs-meta);
+      font-weight: 500;
+      color: var(--terra-ink);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s;
+      margin-bottom: var(--sp-3);
+    }
+    .about-jump::before { content: '\2193'; }
+    .about-jump:hover { border-bottom-color: var(--terra-ink); }
+
+    /* the direct word to the professor: set off by a rule, not a card */
+    .about-note {
+      padding-left: var(--sp-3);
+      border-left: 2px solid var(--terra);
+    }
+    .about-note p { margin: 0; color: var(--ink); }
     @media (max-width: 720px) {
       .about-grid { grid-template-columns: 1fr; gap: var(--sp-3); }
       .about-label { position: static; }
@@ -661,14 +714,13 @@
       transition: color 0.5s;
     }
     .xtl-item.on .vj-icon { color: var(--terra); }
-    .vj-name { font-family: var(--serif); font-size: var(--fs-h3); line-height: var(--lh-head); color: var(--teal); }
+    .vj-name { font-family: var(--serif); font-size: var(--fs-h2s); line-height: var(--lh-head); color: var(--teal); }
     .vj-name a { border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: color 0.25s, border-color 0.25s; }
     .vj-name a:hover { color: var(--teal); border-color: var(--teal); }
-    .vj-years { font-size: var(--fs-meta); color: var(--mut); font-family: var(--sans); font-weight: 500; white-space: nowrap; }
-    .vj-course { font-size: var(--fs-meta); color: var(--mut); margin-top: var(--sp-1); line-height: var(--lh-body); }
+    .vj-years { font-size: var(--fs-meta); color: var(--mut); font-family: var(--sans); font-weight: 500; white-space: nowrap; letter-spacing: 0; }
     .vj-thesis-link {
       display: inline-block;
-      margin-top: var(--sp-1);
+      margin-top: var(--sp-2);
       font-size: var(--fs-meta);
       font-weight: 600;
       color: var(--terra-ink);
@@ -1199,8 +1251,7 @@
       }
       .vj-item.on { transform: none; }
       .vj-badge { width: 52px; height: 52px; font-size: 0.85rem; }
-      .vj-name { font-size: var(--fs-body); }
-      .vj-course { font-size: var(--fs-meta); }
+      .vj-name { font-size: var(--fs-h3); }
       /* Vehicles scale down; seats recomputed from the same geometry.
          Plane at 104px wide (k=0.65): window centre (54.6, 33.8) r13.
          Bike at 64px (k=0.64): head centre (31.4, 16.6) r13.4. */
@@ -1315,14 +1366,31 @@
   <section id="about" class="about">
     <div class="wrap unfold">
       <div class="about-grid">
-        <div class="about-label stg">
+        <aside class="about-label stg">
           <h2 class="eyebrow" data-i18n="about.eyebrow">About</h2>
           <hr class="about-rule" aria-hidden="true">
-        </div>
+          <dl class="about-facts">
+            <div>
+              <dt data-i18n="about.f1k">Now</dt>
+              <dd data-i18n="about.f1v">BSc Economics (hons), Utrecht</dd>
+            </div>
+            <div>
+              <dt data-i18n="about.f2k">September</dt>
+              <dd data-i18n="about.f2v">MSc Finance &amp; Investments, RSM</dd>
+            </div>
+            <div>
+              <dt data-i18n="about.f3k">Also</dt>
+              <dd data-i18n="about.f3v">Minor in Law · Utrecht</dd>
+            </div>
+          </dl>
+        </aside>
         <div class="about-body">
-          <p class="about-lead stg" data-i18n="about.p1">I just completed my bachelor’s degree with honours in Economics at Utrecht University, with a minor in Law. During my undergraduate studies I realised I wanted to specialise in finance. That’s why I’ll be moving to Rotterdam in September to begin the Master’s programme in Finance and Investments at RSM.</p>
-          <p class="stg" data-i18n="about.p2">However, over the past three years I’ve often found myself working on several projects at the same time, which have allowed me to gain skills very different from those covered in my undergraduate programme. I’ll tell you more about them below!</p>
-          <p class="stg" data-i18n="about.p3">I created this website for my application to the web optimisation project at RSM because I believe it’s a more engaging way to show what I’ve already learned. So, Prof. Kostadinova, I hope you’ll appreciate this approach, which differs from a traditional cover letter, and I also hope to have the opportunity to join the team. Thank you!</p>
+          <p class="about-lead stg" data-i18n="about.p1">I have just completed my bachelor’s degree in Economics and will soon be moving to Rotterdam to pursue a master’s degree in Finance.</p>
+          <p class="stg" data-i18n="about.p2">Over the past few years, I’ve also had the opportunity to participate in several projects; below are the ones I enjoyed the most!</p>
+          <a class="about-jump stg" href="#projects" data-i18n="about.jump">The projects are below</a>
+          <div class="about-note stg">
+            <p data-i18n="about.p3">This website is one of them, and I created it for my application to the Web Optimization Project at RSM. I hope this approach is well-received and, Prof. Kostadinova, that I’ll have the opportunity to join the team. Thank you!</p>
+          </div>
         </div>
       </div>
 
@@ -1397,7 +1465,6 @@
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-uu.png" alt="" loading="lazy" decoding="async" width="231" height="231"><span class="vj-badge-txt">UU</span></div>
             <div>
               <div class="vj-name"><a href="https://www.uu.nl" target="_blank" rel="noopener">Utrecht University</a> <span class="vj-years">· 2023–2026</span></div>
-              <div class="vj-course" data-i18n="edu.uu">BSc Economics and Business Economics, with a minor in Law and the Honours Programme alongside it. I finished with a 7.85 average and a thesis graded 9.2.</div>
               <a class="vj-thesis-link" href="#thesis" data-i18n="edu.uuthesis">→ Read about the thesis below</a>
             </div>
           </div>
@@ -1405,14 +1472,12 @@
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo" src="images/logo-puc.png" alt="" loading="lazy" decoding="async" width="377" height="377"><span class="vj-badge-txt">PUC</span></div>
             <div>
               <div class="vj-name"><a href="https://www.puc-rio.br" target="_blank" rel="noopener">PUC-Rio</a> <span class="vj-years">· 2025–2026</span></div>
-              <div class="vj-course" data-i18n="edu.puc">One semester in Rio de Janeiro: business, law and Portuguese, assessed through case studies rather than exams. Most of the Portuguese I learned outside the classroom.</div>
             </div>
           </div>
           <div class="vj-item vj-i3 vj-final">
             <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-rsm.png" alt="" loading="lazy" decoding="async" width="402" height="402"><span class="vj-badge-txt">RSM</span></div>
             <div>
               <div class="vj-name"><a href="https://www.rsm.nl" target="_blank" rel="noopener">RSM · Erasmus University Rotterdam</a> <span class="vj-years">· 2026–2027</span></div>
-              <div class="vj-course" data-i18n="edu.rsm">MSc Finance and Investments. This is where I’m heading in September.</div>
             </div>
           </div>
         </div>
@@ -1791,16 +1856,17 @@
         'hero.cta1': 'See my work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'About',
-        'about.p1': 'I just completed my bachelor’s degree with honours in Economics at Utrecht University, with a minor in Law. During my undergraduate studies I realised I wanted to specialise in finance. That’s why I’ll be moving to Rotterdam in September to begin the Master’s programme in Finance and Investments at RSM.',
-        'about.p2': 'However, over the past three years I’ve often found myself working on several projects at the same time, which have allowed me to gain skills very different from those covered in my undergraduate programme. I’ll tell you more about them below!',
-        'about.p3': 'I created this website for my application to the web optimisation project at RSM because I believe it’s a more engaging way to show what I’ve already learned. So, Prof. Kostadinova, I hope you’ll appreciate this approach, which differs from a traditional cover letter, and I also hope to have the opportunity to join the team. Thank you!',
+        'about.p1': 'I have just completed my bachelor’s degree in Economics and will soon be moving to Rotterdam to pursue a master’s degree in Finance.',
+        'about.p2': 'Over the past few years, I’ve also had the opportunity to participate in several projects; below are the ones I enjoyed the most!',
+        'about.p3': 'This website is one of them, and I created it for my application to the Web Optimization Project at RSM. I hope this approach is well-received and, Prof. Kostadinova, that I’ll have the opportunity to join the team. Thank you!',
+        'about.jump': 'The projects are below',
+        'about.f1k': 'Now', 'about.f1v': 'BSc Economics (hons), Utrecht',
+        'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
+        'about.f3k': 'Also', 'about.f3v': 'Minor in Law · Utrecht',
 
         'edu.eyebrow': 'Education',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uu': 'BSc Economics and Business Economics, with a minor in Law and the Honours Programme alongside it. I finished with a 7.85 average and a thesis graded 9.2.',
         'edu.uuthesis': '→ Read about the thesis below',
-        'edu.puc': 'One semester in Rio de Janeiro: business, law and Portuguese, assessed through case studies rather than exams. Most of the Portuguese I learned outside the classroom.',
-        'edu.rsm': 'MSc Finance and Investments. This is where I’m heading in September.',
 
         'thesis.eyebrow': 'Research',
         'thesis.title': 'Do Chinese Capital Controls Raise the Cost of Debt for European Firms?',
@@ -1847,16 +1913,17 @@
         'hero.cta1': 'Guarda i progetti', 'hero.cta2': 'Scrivimi', 'hero.scroll': 'Scorri',
 
         'about.eyebrow': 'Chi sono',
-        'about.p1': 'Ho appena concluso la laurea triennale in Economia all’Università di Utrecht, con lode e con un minor in Diritto. Durante il percorso ho capito di volermi specializzare in finanza: per questo a settembre mi trasferisco a Rotterdam per iniziare il Master in Finance and Investments alla RSM.',
-        'about.p2': 'Negli ultimi tre anni però mi sono ritrovato spesso a portare avanti più progetti in parallelo, che mi hanno fatto acquisire competenze molto diverse da quelle del corso di laurea. Te ne parlo qui sotto!',
-        'about.p3': 'Ho creato questo sito per la mia candidatura al progetto di ottimizzazione web della RSM, perché credo sia un modo più coinvolgente di mostrare quello che ho già imparato. Quindi, Prof.ssa Kostadinova, spero apprezzerà questo approccio diverso da una lettera di presentazione tradizionale, e spero anche di avere l’occasione di entrare nel team. Grazie!',
+        'about.p1': 'Ho appena concluso la laurea triennale in Economia e presto mi trasferirò a Rotterdam per un master in Finanza.',
+        'about.p2': 'Negli ultimi anni ho anche avuto l’occasione di partecipare a diversi progetti; qui sotto trovi quelli che mi sono piaciuti di più!',
+        'about.p3': 'Questo sito è uno di quelli, e l’ho creato per la mia candidatura al Web Optimization Project della RSM. Spero che questo approccio venga apprezzato e, Prof.ssa Kostadinova, di avere l’occasione di entrare nel team. Grazie!',
+        'about.jump': 'I progetti sono qui sotto',
+        'about.f1k': 'Ora', 'about.f1v': 'BSc Economia (con lode), Utrecht',
+        'about.f2k': 'Settembre', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
+        'about.f3k': 'Inoltre', 'about.f3v': 'Minor in Diritto · Utrecht',
 
         'edu.eyebrow': 'Formazione',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uu': 'BSc Economics and Business Economics, con un minor in Diritto e l’Honours Programme in parallelo. Ho chiuso con una media di 7,85 e una tesi valutata 9,2.',
         'edu.uuthesis': '→ Leggi della tesi qui sotto',
-        'edu.puc': 'Un semestre a Rio de Janeiro: business, diritto e portoghese, valutati con case study più che con esami. Il portoghese l’ho imparato soprattutto fuori dall’aula.',
-        'edu.rsm': 'MSc Finance and Investments. È qui che mi dirigo a settembre.',
 
         'thesis.eyebrow': 'Ricerca',
         'thesis.title': 'I controlli sui capitali cinesi aumentano il costo del debito per le imprese europee?',
@@ -1903,16 +1970,17 @@
         'hero.cta1': 'Bekijk mijn werk', 'hero.cta2': 'Neem contact op', 'hero.scroll': 'Scroll',
 
         'about.eyebrow': 'Over mij',
-        'about.p1': 'Ik heb net mijn bachelor Economie cum laude afgerond aan de Universiteit Utrecht, met een minor Rechten. Tijdens mijn bachelor merkte ik dat ik me wilde specialiseren in finance. Daarom verhuis ik in september naar Rotterdam om aan de RSM te beginnen aan de master Finance and Investments.',
-        'about.p2': 'De afgelopen drie jaar werkte ik echter vaak aan meerdere projecten tegelijk, waardoor ik vaardigheden opdeed die ver buiten mijn bachelor lagen. Hieronder vertel ik er meer over!',
-        'about.p3': 'Ik heb deze website gemaakt voor mijn sollicitatie op het weboptimalisatieproject van RSM, omdat het volgens mij een boeiendere manier is om te laten zien wat ik al geleerd heb. Prof. Kostadinova, ik hoop dat u deze aanpak waardeert — anders dan een klassieke motivatiebrief — en dat ik de kans krijg om bij het team te komen. Dank u wel!',
+        'about.p1': 'Ik heb net mijn bachelor Economie afgerond en verhuis binnenkort naar Rotterdam voor een master in Finance.',
+        'about.p2': 'De afgelopen jaren heb ik daarnaast aan verschillende projecten mogen werken; hieronder staan de projecten waar ik het meest plezier aan beleefde!',
+        'about.p3': 'Deze website is er daar één van, en ik maakte hem voor mijn sollicitatie op het Web Optimization Project van RSM. Ik hoop dat deze aanpak in goede aarde valt en, Prof. Kostadinova, dat ik de kans krijg om bij het team te komen. Dank u wel!',
+        'about.jump': 'De projecten staan hieronder',
+        'about.f1k': 'Nu', 'about.f1v': 'BSc Economie (cum laude), Utrecht',
+        'about.f2k': 'September', 'about.f2v': 'MSc Finance &amp; Investments, RSM',
+        'about.f3k': 'Ook', 'about.f3v': 'Minor Rechten · Utrecht',
 
         'edu.eyebrow': 'Opleiding',
         'edu.title': 'Utrecht, Rio de Janeiro, Rotterdam.',
-        'edu.uu': 'BSc Economics and Business Economics, met een minor Rechten en het Honours Programme ernaast. Ik sloot af met een gemiddelde van 7,85 en een scriptie beoordeeld met 9,2.',
         'edu.uuthesis': '→ Lees hieronder over de scriptie',
-        'edu.puc': 'Eén semester in Rio de Janeiro: business, recht en Portugees, getoetst met casussen in plaats van tentamens. Mijn Portugees leerde ik vooral buiten het lokaal.',
-        'edu.rsm': 'MSc Finance and Investments. Hier ga ik in september naartoe.',
 
         'thesis.eyebrow': 'Onderzoek',
         'thesis.title': 'Verhogen Chinese kapitaalcontroles de kosten van schuld voor Europese bedrijven?',
