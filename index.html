@@ -1056,11 +1056,13 @@
     .noce-app svg { width: 100%; height: 100%; display: block; }
 
     /* ---- caption under the carousel ---- */
-    .show-meta { position: relative; width: min(560px, 86vw); min-height: 168px; text-align: center; }
+    /* All three captions share one grid cell, so the box is exactly as
+       tall as the longest of them. The old min-height was a fixed 168px
+       and the longer Noce copy overflowed it into the arrows below. */
+    .show-meta { position: relative; width: min(560px, 86vw); text-align: center; display: grid; }
     .show-meta .chips { justify-content: center; }
     .meta-item {
-      position: absolute;
-      inset: 0;
+      grid-area: 1 / 1;
       opacity: 0;
       transform: translateY(14px);
       transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
@@ -1129,6 +1131,7 @@
     .showcase.stacked .show-meta,
     .showcase.stacked .show-nav { display: none; }
     .showcase.stacked .meta-item {
+      grid-area: auto;
       position: static;
       opacity: 1;
       transform: none;
@@ -1541,7 +1544,7 @@
 
         <!-- 2. AI Scouts — no brand mark, so the badge carries initials -->
         <div class="xtl-item">
-          <div class="vj-badge" aria-hidden="true"><span class="vj-badge-txt">AI</span></div>
+          <div class="vj-badge" aria-hidden="true"><img class="vj-logo logo-fill" src="images/logo-aiscouts.png" alt="AI Squads" loading="lazy" decoding="async" width="440" height="440"><span class="vj-badge-txt">AI</span></div>
           <div>
             <div class="xp-period" data-i18n="exp2.period">Feb – May 2026</div>
             <h3 class="xp-role" data-i18n="exp2.role">AI Scouts</h3>
